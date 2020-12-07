@@ -1,0 +1,6 @@
+curl -X POST -H "Content-Type: application/json" -d '{"name" : "Manuel", "email" : "manuelobacanodastreet@gmail.com", "password" : "supersecretpassword", "phoneNumber" : "935555666"}' http://localhost:8080/api/users
+
+
+curl -X POST -H "Content-Type: application/json" -d '{"cientificName" : "qq coisa", "englishName" : "something", "phMax" : "8", "phMin" : "7", "humMin" : "0.1", "humMax" : "0.5"}' http://localhost:8080/api/plants
+ 1940  curl localhost:8080/api/plants
+

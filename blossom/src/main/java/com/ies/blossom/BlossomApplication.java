@@ -10,4 +10,9 @@ public class BlossomApplication {
 		SpringApplication.run(BlossomApplication.class, args);
 	}
 
+//	@Bean
+//	public PasswordEncoder encoder() {
+//		return new BCryptPasswordEncoder();
+//	}
+
 }
