@@ -3,6 +3,7 @@ package com.ies.blossom.entitys;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -22,7 +23,7 @@ public class User {
     private Date entryDate;
 
     @Column(name = "password")
-    private String password; // TODO é necessário codificar a password
+    private String password; // TODO é necessário encriptar a password
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -32,6 +33,9 @@ public class User {
 
     @Column(name = "is_active")
     private Boolean isActive;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Parcel> parcels;
 
     public User() {}
 
@@ -107,5 +111,13 @@ public class User {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public Set<Parcel> getParcels() {
+        return parcels;
+    }
+
+    public void setParcels(Set<Parcel> parcels) {
+        this.parcels = parcels;
     }
 }

@@ -1,6 +1,7 @@
 package com.ies.blossom.entitys;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "plants")
@@ -28,6 +29,10 @@ public class Plant {
     @Column(name = "hum_max")
     private Double humMax;
 
+    @OneToMany(mappedBy = "plant")
+    @Column(name = "parcels")
+    private Set<Parcel> parcels;
+
     public Plant() {}
 
     public Plant(Long plantId, String cientificName, String englishName, Double phMax, Double phMin, Double humMin, Double humMax) {
@@ -38,6 +43,14 @@ public class Plant {
         this.phMin = phMin;
         this.humMin = humMin;
         this.humMax = humMax;
+    }
+
+    public Set<Parcel> getParcels() {
+        return parcels;
+    }
+
+    public void setParcels(Set<Parcel> parcels) {
+        this.parcels = parcels;
     }
 
     public Long getPlantId() {
