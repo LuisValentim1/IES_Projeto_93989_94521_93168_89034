@@ -12,7 +12,7 @@
 	<artifactId>blossom</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>blossom</name>
-	<description>Spring Web Soil Monitoring app for IES P3 Class</description>
+	<description>Application to manage the yard and others</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -29,10 +29,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-validation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
@@ -43,8 +39,8 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
