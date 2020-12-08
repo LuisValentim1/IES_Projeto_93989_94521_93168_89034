@@ -1,5 +1,7 @@
 package com.ies.blossom.entitys;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -13,6 +15,7 @@ public class HumMeasure {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "sensor_id")
+    @JsonBackReference
     private HumSensor sensor;
 
     @Column(name = "timestamp")

@@ -1,6 +1,21 @@
-curl -X POST -H "Content-Type: application/json" -d '{"name" : "Manuel", "email" : "manuelobacanodastreet@gmail.com", "password" : "supersecretpassword", "phoneNumber" : "935555666"}' http://localhost:8080/api/users
+# adicionar user
+curl -X POST -H "Content-Type: application/json" -d '{"name" : "Manuel", "email" : "manuelobacanodastreet@gmail.com", "password" : "supersecretpassword", "phoneNumber" : "935555666"}' http://localhost:8080/api/test/users
 
+# adicionar planta
+curl -X POST -H "Content-Type: application/json" -d '{"cientificName" : "qq coisa", "englishName" : "something", "phMax" : "8", "phMin" : "7", "humMin" : "0.1", "humMax" : "0.5"}' http://localhost:8080/api/test/plants
 
-curl -X POST -H "Content-Type: application/json" -d '{"cientificName" : "qq coisa", "englishName" : "something", "phMax" : "8", "phMin" : "7", "humMin" : "0.1", "humMax" : "0.5"}' http://localhost:8080/api/plants
- 1940  curl localhost:8080/api/plants
+# adicionar parcela
+curl -X POST -H "Content-Type: application/json" -d '{"owner" : "1", "location" : "quintal da dona Maria"}' http://localhost:8080/api/test/parcels
+
+# adicionar sensor de ph
+curl -X POST -H "Content-Type: application/json" -d '{"parcelId" : "2"}' http://localhost:8080/api/test/phsensors
+
+# adicionar sensor de hum
+curl -X POST -H "Content-Type: application/json" -d '{"parcelId" : "2"}' http://localhost:8080/api/test/humsensors
+
+# adicionar medicao de ph
+curl -X POST -H "Content-Type: application/json" -d '{"sensorId" : "4", "value" : "7.3"}' http://localhost:8080/api/test/phmeasures
+
+# adicionar medicao de hum
+curl -X POST -H "Content-Type: application/json" -d '{"sensorId" : "5", "value" : "0.3"}' http://localhost:8080/api/test/hummeasures
 

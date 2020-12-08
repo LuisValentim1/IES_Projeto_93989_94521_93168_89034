@@ -1,5 +1,8 @@
 package com.ies.blossom.entitys;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,34 +20,27 @@ public class Parcel {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "owner_id")
+    @JsonBackReference
     private User owner;
 
     @OneToMany(mappedBy = "parcel")
+    @JsonManagedReference
     private Set<PhSensor> phSensors = new HashSet<>();
 
     @OneToMany(mappedBy = "parcel")
+    @JsonManagedReference
     private Set<HumSensor> humSensors = new HashSet<>();
 
     @ManyToOne()
     @JoinColumn(name = "plant_id")
+    @JsonBackReference
     private Plant plant;
 
     public Parcel() { super(); }
 
-    public Parcel(Long parcelId, String location, User owner, Set<PhSensor> phSensors, Set<HumSensor> humSensors, Plant plant) {
-        this.parcelId = parcelId;
+    public Parcel(User owner, String location) {
         this.location = location;
         this.owner = owner;
-        this.phSensors = phSensors;
-        this.humSensors = humSensors;
-        this.plant = plant;
-    }
-
-    public Parcel(String location, User owner, Set<PhSensor> phSensors, Set<HumSensor> humSensors) {
-        this.location = location;
-        this.owner = owner;
-        this.phSensors = phSensors;
-        this.humSensors = humSensors;
     }
 
     public Plant getPlant() {

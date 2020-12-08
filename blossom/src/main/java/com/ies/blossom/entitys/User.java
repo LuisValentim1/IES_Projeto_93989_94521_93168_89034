@@ -1,5 +1,7 @@
 package com.ies.blossom.entitys;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -36,21 +38,10 @@ public class User {
     private Boolean isActive;
 
     @OneToMany(mappedBy = "owner")
+    @JsonManagedReference
     private Set<Parcel> parcels = new HashSet<>();
 
     public User() { super(); }
-
-    public User(Long userId, String name, String email, Date entryDate, String password, String phoneNumber, Timestamp lastJoined, Boolean isActive, Set<Parcel> parcels) {
-        this.userId = userId;
-        this.name = name;
-        this.email = email;
-        this.entryDate = entryDate;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.lastJoined = lastJoined;
-        this.isActive = isActive;
-        this.parcels = parcels;
-    }
 
     public User(String name, String email, Date entryDate, String password, String phoneNumber, Timestamp lastJoined, Boolean isActive) {
         this.name = name;

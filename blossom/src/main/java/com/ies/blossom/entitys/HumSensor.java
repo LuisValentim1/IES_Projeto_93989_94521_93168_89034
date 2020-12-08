@@ -1,7 +1,11 @@
 package com.ies.blossom.entitys;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -14,21 +18,21 @@ public class HumSensor {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "parcel_id")
+    @JsonBackReference
     private Parcel parcel;
 
     @Column(name = "assoc_date")
     private Date assocDate;
 
     @OneToMany(mappedBy = "sensor")
-    private Set<HumMeasure> measures;
+    @JsonManagedReference
+    private Set<HumMeasure> measures = new HashSet<HumMeasure>();
 
     public HumSensor() { super(); }
 
-    public HumSensor(Long sensorId, Parcel parcel, Date assocDate, Set<HumMeasure> measures) {
-        this.sensorId = sensorId;
+    public HumSensor(Parcel parcel, Date assocDate) {
         this.parcel = parcel;
         this.assocDate = assocDate;
-        this.measures = measures;
     }
 
     public Parcel getParcel() {

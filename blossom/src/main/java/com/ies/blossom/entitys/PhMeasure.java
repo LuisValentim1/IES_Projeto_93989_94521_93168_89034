@@ -1,5 +1,7 @@
 package com.ies.blossom.entitys;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -13,6 +15,7 @@ public class PhMeasure {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "sensor_id")
+    @JsonBackReference
     private PhSensor sensor;
 
     @Column(name = "timestamp")
@@ -23,8 +26,7 @@ public class PhMeasure {
 
     public PhMeasure() { super(); }
 
-    public PhMeasure(Long measureId, PhSensor sensor, Timestamp timestamp, Double value) {
-        this.measureId = measureId;
+    public PhMeasure(PhSensor sensor, Timestamp timestamp, Double value) {
         this.sensor = sensor;
         this.timestamp = timestamp;
         this.value = value;

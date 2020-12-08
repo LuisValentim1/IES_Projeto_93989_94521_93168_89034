@@ -1,5 +1,7 @@
 package com.ies.blossom.entitys;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,11 +33,12 @@ public class Plant {
     private Double humMax;
 
     @OneToMany(mappedBy = "plant")
+    @JsonManagedReference
     private Set<Parcel> parcels = new HashSet<>();
 
     public Plant() { super(); }
 
-    public Plant(Long plantId, String cientificName, String englishName, Double phMax, Double phMin, Double humMin, Double humMax) {
+    public Plant(String cientificName, String englishName, Double phMax, Double phMin, Double humMin, Double humMax) {
         this.plantId = plantId;
         this.cientificName = cientificName;
         this.englishName = englishName;
