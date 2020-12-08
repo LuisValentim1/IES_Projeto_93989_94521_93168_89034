@@ -13,19 +13,19 @@ public class HumSensor {
     private Long sensorId;
 
     @ManyToOne(optional = false)
-    @Column(name = "parcel")
+    @JoinColumn(name = "parcel_id")
     private Parcel parcel;
 
     @Column(name = "assoc_date")
     private Date assocDate;
 
-    @OneToMany(mappedBy = "hum_sensor")
-    @Column(name = "measures")
+    @OneToMany(mappedBy = "sensor")
     private Set<HumMeasure> measures;
 
-    public HumSensor() {}
+    public HumSensor() { super(); }
 
-    public HumSensor(Parcel parcel, Date assocDate, Set<HumMeasure> measures) {
+    public HumSensor(Long sensorId, Parcel parcel, Date assocDate, Set<HumMeasure> measures) {
+        this.sensorId = sensorId;
         this.parcel = parcel;
         this.assocDate = assocDate;
         this.measures = measures;

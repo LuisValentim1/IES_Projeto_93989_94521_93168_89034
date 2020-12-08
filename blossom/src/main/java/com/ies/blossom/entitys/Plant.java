@@ -1,6 +1,7 @@
 package com.ies.blossom.entitys;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,10 +31,9 @@ public class Plant {
     private Double humMax;
 
     @OneToMany(mappedBy = "plant")
-    @Column(name = "parcels")
-    private Set<Parcel> parcels;
+    private Set<Parcel> parcels = new HashSet<>();
 
-    public Plant() {}
+    public Plant() { super(); }
 
     public Plant(Long plantId, String cientificName, String englishName, Double phMax, Double phMin, Double humMin, Double humMax) {
         this.plantId = plantId;

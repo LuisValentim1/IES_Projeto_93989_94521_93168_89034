@@ -12,7 +12,7 @@ public class PhMeasure {
     private Long measureId;
 
     @ManyToOne(optional = false)
-    @Column(name = "sensor")
+    @JoinColumn(name = "sensor_id")
     private PhSensor sensor;
 
     @Column(name = "timestamp")
@@ -21,9 +21,10 @@ public class PhMeasure {
     @Column(name = "value")
     private Double value;
 
-    public PhMeasure() {}
+    public PhMeasure() { super(); }
 
-    public PhMeasure(PhSensor sensor, Timestamp timestamp, Double value) {
+    public PhMeasure(Long measureId, PhSensor sensor, Timestamp timestamp, Double value) {
+        this.measureId = measureId;
         this.sensor = sensor;
         this.timestamp = timestamp;
         this.value = value;

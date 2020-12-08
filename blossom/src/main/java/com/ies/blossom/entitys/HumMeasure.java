@@ -12,7 +12,7 @@ public class HumMeasure {
     private Long measureId;
 
     @ManyToOne(optional = false)
-    @Column(name = "sensor")
+    @JoinColumn(name = "sensor_id")
     private HumSensor sensor;
 
     @Column(name = "timestamp")
@@ -21,7 +21,7 @@ public class HumMeasure {
     @Column(name = "value")
     private Double value;
 
-    public HumMeasure() {}
+    public HumMeasure() { super(); }
 
     public HumMeasure(HumSensor sensor, Timestamp timestamp, Double value) {
         this.sensor = sensor;

@@ -2,6 +2,7 @@ package com.ies.blossom.entitys;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,19 +14,19 @@ public class PhSensor {
     private Long sensorId;
 
     @ManyToOne(optional = false)
-    @Column(name = "parcel")
+    @JoinColumn(name = "parcel_id")
     private Parcel parcel;
 
     @Column(name = "assoc_date")
     private Date assocDate;
 
-    @OneToMany(mappedBy = "ph_sensor")
-    @Column(name = "measures")
-    private Set<PhMeasure> measures;
+    @OneToMany(mappedBy = "sensor")
+    private Set<PhMeasure> measures = new HashSet<>();
 
-    public PhSensor() {}
+    public PhSensor() { super(); }
 
-    public PhSensor(Parcel parcel, Date assocDate, Set<PhMeasure> measures) {
+    public PhSensor(Long sensorId, Parcel parcel, Date assocDate, Set<PhMeasure> measures) {
+        this.sensorId = sensorId;
         this.parcel = parcel;
         this.assocDate = assocDate;
         this.measures = measures;

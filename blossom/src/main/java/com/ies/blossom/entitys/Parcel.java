@@ -1,6 +1,7 @@
 package com.ies.blossom.entitys;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,22 +16,29 @@ public class Parcel {
     private String location;
 
     @ManyToOne(optional = false)
-    @Column(name = "owner")
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @OneToMany(mappedBy = "parcel")
-    @Column(name = "ph_sensors")
-    private Set<PhSensor> phSensors;
+    private Set<PhSensor> phSensors = new HashSet<>();
 
     @OneToMany(mappedBy = "parcel")
-    @Column(name = "hum_sensors")
-    private Set<HumSensor> humSensors;
+    private Set<HumSensor> humSensors = new HashSet<>();
 
     @ManyToOne()
-    @Column(name = "plant")
+    @JoinColumn(name = "plant_id")
     private Plant plant;
 
-    public Parcel() {}
+    public Parcel() { super(); }
+
+    public Parcel(Long parcelId, String location, User owner, Set<PhSensor> phSensors, Set<HumSensor> humSensors, Plant plant) {
+        this.parcelId = parcelId;
+        this.location = location;
+        this.owner = owner;
+        this.phSensors = phSensors;
+        this.humSensors = humSensors;
+        this.plant = plant;
+    }
 
     public Parcel(String location, User owner, Set<PhSensor> phSensors, Set<HumSensor> humSensors) {
         this.location = location;
