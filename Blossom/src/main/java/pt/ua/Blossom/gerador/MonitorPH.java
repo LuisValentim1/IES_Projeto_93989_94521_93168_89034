@@ -5,7 +5,6 @@ import java.util.*;
 public class MonitorPH {
 		
 		private int id;
-		private int ownerId;
 		private String modo;
 		private int reg_freq;
 		private ArrayList<Integer> values;	
