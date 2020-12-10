@@ -31,13 +31,13 @@
                         </div>
                         <br>
 
-                        <div class="container issue_list">
-                            <h2>Ph Sensors</h2>
+                        <div >
+                            <h3>Ph Sensors</h2>
+                                <p>Bellow will render dynamicly table with Sensors</p>
                            
                             <table>
                                 <tr>
                                     <th>Sensor Id</th>
-                                    <th>Sensor</th>
                                 </tr>
                                 <th:block th:each="sensorph : ${parcel.phSensors}">
                                     <tr>
@@ -48,6 +48,21 @@
                             </table>
                         </div>
                         
+                        <div >
+                            <h3>Humidity Sensors</h2>
+                                <p>Bellow will render dynamicly table with Sensors</p>
+                            <table>
+                                <tr>
+                                    <th>Sensor Id</th>
+                                </tr>
+                                <th:block th:each="sensorhum : ${parcel.humSensors}">
+                                    <tr>
+                                        <td ><a th:href="@{${sensorhum.sensorid}}" th:text="${sensorhum.sensorid}"></a></td>
+                                        <!-- Queria por last measurment aqui, mas não tenho mapping direto , so tenho mapa para o array de measurments-->
+                                    </tr>
+                                </th:block>
+                            </table>
+                        </div>
                     </body>
                 </div>
             </div>
