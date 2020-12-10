@@ -25,4 +25,5 @@ public class FrontController {
     public String login() {
         return "login.html";
     }
+
 }
