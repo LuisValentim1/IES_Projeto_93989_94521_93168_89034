@@ -1,4 +1,4 @@
-package pt.ua.Blossom.gerador;
+package pt.ua.Blossom_Gen.Blossom_Gerador;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -10,7 +10,7 @@ public class MonitorHum {
 		private int reg_freq;
 		private ArrayList<Integer> values;	
 
-		public MonitorHum(String mode, int freq, int instant) { 		//instant é uma opção que permite gerar automaticamente valores de um certo numero de dias
+		public MonitorHum(String mode, int freq, int instant) { 		//instant ï¿½ uma opï¿½ï¿½o que permite gerar automaticamente valores de um certo numero de dias
 			this.modo = mode;
 			this.reg_freq = freq;
 			if(instant > 0) {
