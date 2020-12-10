@@ -3,6 +3,42 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title>Welcome to Our Site</title>
+    <title>Plant Name</title>
 </head>
-<body>
+
+<div layout:fragment="content">
+    <section class="my-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <body>
+                            <h2>Sensor Info</h2>
+                            <br />
+                            <table>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Parsel</th>
+                                    <th >Id</th>
+                                    <th>Date</th>
+                                    <th>Last Measurement</th>
+                                    <th>Measurement List</th>
+                        
+                                </tr>
+                                <tr>
+                                    <td>PH    </td>
+                                    <td ><a th:href="@{${phSensor.parcel}}" th:text="${phSensor.parcel}"></a></td>
+                                    <td th:text="${phSensor.sensorId}">...</td>
+                                    <td th:text="${phSensor.assocDate}">...</td>
+                                    <td>NA...</td>
+                                    <td ><a th:href="@{${phSensor.measures}}" >measures</a></td>
+
+                                </tr>
+                            </table>
+                        </div>
+                    </body>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+

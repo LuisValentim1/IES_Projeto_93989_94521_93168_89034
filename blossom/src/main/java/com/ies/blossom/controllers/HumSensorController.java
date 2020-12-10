@@ -31,7 +31,7 @@ public class HumSensorController {
         // Temporary Values
         Parcel tempParcel = new Parcel();
         java.sql.Date tempDate = new java.sql.Date(0);
-        model.addAttribute("humsensor", new HumSensor(tempParcel, tempDate));
+        model.addAttribute("humSensor", new HumSensor(tempParcel, tempDate));
         return "humSensor.html";
     }
 }

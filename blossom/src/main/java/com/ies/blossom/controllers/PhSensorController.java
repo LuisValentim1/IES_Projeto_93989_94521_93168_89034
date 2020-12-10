@@ -31,7 +31,7 @@ public class PhSensorController {
         // Temporary Values
         Parcel tempParcel = new Parcel();
         java.sql.Date tempDate = new java.sql.Date(0);
-        model.addAttribute("phsensor", new PhSensor(tempParcel, tempDate));
+        model.addAttribute("phSensor", new PhSensor(tempParcel, tempDate));
         return "phSensor.html";
     }
 }
