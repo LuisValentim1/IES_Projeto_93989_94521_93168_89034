@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Parcel</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <section class="my-5">
+        <div class="container">
+            <div class="col">
+                <div class="col-md-12">
+                    <body>
+                        <div>
+                            <h2>Parcel info</h2>
+                            <br />
+                            <table>
+                                <tr>
+                                    <th>Owner</th>
+                                    <th >Location</th>
+                                    <th >Plant</th>
+                                <tr>
+                                    <td ><a th:href="@{${parcel.owner}}" th:text="${parcel.owner}"></a></td>
+                                    <td th:text="${parcel.location}">...</td>
+                                    <td th:text="${parcel.plant}">...</td>
+                                </tr>
+                               
+                            </table>
+                        </div>
+                        <br>
+
+                        <div >
+                            <h3>Ph Sensors</h2>
+                                <p>Bellow will render dynamicly table with Sensors</p>
+                           
+                            <table>
+                                <tr>
+                                    <th>Sensor Id</th>
+                                </tr>
+                                <th:block th:each="sensorph : ${parcel.phSensors}">
+                                    <tr>
+                                        <td ><a th:href="@{${sensorph.sensorid}}" th:text="${sensorph.sensorid}"></a></td>
+                                        <!-- Queria por last measurment aqui, mas não tenho mapping direto , so tenho mapa para o array de measurments-->
+                                    </tr>
+                                </th:block>
+                            </table>
+                        </div>
+                        
+                        <div >
+                            <h3>Humidity Sensors</h2>
+                                <p>Bellow will render dynamicly table with Sensors</p>
+                            <table>
+                                <tr>
+                                    <th>Sensor Id</th>
+                                </tr>
+                                <th:block th:each="sensorhum : ${parcel.humSensors}">
+                                    <tr>
+                                        <td ><a th:href="@{${sensorhum.sensorid}}" th:text="${sensorhum.sensorid}"></a></td>
+                                        <!-- Queria por last measurment aqui, mas não tenho mapping direto , so tenho mapa para o array de measurments-->
+                                    </tr>
+                                </th:block>
+                            </table>
+                        </div>
+                    </body>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>
