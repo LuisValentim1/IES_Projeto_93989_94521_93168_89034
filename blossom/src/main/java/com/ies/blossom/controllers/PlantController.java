@@ -19,7 +19,7 @@ public class PlantController {
         this.plantRepository = plantRepository;
     }
 
-    // TODO Change the URL MAPPING TO PLANT NAME DYNAMICALY //
+    //TODO Change the URL MAPPING TO PLANT NAME DYNAMICALY //
 
     @GetMapping("/plant")
     public String getIssues(Model model) {
