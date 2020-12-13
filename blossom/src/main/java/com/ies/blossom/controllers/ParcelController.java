@@ -41,14 +41,12 @@ public class ParcelController {
     @GetMapping("/parcel")
     public String getIssues(Model model) throws ParseException {
     	
-    	// basic data generation. change it for db access
-        User Jaime    = new User();
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    	
+    	User Jaime    = new User();
         Parcel parcel = new Parcel(Jaime, "Aveiro");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date date = new Date((sdf.parse("2019-01-01 00:00:00")).getTime());
         
-        HumSensor humsensor = new HumSensor(parcel, date);
-        
+        HumSensor humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
         HumMeasure measure01 = new HumMeasure(humsensor, 
         		new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1);
         HumMeasure measure02 = new HumMeasure(humsensor, 
@@ -56,74 +54,53 @@ public class ParcelController {
         HumMeasure measure03 = new HumMeasure(humsensor, 
 				new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7);
         
-        PhSensor phsensor = new PhSensor(parcel, date);
-        
-        PhMeasure phmeasure01 = new PhMeasure(phsensor, 
-        		new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 0.9);
-        PhMeasure phmeasure02 = new PhMeasure(phsensor, 
-				new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.5);
-        PhMeasure phmeasure03 = new PhMeasure(phsensor, 
-				new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 2.1);
-        
-        
-        
-        Plant plant01 = new Plant("planta01", "planta01", 2.0, 1.0, 1.0, 1.8);//on parcel
-        Plant plant02 = new Plant("planta02", "planta02", 2.0, 1.0, 1.0, 2.5);//on parcel
-        Plant plant03 = new Plant("planta03", "planta03", 2.0, 1.0, 1.0, 2.0);//not in
-        Plant plant04 = new Plant("planta04", "planta04", 2.0, 1.0, 1.0, 1.5);//not in
-        
-        List<Plant> in = new ArrayList<Plant>();
-        in.add(plant01); in.add(plant02);
-        List<Plant> out = new ArrayList<Plant>();
-        out.add(plant03);out.add(plant04);       
-        
         List<HumMeasure> hummeasures = new ArrayList<HumMeasure>();
         hummeasures.add(measure03);hummeasures.add(measure02);hummeasures.add(measure01);
-        List<PhMeasure> phmeasures = new ArrayList<PhMeasure>();
-        phmeasures.add(phmeasure01);phmeasures.add(phmeasure02);phmeasures.add(phmeasure02);
-        // end of basic data generation
+        
+    	Plant plant01 = new Plant("plantatusUno", "planta01", 2.0, 1.0, 1.0, 1.8);
+        Plant plant02 = new Plant("planta02", "planta02", 2.0, 1.0, 1.0, 2.5);
+        Plant plant03 = new Plant("planta03", "planta03", 2.0, 1.0, 1.0, 2.0);
+        Plant plant04 = new Plant("plantatusCuatro", "planta04", 2.0, 1.0, 1.0, 1.5);
+        List<Plant> plants = new ArrayList<Plant>();
+        plants.add(plant01);plants.add(plant02);plants.add(plant03);plants.add(plant04);
+        
+        //plants
+        //hummeasures
         
         double [] humvalues = new double[hummeasures.size()];
         for (int i = 0; i < hummeasures.size(); i++) {
 			humvalues[i] = (hummeasures.get(i)).getValue();
 		}
         double humvalue = Arrays.stream(humvalues).average().getAsDouble();
+        List<Plant> goodhumplants = new ArrayList<Plant>();
+        List<Plant> badhumplants = new ArrayList<Plant>();
         
-        double [] phvalues = new double[phmeasures.size()];
-        for (int i = 0; i < phmeasures.size(); i++) {
-        	phvalues[i] = (phmeasures.get(i)).getValue();
-		}
-        double phvalue = Arrays.stream(humvalues).average().getAsDouble();
-        
-        List<Plant> inParcelNotGood = new ArrayList<Plant>();
-        List<Plant> inParcelGood = new ArrayList<Plant>();
-        List<Plant> notInGood = new ArrayList<Plant>();
-        
-        boolean humgood, phgood;
-        
-        for (Plant plant : in) {
-        	humgood = plant.getHumMin() <= humvalue && humvalue <= plant.getHumMax();
-        	phgood = plant.getPhMin() <= phvalue && phvalue <= plant.getPhMax();
+        for (Plant plant : plants) {
+        	boolean inrange = plant.getHumMin() <= humvalue && humvalue <= plant.getHumMax();
+        	if (inrange) {
+        		goodhumplants.add(plant);
+        	} else {
+        		badhumplants.add(plant);
+        	}
+        }
         	
-			if(humgood && phgood) {
-				inParcelGood.add(plant);
-			} else {
-				inParcelNotGood.add(plant);
-			}
-		}
-        
-        for (Plant plant : out) {
-        	humgood = plant.getHumMin() <= humvalue && humvalue <= plant.getHumMax();
-        	phgood = plant.getPhMin() <= phvalue && phvalue <= plant.getPhMax();
-        	if(humgood && phgood) {
-				notInGood.add(plant);
-			}		
+        List<Plant> badhum_dry = new ArrayList<Plant>();
+        List<Plant> badhum_wet = new ArrayList<Plant>();
+        	
+        for (Plant plant : badhumplants) {
+        	
+        	if (plant.getHumMin() > humvalue) {
+        		badhum_dry.add(plant);
+        	} else {
+        		badhum_wet.add(plant);
+        	}
+        	
 		}
         
         model.addAttribute("parcel", parcel);
-        model.addAttribute("inParcelNotGood", inParcelNotGood);
-        model.addAttribute("inParcelGood", inParcelGood);
-        model.addAttribute("notInGood", notInGood);
+        model.addAttribute("goodlants", goodhumplants);
+        model.addAttribute("wetplants", badhum_wet);
+        model.addAttribute("dryplants", badhum_dry);
         
         return "parcel.html";
     }

@@ -63,9 +63,48 @@
                                 </th:block>
                             </table>
                         </div>
-                        <div th:text="${inParcelNotGood}">...</div>
-                        <div th:text="${inParcelGood}">...</div>
-                        <div th:text="${notInGood}">...</div>
+                        <div class="container" style="border: 1px black solid">
+                        	<div class="row">
+                        		<div class="col-md-12">
+                        			As seguintes plantas apresentam uma boa umidade e consequentemente, uma boa irrigação.
+                        		</div>
+                        	</div>
+                        	<div class="row" th:each="plant: ${goodplants}">
+                        		<div class="col-md-12">
+                        			<p th:text="${plant.cientificName}">...</p>
+                        			<p th:text="${plant.englishName}">...</p>
+                        		</div>
+                        	</div>
+                        </div>
+                        <div class="container" style="border: 1px black solid">
+                        	<div class="row">
+                        		<div class="col-md-12">
+                        			As seguintes plantas apresentam uma irrigação exagerada, prejudicial a elas.
+                        		</div>
+                        	</div>
+                        	<div class="row" th:each="plant: ${wetplants}">
+                        		<div class="col-md-12">
+                        			<p th:text="${plant.cientificName}" style="color-text: red">...</p>
+                        			<p th:text="${plant.englishName}" style="color-text: red">...</p>
+                        		</div>
+                        	</div>
+                        
+                        </div>
+                        <div class="container" style="border: 1px black solid">
+                        	<div class="row" >
+                        		<div class="col-md-12">
+                        			As seguintes plantas apresentam uma irrigação escassa, prejudicial a elas.
+                        		</div>
+                        	</div>
+                        	<div class="row" th:each="plant: ${dryplants}">
+                        		<div class="col-md-12">
+                        			<p th:text="${plant.cientificName}">...</p>
+                        			<p th:text="${plant.englishName}">...</p>
+                        		</div>
+                        	</div>
+                        
+                        </div>
+                
                     </body>
                 </div>
             </div>
