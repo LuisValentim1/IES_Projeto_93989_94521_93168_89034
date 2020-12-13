@@ -16,17 +16,26 @@
                         <div>
                             <h2>Parcel info</h2>
                             <br />
-                            <table>
-                                <tr>
-                                    <th>Owner</th>
-                                    <th >Location</th>
-                                    <th >Plant</th>
-                                <tr>
-                                    <td ><a th:href="@{${parcel.owner}}" th:text="${parcel.owner}"></a></td>
-                                    <td th:text="${parcel.location}">...</td>
-                                    <td th:text="${parcel.plant}">...</td>
-                                </tr>
-                               
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Owner</th>
+                                        <th scope="col">Location</th>
+                                        <th scope="col">Plant</th>
+                                    <tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <!--<td ><a th:href="@{${parcel.owner}}" th:text="${parcel.owner}"></a></td>
+                                                                                <td th:text="${parcel.owner.name}">..</td>
+                                        <td th:text="${parcel.location}">...</td>
+                                        <td th:text="${parcel.plant.englishName}">...</td>
+                                        -->
+                                        <td><a th:href="@{'/profile/' + ${parcel.owner.userId}}" th:text="${parcel.owner.name}">..</a></td>
+                                        <td th:text="${parcel.location}">...</td>
+                                        <td th:text="${parcel.plant.englishName}">...</td>
+                                    </tr>
+                                </tbody>                               
                             </table>
                         </div>
                         <br>
@@ -35,32 +44,39 @@
                             <h3>Ph Sensors</h2>
                                 <p>Bellow will render dynamicly table with Sensors</p>
                            
-                            <table>
-                                <tr>
-                                    <th>Sensor Id</th>
-                                </tr>
-                                <th:block th:each="sensorph : ${parcel.phSensors}">
+                            <table class="table">
+                                <thead>
                                     <tr>
-                                        <td ><a th:href="@{${sensorph.sensorid}}" th:text="${sensorph.sensorid}"></a></td>
-                                        <!-- Queria por last measurment aqui, mas não tenho mapping direto , so tenho mapa para o array de measurments-->
+                                        <th scope="col">Sensor Id</th>
+                                        <th scope="col">Last measure</th>
                                     </tr>
-                                </th:block>
+                                </thead>
+                                <tbody>
+                                    <!-- tmb se pode colocar aqui os links para os sensores -->
+                                    <tr th:each="dic : ${phSensorsLastMeasures}">
+                                        <td th:text="${dic.key.sensorId}">..</td>
+                                        <td th:text="${dic.value.value}"></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
-                        
                         <div >
                             <h3>Humidity Sensors</h2>
                                 <p>Bellow will render dynamicly table with Sensors</p>
-                            <table>
-                                <tr>
-                                    <th>Sensor Id</th>
-                                </tr>
-                                <th:block th:each="sensorhum : ${parcel.humSensors}">
+                            <table class="table">
+                                <thead>
                                     <tr>
-                                        <td ><a th:href="@{${sensorhum.sensorid}}" th:text="${sensorhum.sensorid}"></a></td>
-                                        <!-- Queria por last measurment aqui, mas não tenho mapping direto , so tenho mapa para o array de measurments-->
+                                        <th scope="col">Sensor Id</th>
+                                        <th scope="col">Last measure</th>
                                     </tr>
-                                </th:block>
+                                </thead>
+                                <tbody>
+                                    <!-- tmb se pode colocar aqui os links para os sensores -->
+                                    <tr th:each="dic : ${humSensorsLastMeasures}">
+                                        <td th:text="${dic.key.sensorId}">..</td>
+                                        <td th:text="${dic.value.value}"></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </body>
