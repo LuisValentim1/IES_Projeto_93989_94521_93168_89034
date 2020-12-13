@@ -22,9 +22,9 @@
                                     <th >Location</th>
                                     <th >Plant</th>
                                 <tr>
-                                    <td ><a th:href="@{${parcel.owner}}" th:text="${parcel.owner}"></a></td>
+                                    <td ><a th:href="@{${parcel.owner.name}}" th:text="${parcel.owner.name}"></a></td>
                                     <td th:text="${parcel.location}">...</td>
-                                    <td th:text="${parcel.plant}">...</td>
+                                    <td th:text="${parcel.plant.englishName}">...</td>
                                 </tr>
                                
                             </table>
@@ -41,8 +41,8 @@
                                 </tr>
                                 <th:block th:each="sensorph : ${parcel.phSensors}">
                                     <tr>
-                                        <td ><a th:href="@{${sensorph.sensorid}}" th:text="${sensorph.sensorid}"></a></td>
-                                        <!-- Queria por last measurment aqui, mas não tenho mapping direto , so tenho mapa para o array de measurments-->
+                                        <td ><a th:href="@{${sensorph.sensorId}}" th:text="${sensorph.sensorId}">...</a></td>
+                                        <td th:text="${sensorph.latest.value}" >...</td>
                                     </tr>
                                 </th:block>
                             </table>
@@ -57,11 +57,21 @@
                                 </tr>
                                 <th:block th:each="sensorhum : ${parcel.humSensors}">
                                     <tr>
-                                        <td ><a th:href="@{${sensorhum.sensorid}}" th:text="${sensorhum.sensorid}"></a></td>
-                                        <!-- Queria por last measurment aqui, mas não tenho mapping direto , so tenho mapa para o array de measurments-->
+                                        <td ><a th:href="@{${sensorhum.sensorId}}" th:text="${sensorhum.sensorId}"></a></td>
+                                        <td th:text="${sensorhum.latest.value}" >...</td>
                                     </tr>
                                 </th:block>
                             </table>
+                        </div>
+                        
+                        <div th:if="${goodConditions}">
+                            <h2>Results</h2>
+                            <div th:if="${goodConditions}">
+                            Condições são boas
+                            </div>
+                            <div th:unless="${goodConditions}">
+                            Condições não são boas, ph e humidade não são adequadas a planta
+                            </div>
                         </div>
                         <div class="container" style="border: 1px black solid">
                         	<div class="row">
@@ -69,42 +79,13 @@
                         			As seguintes plantas apresentam uma boa umidade e consequentemente, uma boa irrigação.
                         		</div>
                         	</div>
-                        	<div class="row" th:each="plant: ${goodplants}">
+                        	<div class="row" th:each="plant: ${plants}">
                         		<div class="col-md-12">
                         			<p th:text="${plant.cientificName}">...</p>
                         			<p th:text="${plant.englishName}">...</p>
                         		</div>
                         	</div>
-                        </div>
-                        <div class="container" style="border: 1px black solid">
-                        	<div class="row">
-                        		<div class="col-md-12">
-                        			As seguintes plantas apresentam uma irrigação exagerada, prejudicial a elas.
-                        		</div>
-                        	</div>
-                        	<div class="row" th:each="plant: ${wetplants}">
-                        		<div class="col-md-12">
-                        			<p th:text="${plant.cientificName}" style="color-text: red">...</p>
-                        			<p th:text="${plant.englishName}" style="color-text: red">...</p>
-                        		</div>
-                        	</div>
-                        
-                        </div>
-                        <div class="container" style="border: 1px black solid">
-                        	<div class="row" >
-                        		<div class="col-md-12">
-                        			As seguintes plantas apresentam uma irrigação escassa, prejudicial a elas.
-                        		</div>
-                        	</div>
-                        	<div class="row" th:each="plant: ${dryplants}">
-                        		<div class="col-md-12">
-                        			<p th:text="${plant.cientificName}">...</p>
-                        			<p th:text="${plant.englishName}">...</p>
-                        		</div>
-                        	</div>
-                        
-                        </div>
-                
+                        </div>                
                     </body>
                 </div>
             </div>

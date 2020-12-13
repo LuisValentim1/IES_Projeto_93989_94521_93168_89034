@@ -27,6 +27,9 @@ public class PhSensor {
     @OneToMany(mappedBy = "sensor")
     @JsonManagedReference
     private Set<PhMeasure> measures = new HashSet<>();
+    
+    @Transient
+	private PhMeasure latest;
 
     public PhSensor() { super(); }
 
@@ -65,5 +68,26 @@ public class PhSensor {
 
     public void setMeasures(Set<PhMeasure> measures) {
         this.measures = measures;
+        this.updateLatestMeasure();
+    }
+    
+    public void addPhMeasure(PhMeasure measure) {
+    	this.measures.add(measure);
+    	this.updateLatestMeasure();
+    }
+    
+    private void updateLatestMeasure() {
+    	PhMeasure latest = null;
+    	for (PhMeasure humMeasure : this.getMeasures()) {
+    		if (latest == null || latest.getTimestamp().after(humMeasure.getTimestamp())) {
+    			latest = humMeasure;
+    		}
+		}
+    	this.latest = latest;
+    	
+    }
+    
+    public PhMeasure getLatest() {
+    	return this.latest;
     }
 }

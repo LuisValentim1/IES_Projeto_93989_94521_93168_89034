@@ -27,6 +27,10 @@ public class HumSensor {
     @OneToMany(mappedBy = "sensor")
     @JsonManagedReference
     private Set<HumMeasure> measures = new HashSet<HumMeasure>();
+    
+    
+    @Transient
+	private HumMeasure latest;
 
     public HumSensor() { super(); }
 
@@ -65,5 +69,26 @@ public class HumSensor {
 
     public void setMeasures(Set<HumMeasure> measures) {
         this.measures = measures;
+        this.updateLatestMeasure();
+    }
+    
+    public void addHumMeasure(HumMeasure measure) {
+    	this.measures.add(measure);
+    	this.updateLatestMeasure();
+    }
+    
+    private void updateLatestMeasure() {
+    	HumMeasure latest = null;
+    	for (HumMeasure humMeasure : this.getMeasures()) {
+    		if (latest == null || latest.getTimestamp().after(humMeasure.getTimestamp())) {
+    			latest = humMeasure;
+    		}
+		}
+    	this.latest = latest;
+    	
+    }
+    
+    public HumMeasure getLatest() {
+    	return this.latest;
     }
 }

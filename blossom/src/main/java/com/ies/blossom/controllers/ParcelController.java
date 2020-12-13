@@ -16,6 +16,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -41,68 +43,111 @@ public class ParcelController {
     @GetMapping("/parcel")
     public String getIssues(Model model) throws ParseException {
     	
-SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    	
-    	User Jaime    = new User();
-        Parcel parcel = new Parcel(Jaime, "Aveiro");
+    	User user         = new User();
+        Parcel parcel     = new Parcel();
+        Set<Plant> plants = new HashSet<Plant>();
+        makeData(user, parcel, plants);
         
-        HumSensor humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-        HumMeasure measure01 = new HumMeasure(humsensor, 
-        		new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1);
-        HumMeasure measure02 = new HumMeasure(humsensor, 
-				new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9);
-        HumMeasure measure03 = new HumMeasure(humsensor, 
-				new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7);
-        
-        List<HumMeasure> hummeasures = new ArrayList<HumMeasure>();
-        hummeasures.add(measure03);hummeasures.add(measure02);hummeasures.add(measure01);
-        
-    	Plant plant01 = new Plant("plantatusUno", "planta01", 2.0, 1.0, 1.0, 1.8);
-        Plant plant02 = new Plant("planta02", "planta02", 2.0, 1.0, 1.0, 2.5);
-        Plant plant03 = new Plant("planta03", "planta03", 2.0, 1.0, 1.0, 2.0);
-        Plant plant04 = new Plant("plantatusCuatro", "planta04", 2.0, 1.0, 1.0, 1.5);
-        List<Plant> plants = new ArrayList<Plant>();
-        plants.add(plant01);plants.add(plant02);plants.add(plant03);plants.add(plant04);
-        
-        //plants
-        //hummeasures
-        
-        double [] humvalues = new double[hummeasures.size()];
-        for (int i = 0; i < hummeasures.size(); i++) {
-			humvalues[i] = (hummeasures.get(i)).getValue();
+        int count = 0;
+        int sum = 0;
+        for (HumSensor sensor : parcel.getHumSensors()) {
+        	for (HumMeasure measure : sensor.getMeasures()) {
+        		sum += measure.getValue();
+			}
+        	count += sensor.getMeasures().size();
 		}
-        double humvalue = Arrays.stream(humvalues).average().getAsDouble();
-        List<Plant> goodhumplants = new ArrayList<Plant>();
-        List<Plant> badhumplants = new ArrayList<Plant>();
+        double humidity;
+        if (count == 0) {
+        	humidity = 0;
+        } else {
+        	humidity = sum/count;
+        }
+        
+        count = 0;
+        sum = 0;
+        for (PhSensor sensor : parcel.getPhSensors()) {
+        	for (PhMeasure measure : sensor.getMeasures()) {
+        		sum += measure.getValue();
+			}
+        	count += sensor.getMeasures().size();
+		}
+        double ph;
+        if (count == 0) {
+        	ph = 0;
+        } else {
+        	ph = sum/count;
+        }
+        
+        boolean goodConditions = true;        
+        Plant cropPlant = parcel.getPlant();
+        boolean goodHum = cropPlant.getHumMin() <= humidity && humidity <= cropPlant.getHumMax();
+        boolean goodPh = cropPlant.getPhMin() <= ph && ph <= cropPlant.getPhMax();
+        if((!goodHum) || (!goodPh)) {
+        	goodConditions = false;        	
+        }
+        
+        List<Plant> listplants = new ArrayList<Plant>();
         
         for (Plant plant : plants) {
-        	boolean inrange = plant.getHumMin() <= humvalue && humvalue <= plant.getHumMax();
-        	if (inrange) {
-        		goodhumplants.add(plant);
-        	} else {
-        		badhumplants.add(plant);
+        	goodHum = cropPlant.getHumMin() <= humidity && humidity <= cropPlant.getHumMax();
+        	goodPh = cropPlant.getPhMin() <= ph && ph <= cropPlant.getPhMax();
+        	if(goodHum && goodPh) {
+        		listplants.add(plant);
         	}
-        }
-        	
-        List<Plant> badhum_dry = new ArrayList<Plant>();
-        List<Plant> badhum_wet = new ArrayList<Plant>();
-        	
-        for (Plant plant : badhumplants) {
-        	
-        	if (plant.getHumMin() > humvalue) {
-        		badhum_dry.add(plant);
-        	} else {
-        		badhum_wet.add(plant);
-        	}
-        	
 		}
         
         model.addAttribute("parcel", parcel);
-        model.addAttribute("goodlants", goodhumplants);
-        model.addAttribute("wetplants", badhum_wet);
-        model.addAttribute("dryplants", badhum_dry);
+        model.addAttribute("goodConditions", goodConditions);
+        model.addAttribute("humidity", humidity);
+        model.addAttribute("ph", ph);
+        model.addAttribute("plants", listplants);
+        
+        
         
         return "parcel.html";
+    }
+    
+    
+    private static void makeData(User user, Parcel parcel, Set<Plant> plants) throws ParseException {
+    	
+    	user.setName("Jaime");
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    	
+    	parcel.setLocation("Aveiro");
+        parcel.setOwner(user);
+        
+        Plant plant01 = new Plant("planta in parcel", "parcel planta", 2.0, 1.0, 1.0, 1.8);
+        parcel.setPlant(plant01);
+        
+        HumSensor humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
+        PhSensor phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
+        parcel.addHumSensor(humsensor);
+        parcel.addPhSensor(phsensor);
+        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
+        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
+        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
+        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
+        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
+        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
+        
+        humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
+        phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
+        parcel.addHumSensor(humsensor);
+        parcel.addPhSensor(phsensor);
+        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
+        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
+        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
+        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
+        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
+        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
+        
+
+        plants.add(plant01);
+        plants.add(new Plant("planta02", "planta02", 2.0, 1.0, 1.0, 2.5));
+        plants.add(new Plant("planta03", "planta03", 2.0, 1.0, 1.0, 2.0));
+        plants.add(new Plant("plantatusCuatro", "planta04", 2.0, 1.0, 1.0, 1.5));
+    	
     }
     
 }

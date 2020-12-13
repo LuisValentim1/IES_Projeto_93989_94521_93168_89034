@@ -90,4 +90,14 @@ public class Parcel {
     public void setHumSensors(Set<HumSensor> humSensors) {
         this.humSensors = humSensors;
     }
+    
+    public void addHumSensor(HumSensor sensor) {
+    	this.humSensors.add(sensor);
+    }
+    
+    public void addPhSensor(PhSensor sensor) {
+    	this.phSensors.add(sensor);
+    }
+    
+    
 }
