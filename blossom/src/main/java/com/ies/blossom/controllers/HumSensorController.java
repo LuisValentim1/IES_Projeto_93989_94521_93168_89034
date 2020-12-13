@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -36,16 +37,13 @@ public class HumSensorController {
 
     // TODO Change the URL MAPPING TO parcel NAME DYNAMICALY ex. phsensor.id //
 
-    @GetMapping("/humSensor")
-    public String getIssues(Model model) {
-        List<HumSensor> sensors = this.humSensorRepository.findAll(); // Normalmente quando se chegasse a esta página já se
-                                                            // saberia qual era o id do sensor em causa
-                                                            // desta forma vamos buscar o 1o sensor da tabela TODO ir buscar 1
-                                                            // q faca sentido
-        HumSensor sensor = sensors.get(0);
+    @GetMapping("/humSensor/{id}")
+    public String getIssues(Model model, @PathVariable(value = "id") Long sensorId) {
+        // TODO colocar excecoes
+        HumSensor sensor = this.humSensorRepository.getOne(sensorId);
         model.addAttribute("humSensor", sensor);
 
-        model.addAttribute("last_med", sensor.getMeasures().get(0));
+        model.addAttribute("last_med", sensor.getMeasures().get(0)); // vai buscar o mais antigo TODO
         return "humSensor.html";
     }
     // humSensor/measures?sensorId=5
