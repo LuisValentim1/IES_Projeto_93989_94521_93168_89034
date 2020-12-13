@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Plant Name</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <section class="my-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <body>
+                            <h2>Plant info</h2>
+                            <br />
+                            <table>
+                                <tr>
+                                    <th>Cientific name</th>
+                                    <th >English Name</th>
+                                    <th>Ph Max</th>
+                                    <th>Ph Min</th>
+                                    <th>Hum Max</th>
+                                    <th>Hum Min</th>
+                                    <th>Id</th>
+                                </tr>
+                            
+                                <tr>
+                                    <td ><a th:href="@{${plant.cientificName}}" th:text="${plant.cientificName}"></a></td>
+                                    <td th:text="${plant.englishName}">...</td>
+                                    <td th:text="${plant.phMax}">...</td>
+                                    <td th:text="${plant.phMin}">...</td>
+                                    <td th:text="${plant.humMax}">...</td>
+                                    <td th:text="${plant.humMin}">...</td>
+                                    <td th:text="${plant.plantId}">...</td>
+                                </tr>
+                               
+                            </table>
+                        </div>
+                    </body>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

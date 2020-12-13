@@ -15,6 +15,19 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
+    
+    
+    public User() { super(); }
+
+    public User(String name, String email, Date entryDate, String password, String phoneNumber, Timestamp lastJoined, Boolean isActive) {
+        this.name = name;
+        this.email = email;
+        this.entryDate = entryDate;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.lastJoined = lastJoined;
+        this.isActive = isActive;
+    }
 
     @Column(name = "name")
     private String name;
@@ -40,18 +53,6 @@ public class User {
     @OneToMany(mappedBy = "owner")
     @JsonManagedReference
     private Set<Parcel> parcels = new HashSet<>();
-
-    public User() { super(); }
-
-    public User(String name, String email, Date entryDate, String password, String phoneNumber, Timestamp lastJoined, Boolean isActive) {
-        this.name = name;
-        this.email = email;
-        this.entryDate = entryDate;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.lastJoined = lastJoined;
-        this.isActive = isActive;
-    }
 
     public Long getUserId() {
         return userId;
