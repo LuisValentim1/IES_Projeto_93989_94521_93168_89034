@@ -38,11 +38,6 @@ public class HumSensorController {
 
     @GetMapping("/humSensor")
     public String getIssues(Model model) {
-
-        // Temporary Values
-//        Parcel tempParcel = new Parcel();
-//        java.sql.Date tempDate = new java.sql.Date(0);
-//        model.addAttribute("humSensor", new HumSensor(tempParcel, tempDate));
         List<HumSensor> sensors = this.humSensorRepository.findAll(); // Normalmente quando se chegasse a esta página já se
                                                             // saberia qual era o id do sensor em causa
                                                             // desta forma vamos buscar o 1o sensor da tabela TODO ir buscar 1
