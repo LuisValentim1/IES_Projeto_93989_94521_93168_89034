@@ -26,14 +26,11 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <!--<td ><a th:href="@{${parcel.owner}}" th:text="${parcel.owner}"></a></td>
-                                                                                <td th:text="${parcel.owner.name}">..</td>
-                                        <td th:text="${parcel.location}">...</td>
-                                        <td th:text="${parcel.plant.englishName}">...</td>
-                                        -->
                                         <td><a th:href="@{'/profile/' + ${parcel.owner.userId}}" th:text="${parcel.owner.name}">..</a></td>
                                         <td th:text="${parcel.location}">...</td>
-                                        <td th:text="${parcel.plant.englishName}">...</td>
+                                        <td>
+                                            <a th:href="'/plant/' + ${parcel.plant.plantId}" th:text="${parcel.plant.englishName}">..</a>
+                                        </td>
                                     </tr>
                                 </tbody>                               
                             </table>
