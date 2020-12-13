@@ -51,7 +51,9 @@
                                 <tbody>
                                     <!-- tmb se pode colocar aqui os links para os sensores -->
                                     <tr th:each="dic : ${phSensorsLastMeasures}">
-                                        <td th:text="${dic.key.sensorId}">..</td>
+                                        <td>
+                                            <a th:href="'/phSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
+                                        </td>
                                         <td th:text="${dic.value.value}"></td>
                                     </tr>
                                 </tbody>
@@ -70,7 +72,9 @@
                                 <tbody>
                                     <!-- tmb se pode colocar aqui os links para os sensores -->
                                     <tr th:each="dic : ${humSensorsLastMeasures}">
-                                        <td th:text="${dic.key.sensorId}">..</td>
+                                        <td>
+                                            <a th:href="'/humSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
+                                        </td>
                                         <td th:text="${dic.value.value}"></td>
                                     </tr>
                                 </tbody>
