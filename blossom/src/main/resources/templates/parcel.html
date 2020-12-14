@@ -16,6 +16,7 @@
                         <div>
                             <h2>Parcel info</h2>
                             <br />
+
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -80,6 +81,29 @@
                                 </tbody>
                             </table>
                         </div>
+                        
+                        <div th:if="${goodConditions}">
+                            <h2>Results</h2>
+                            <div th:if="${goodConditions}">
+                            Condições são boas
+                            </div>
+                            <div th:unless="${goodConditions}">
+                            Condições não são boas, ph e humidade não são adequadas a planta
+                            </div>
+                        </div>
+                        <div class="container" style="border: 1px black solid">
+                        	<div class="row">
+                        		<div class="col-md-12">
+                        			As seguintes plantas apresentam uma boa umidade e consequentemente, uma boa irrigação.
+                        		</div>
+                        	</div>
+                        	<div class="row" th:each="plant: ${plants}">
+                        		<div class="col-md-12">
+                        			<p th:text="${plant.cientificName}">...</p>
+                        			<p th:text="${plant.englishName}">...</p>
+                        		</div>
+                        	</div>
+                        </div>                
                     </body>
                 </div>
             </div>

@@ -27,6 +27,9 @@ public class HumSensor {
     @OneToMany(mappedBy = "sensor")
     @JsonManagedReference
     private List<HumMeasure> measures = new ArrayList<HumMeasure>();
+    
+    @Transient
+	  private HumMeasure latest;
 
     public HumSensor() { super(); }
 
@@ -65,5 +68,26 @@ public class HumSensor {
 
     public void setMeasures(List<HumMeasure> measures) {
         this.measures = measures;
+        this.updateLatestMeasure();
+    }
+    
+    public void addHumMeasure(HumMeasure measure) {
+    	this.measures.add(measure);
+    	this.updateLatestMeasure();
+    }
+    
+    private void updateLatestMeasure() {
+    	HumMeasure latest = null;
+    	for (HumMeasure humMeasure : this.getMeasures()) {
+    		if (latest == null || latest.getTimestamp().after(humMeasure.getTimestamp())) {
+    			latest = humMeasure;
+    		}
+		}
+    	this.latest = latest;
+    	
+    }
+    
+    public HumMeasure getLatest() {
+    	return this.latest;
     }
 }
