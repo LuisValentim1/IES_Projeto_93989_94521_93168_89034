@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "ph_sensors")
@@ -26,10 +26,11 @@ public class PhSensor {
 
     @OneToMany(mappedBy = "sensor")
     @JsonManagedReference
-    private Set<PhMeasure> measures = new HashSet<>();
-    
+    private List<PhMeasure> measures = new ArrayList<PhMeasure>();
+
     @Transient
 	private PhMeasure latest;
+
 
     public PhSensor() { super(); }
 
@@ -62,11 +63,11 @@ public class PhSensor {
         this.assocDate = assocDate;
     }
 
-    public Set<PhMeasure> getMeasures() {
+    public List<PhMeasure> getMeasures() {
         return measures;
     }
 
-    public void setMeasures(Set<PhMeasure> measures) {
+    public void setMeasures(List<PhMeasure> measures) {
         this.measures = measures;
         this.updateLatestMeasure();
     }
