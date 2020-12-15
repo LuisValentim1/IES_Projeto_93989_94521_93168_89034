@@ -8,11 +8,12 @@ public class MonitorHum {
 		private int id;
 		private String modo;
 		private int reg_freq;
-		private ArrayList<Integer> values;	
+		private ArrayList<Integer> values = new ArrayList<Integer>();	;	
 
-		public MonitorHum(String mode, int freq, int instant) { 		//instant � uma op��o que permite gerar automaticamente valores de um certo numero de dias
+		public MonitorHum(int given_id, String mode, int freq, int instant) { 		//instant � uma op��o que permite gerar automaticamente valores de um certo numero de dias
 			this.modo = mode;
 			this.reg_freq = freq;
+			this.id = given_id;
 			if(instant > 0) {
 				if(this.modo == "Low") {
 					this.generateDrySoil(instant);
