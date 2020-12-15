@@ -10,7 +10,7 @@ import com.ies.blossom.entitys.User;
 import com.ies.blossom.repositorys.ParcelRepository;
 import com.ies.blossom.repositorys.PlantRepository;
 import com.ies.blossom.repositorys.UserRepository;
-import com.ies.blossom.model.ParcelForm;
+import com.ies.blossom.model.ParcelModel;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -82,7 +82,7 @@ public class ParcelController {
 
     @GetMapping("/parcel/new")
     public String parcelForm(Model model) {
-        ParcelForm form = new ParcelForm();
+        ParcelModel form = new ParcelModel();
 
         // ir buscar todas as plantas na bd
         List<Plant> plants = this.plantRepository.findAll();
@@ -96,7 +96,7 @@ public class ParcelController {
     }
     
     @PostMapping("/parcel/new")
-    public String newParcel(Model model, @ModelAttribute ParcelForm parcel) {
+    public String newParcel(Model model, @ModelAttribute ParcelModel parcel) {
         // TODO verificar se a parcela já n tinha sido criada previamente
         Parcel parcel2save = new Parcel();
         parcel2save.setLocation(parcel.getLocation());

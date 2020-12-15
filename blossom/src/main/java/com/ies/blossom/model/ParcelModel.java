@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.ies.blossom.entitys.Plant;
 
-public class ParcelForm {
+public class ParcelModel {
     private Long parcelId;
     private String location;
     private Long owner;
@@ -19,10 +19,10 @@ public class ParcelForm {
     private Long plant;
 
 
-    public ParcelForm() {
+    public ParcelModel() {
     }
 
-    public ParcelForm(String location, Long plant) {
+    public ParcelModel(String location, Long plant) {
         this.location = location;
         this.plant = plant;
     }
