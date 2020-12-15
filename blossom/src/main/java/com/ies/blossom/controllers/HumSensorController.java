@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.ies.blossom.entitys.Parcel;
 import com.ies.blossom.entitys.HumMeasure;
 import com.ies.blossom.entitys.HumSensor;
-import com.ies.blossom.entitys.User;
-import com.ies.blossom.model.SensorModel;
 import com.ies.blossom.repositorys.HumMeasureRepository;
 import com.ies.blossom.repositorys.HumSensorRepository;
 import com.ies.blossom.repositorys.ParcelRepository;
@@ -19,9 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class HumSensorController {

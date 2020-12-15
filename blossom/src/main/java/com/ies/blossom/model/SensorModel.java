@@ -1,6 +1,5 @@
 package com.ies.blossom.model;
 
-import com.ies.blossom.entitys.Parcel;
 
 import java.sql.Date;
 

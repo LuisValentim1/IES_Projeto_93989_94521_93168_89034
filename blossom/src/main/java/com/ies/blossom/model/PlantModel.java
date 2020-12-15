@@ -11,7 +11,6 @@ public class PlantModel {
     private Double phMin;
     private Double humMin;
     private Double humMax;
-    private Set<Long> parcels = new HashSet<Long>();
 
     public PlantModel() {}
 
@@ -79,13 +78,5 @@ public class PlantModel {
 
     public void setHumMax(Double humMax) {
         this.humMax = humMax;
-    }
-
-    public Set<Long> getParcels() {
-        return parcels;
-    }
-
-    public void setParcels(Set<Long> parcels) {
-        this.parcels = parcels;
     }
 }
