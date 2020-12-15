@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -137,9 +138,19 @@ public class ParcelController {
                                 HttpServletRequest request) {
 
         Parcel parcel = this.parcelRepository.getOne(change.getParcelId());
+
+        if (change.getCurrentPlantId() == 0L) {
+            Plant previous = this.plantRepository.getOne(change.getPreviousPlantId());
+            previous.getParcels().remove(parcel);
+            this.plantRepository.save(previous);
+
+            parcel.setPlant(null);
+            this.parcelRepository.save(parcel);
+            return "redirect:" + request.getHeader("Referer");
+        }
         Plant current = this.plantRepository.getOne(change.getCurrentPlantId());
 
-        if (change.getCurrentPlantId() != null) {
+        if (change.getPreviousPlantId() != null) {
             Plant previous = this.plantRepository.getOne(change.getPreviousPlantId());
             previous.getParcels().remove(parcel);
             this.plantRepository.save(previous);

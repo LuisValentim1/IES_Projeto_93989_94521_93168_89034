@@ -53,6 +53,10 @@
                                     </div>
                                     <form action="#" th:action="@{/parcel/editplant}" th:object="${plantForm}" method="post">
                                         <div class="modal-body">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" value="0" id="none" name="none" th:field="*{currentPlantId}">
+                                                <label class="form-check-label" for="none">None</label>
+                                            </div>
                                             <th:block th:each="plant : ${plants}">
                                                 <div class="form-check">
                                                     <!-- tentar colocar checked a planta que se encontrava antes -->
