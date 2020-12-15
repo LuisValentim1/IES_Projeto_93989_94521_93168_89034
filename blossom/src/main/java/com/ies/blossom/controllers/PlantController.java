@@ -1,5 +1,6 @@
 package com.ies.blossom.controllers;
 
+import com.ies.blossom.model.PlantModel;
 import com.ies.blossom.repositorys.PlantRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,14 @@ public class PlantController {
     //TODO Change the URL MAPPING TO PLANT NAME DYNAMICALY //
 
     @GetMapping("/plant/{id}")
-    public String getIssues(Model model, @PathVariable(value = "id") Long plantId) {
+    public String getPlant(Model model, @PathVariable(value = "id") Long plantId) {
         model.addAttribute("plant", this.plantRepository.getOne(plantId));
         return "plant.html";
     }
 
-    // @GetMapping("/")
+    @GetMapping("/plant/new")
+    public String getForm(Model model){
+        model.addAttribute("form", new PlantModel());
+        return "forms/plantForm.html";
+    }
 }
