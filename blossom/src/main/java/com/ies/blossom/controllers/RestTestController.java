@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/test")
@@ -119,5 +120,22 @@ public class RestTestController {
     @PostMapping("/plants")
     public Plant createPlant(@RequestBody Plant plant) {
         return this.plantRepository.save(plant);
+    }
+
+    // Funcionalidades para o Luis
+    @GetMapping("/phids")
+    public List<Long> getPhIds() {
+        List<Long> ret = new ArrayList<Long>();
+        for (PhSensor sensor : this.phSensorRepository.findAll())
+            ret.add(sensor.getSensorId());
+        return ret;
+    }
+
+    @GetMapping("/humids")
+    public List<Long> getHumIds() {
+        List<Long> ret = new ArrayList<Long>();
+        for (HumSensor sensor : this.humSensorRepository.findAll())
+            ret.add(sensor.getSensorId());
+        return ret;
     }
 }
