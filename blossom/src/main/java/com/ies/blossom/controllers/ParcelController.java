@@ -9,32 +9,27 @@ import com.ies.blossom.entitys.Plant;
 import com.ies.blossom.entitys.User;
 import com.ies.blossom.repositorys.ParcelRepository;
 import com.ies.blossom.repositorys.PlantRepository;
+import com.ies.blossom.repositorys.UserRepository;
+import com.ies.blossom.model.ParcelForm;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 @Controller
 public class ParcelController {
@@ -43,19 +38,13 @@ public class ParcelController {
     private ParcelRepository parcelRepository;
     @Autowired
     private PlantRepository plantRepository;
-    /*
-    ParcelRepository parcelRepository;
-    PlantRepository plantRepository;
-
-    public ParcelController(ParcelRepository parcelRepository, PlantRepository plantRepository) {
-        this.parcelRepository = parcelRepository;
-
-    }*/
+    @Autowired
+    private UserRepository userRepository;
 
     // TODO Change the URL MAPPING TO parcel NAME DYNAMICALY //
 
     @GetMapping("/parcel/{id}")
-    public String getIssues(Model model, @PathVariable(value="id") Long parcelId) {
+    public String getParcel(Model model, @PathVariable(value="id") Long parcelId) {
         Parcel parcel = this.parcelRepository.getOne(parcelId);
 
         // ir buscar todos as ultimas medidas relativas aos sensores de ph
@@ -75,7 +64,47 @@ public class ParcelController {
         model.addAttribute("humSensorsLastMeasures", retHum);
         return "parcel.html";
     }
+
+    @GetMapping("/parcel/new")
+    public String parcelForm(Model model) {
+        ParcelForm form = new ParcelForm();
+
+        // ir buscar todas as plantas na bd
+        List<Plant> plants = this.plantRepository.findAll();
+        
+        // adicionar as plantas existentes ao form
+        form.setPlants(plants);        
+
+        model.addAttribute("form", form);
+        model.addAttribute("created", false);
+        return "forms/parcelForm.html";
+    }
     
+    @PostMapping("/parcel/new")
+    public String newParcel(Model model, @ModelAttribute ParcelForm parcel) {
+        // TODO verificar se a parcela já n tinha sido criada previamente
+        Parcel parcel2save = new Parcel();
+        parcel2save.setLocation(parcel.getLocation());
+        
+        if (parcel.getPlant() != 0) {
+            Plant plant = this.plantRepository.getOne(parcel.getPlant());
+            plant.getParcels().add(parcel2save);
+            parcel2save.setPlant(plant);
+            this.plantRepository.save(plant);
+        }
+
+        // TODO tem de ser alterado para se associar à pessoa q fez login
+        User user = this.userRepository.getOne(1L);
+        user.getParcels().add(parcel2save);
+        this.userRepository.save(user);
+
+        parcel2save.setOwner(user);
+        this.parcelRepository.save(parcel2save);
+        
+
+        model.addAttribute("created", true);
+        return "forms/parcelForm.html";
+    }
     
     private static void makeData(User user, Parcel parcel, Collection<Plant> plants) throws ParseException {
     	

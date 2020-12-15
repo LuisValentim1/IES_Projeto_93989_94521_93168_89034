@@ -27,43 +27,47 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><a th:href="@{'/profile/' + ${parcel.owner.userId}}" th:text="${parcel.owner.name}">..</a></td>
+                                        <td>
+                                            <a th:href="@{'/profile/' + ${parcel.owner.userId}}" th:text="${parcel.owner.name}">..</a>
+                                        </td>
                                         <td th:text="${parcel.location}">...</td>
                                         <td>
-                                            <a th:href="'/plant/' + ${parcel.plant.plantId}" th:text="${parcel.plant.englishName}">..</a>
+                                            <a th:if="${parcel.plant}" th:href="'/plant/' + ${parcel.plant.plantId}" th:text="${parcel.plant.englishName}">..</a>
+                                            <span th:unless="${parcel.plant}">None</span>
                                         </td>
                                     </tr>
                                 </tbody>                               
                             </table>
                         </div>
                         <br>
-
                         <div >
                             <h3>Ph Sensors</h2>
-                                <p>Bellow will render dynamicly table with Sensors</p>
-                           
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Sensor Id</th>
-                                        <th scope="col">Last measure</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- tmb se pode colocar aqui os links para os sensores -->
-                                    <tr th:each="dic : ${phSensorsLastMeasures}">
-                                        <td>
-                                            <a th:href="'/phSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
-                                        </td>
-                                        <td th:text="${dic.value.value}"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <p th:if="${#maps.isEmpty(phSensorsLastMeasures)}">No sensors associated</p>
+                            <div th:unless="${#maps.isEmpty(phSensorsLastMeasures)}">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Sensor Id</th>
+                                            <th scope="col">Last measure</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- tmb se pode colocar aqui os links para os sensores -->
+                                        <tr th:each="dic : ${phSensorsLastMeasures}">
+                                            <td>
+                                                <a th:href="'/phSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
+                                            </td>
+                                            <td th:text="${dic.value.value}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div >
                             <h3>Humidity Sensors</h2>
-                                <p>Bellow will render dynamicly table with Sensors</p>
-                            <table class="table">
+                            <p th:if="${#maps.isEmpty(humSensorsLastMeasures)}">No sensors associated</p>
+                            
+                            <table class="table" th:unless="${#maps.isEmpty(humSensorsLastMeasures)}">
                                 <thead>
                                     <tr>
                                         <th scope="col">Sensor Id</th>
@@ -91,19 +95,19 @@
                             Condições não são boas, ph e humidade não são adequadas a planta
                             </div>
                         </div>
-                        <div class="container" style="border: 1px black solid">
-                        	<div class="row">
-                        		<div class="col-md-12">
-                        			As seguintes plantas apresentam uma boa umidade e consequentemente, uma boa irrigação.
-                        		</div>
-                        	</div>
-                        	<div class="row" th:each="plant: ${plants}">
-                        		<div class="col-md-12">
-                        			<p th:text="${plant.cientificName}">...</p>
-                        			<p th:text="${plant.englishName}">...</p>
-                        		</div>
-                        	</div>
-                        </div>                
+                        <div th:if="${parcel.plant}" class="container" style="border: 1px black solid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    As seguintes plantas apresentam uma boa umidade e consequentemente, uma boa irrigação.
+                                </div>
+                            </div>
+                            <div class="row" th:each="plant: ${plants}">
+                                <div class="col-md-12">
+                                    <p th:text="${plant.cientificName}">...</p>
+                                    <p th:text="${plant.englishName}">...</p>
+                                </div>
+                            </div>
+                        </div>                                     
                     </body>
                 </div>
             </div>
