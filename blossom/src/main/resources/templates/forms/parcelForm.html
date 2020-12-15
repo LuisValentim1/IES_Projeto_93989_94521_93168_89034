@@ -33,7 +33,10 @@
                 </div>
                 <p><input type="submit" class="btn btn-primary" value="Submit" /> <input type="reset" class="btn btn-danger" value="Reset" /></p>
             </form>
-            <p th:if="${created}">New parcel created with sucess</p>
+            <div th:if="${created}">
+                <p>New parcel created with sucess</p>
+                <a th:href="@{/}" class="btn btn-primary">Back to main page</a>
+            </div>
         </div>
     </div>
 </div>

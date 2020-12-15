@@ -40,11 +40,10 @@
                             </table>
                         </div>
                         <br>
-                        <div >
-                            <h3>Ph Sensors</h2>
-                            <p th:if="${#maps.isEmpty(phSensorsLastMeasures)}">No sensors associated</p>
-                            <div th:unless="${#maps.isEmpty(phSensorsLastMeasures)}">
-                                <table class="table">
+                        <div>
+                            <h3>Ph Sensors</h3>
+                            <div th:if="${phSensorsLastMeasures}">
+                                <table class="table" th:unless="${#maps.isEmpty(phSensorsLastMeasures)}">
                                     <thead>
                                         <tr>
                                             <th scope="col">Sensor Id</th>
@@ -57,33 +56,39 @@
                                             <td>
                                                 <a th:href="'/phSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
                                             </td>
-                                            <td th:text="${dic.value.value}"></td>
+                                            <td th:if="${dic.value != null}" th:text="${dic.value.value}"></td>
+                                            <td th:unless="${dic.value != null}">No measures have been made</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
+                            <p th:unless="${phSensorsLastMeasures}">No sensors associated</p>
+                            <a th:href="@{/phsensor/new(parcelId=${parcel.parcelId})}" class="btn btn-primary">Add ph sensor</a>
                         </div>
                         <div >
-                            <h3>Humidity Sensors</h2>
-                            <p th:if="${#maps.isEmpty(humSensorsLastMeasures)}">No sensors associated</p>
-                            
-                            <table class="table" th:unless="${#maps.isEmpty(humSensorsLastMeasures)}">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Sensor Id</th>
-                                        <th scope="col">Last measure</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- tmb se pode colocar aqui os links para os sensores -->
-                                    <tr th:each="dic : ${humSensorsLastMeasures}">
-                                        <td>
-                                            <a th:href="'/humSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
-                                        </td>
-                                        <td th:text="${dic.value.value}"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <h3>Humidity Sensors</h3>
+                            <div th:if="${humSensorsLastMeasures}">
+                                <table class="table" th:unless="${#maps.isEmpty(humSensorsLastMeasures)}">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Sensor Id</th>
+                                            <th scope="col">Last measure</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- tmb se pode colocar aqui os links para os sensores -->
+                                        <tr th:each="dic : ${humSensorsLastMeasures}">
+                                            <td>
+                                                <a th:href="'/humSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
+                                            </td>
+                                            <td th:if="${dic.value != null}" th:text="${dic.value.value}"></td>
+                                            <td th:unless="${dic.value != null}">No measures have been made</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p th:unless="${humSensorsLastMeasures}">No sensors associated</p>
+                            <a th:href="@{/humsensor/new(parcelId=${parcel.parcelId})}" class="btn btn-primary">Add humidity sensor</a>
                         </div>
                         
                         <div th:if="${goodConditions}">

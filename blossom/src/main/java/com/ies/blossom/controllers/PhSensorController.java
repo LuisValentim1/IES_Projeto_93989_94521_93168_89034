@@ -6,6 +6,7 @@ import com.ies.blossom.entitys.Parcel;
 import com.ies.blossom.entitys.PhMeasure;
 import com.ies.blossom.entitys.PhSensor;
 import com.ies.blossom.entitys.User;
+import com.ies.blossom.repositorys.ParcelRepository;
 import com.ies.blossom.repositorys.PhMeasureRepository;
 import com.ies.blossom.repositorys.PhSensorRepository;
 
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class PhSensorController {
 
@@ -27,6 +30,9 @@ public class PhSensorController {
 
     @Autowired
     private PhMeasureRepository phMeasureRepository;
+
+    @Autowired
+    private ParcelRepository parcelRepository;
     /*
     PhSensorRepository phSensorRepository;
 
@@ -51,5 +57,24 @@ public class PhSensorController {
         List<PhMeasure> measures = this.phMeasureRepository.findBySensorId(sensorId);
         model.addAttribute("measures", measures);
         return "measures.html";
+    }
+
+    // phsensor/new?parcelId=9
+    @GetMapping("/phsensor/new")
+    public String createSensor(@RequestParam(name = "parcelId", required = true) Long parcelId,
+                                HttpServletRequest request) {
+        // como para já n há info associada aos sensores
+        // podemos fazer logo a criacao do objeto na base de dados
+        // pq o utilizador nao teria que preencher nenhum campo de formulário
+        PhSensor sensor2save = new PhSensor();
+        
+        Parcel parcel = this.parcelRepository.getOne(parcelId);
+        parcel.getPhSensors().add(sensor2save);
+        this.parcelRepository.save(parcel);
+
+        sensor2save.setParcel(parcel);
+        sensor2save.setAssocDate(new Date(System.currentTimeMillis()));
+        this.phSensorRepository.save(sensor2save);
+        return "redirect:" + request.getHeader("Referer");
     }
 }

@@ -20,8 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.Cookie;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,20 +47,37 @@ public class ParcelController {
         Parcel parcel = this.parcelRepository.getOne(parcelId);
 
         // ir buscar todos as ultimas medidas relativas aos sensores de ph
-        Map<PhSensor, PhMeasure> retPh = new HashMap<PhSensor, PhMeasure>();
-        for (PhSensor sensor : parcel.getPhSensors()) {
-            retPh.put(sensor, sensor.getMeasures().get(0)); // em vez de ir buscar o primeiro pode ir buscar o ultimo
+        if (!parcel.getPhSensors().isEmpty()) {
+            Map<PhSensor, PhMeasure> retPh = new HashMap<PhSensor, PhMeasure>();
+            
+            for (PhSensor sensor : parcel.getPhSensors()) {
+                if (!sensor.getMeasures().isEmpty()) {
+                    retPh.put(sensor, sensor.getMeasures().get(0)); // em vez de ir buscar o primeiro pode ir buscar o ultimo
+                }else{
+                    retPh.put(sensor, null);
+                }
+            }
+            // se houver sensores mais ainda n houver medicoes            
+            model.addAttribute("phSensorsLastMeasures", retPh);
         }
 
         // ir buscar todos as ultimas medidas relativas aos sensores de hum
-        Map<HumSensor, HumMeasure> retHum = new HashMap<HumSensor, HumMeasure>();
-        for (HumSensor sensor : parcel.getHumSensors()) {
-            retHum.put(sensor, sensor.getMeasures().get(0)); // em vez de ir buscar o primeiro pode ir buscar o ultimo
+        if (!parcel.getHumSensors().isEmpty()) {
+            Map<HumSensor, HumMeasure> retHum = new HashMap<HumSensor, HumMeasure>();
+            for (HumSensor sensor : parcel.getHumSensors()) {
+                if (!sensor.getMeasures().isEmpty()) {
+                    retHum.put(sensor, sensor.getMeasures().get(0)); // em vez de ir buscar o primeiro pode ir buscar o ultimo
+                }else{
+                    retHum.put(sensor, null);
+                }
+            }
+            // há sensores de humidade mas n há medicoes
+            
+            model.addAttribute("humSensorsLastMeasures", retHum);
         }
 
         model.addAttribute("parcel", parcel);
-        model.addAttribute("phSensorsLastMeasures", retPh);
-        model.addAttribute("humSensorsLastMeasures", retHum);
+        
         return "parcel.html";
     }
 

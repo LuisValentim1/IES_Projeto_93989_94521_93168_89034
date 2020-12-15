@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
 @Table(name = "ph_sensors")
-public class PhSensor {
-
+// public class PhSensor implements Comparator<PhSensor> {
+public class PhSensor{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long sensorId;
@@ -29,9 +30,11 @@ public class PhSensor {
     private List<PhMeasure> measures = new ArrayList<PhMeasure>();
 
     @Transient
-	  private PhMeasure latest;
+    private PhMeasure latest;
 
-    public PhSensor() { super(); }
+    public PhSensor() {
+        super();
+    }
 
     public PhSensor(Parcel parcel, Date assocDate) {
         this.parcel = parcel;
@@ -70,24 +73,29 @@ public class PhSensor {
         this.measures = measures;
         this.updateLatestMeasure();
     }
-    
+
     public void addPhMeasure(PhMeasure measure) {
-    	this.measures.add(measure);
-    	this.updateLatestMeasure();
+        this.measures.add(measure);
+        this.updateLatestMeasure();
     }
-    
+
     private void updateLatestMeasure() {
-    	PhMeasure latest = null;
-    	for (PhMeasure humMeasure : this.getMeasures()) {
-    		if (latest == null || latest.getTimestamp().after(humMeasure.getTimestamp())) {
-    			latest = humMeasure;
-    		}
-		}
-    	this.latest = latest;
-    	
+        PhMeasure latest = null;
+        for (PhMeasure humMeasure : this.getMeasures()) {
+            if (latest == null || latest.getTimestamp().after(humMeasure.getTimestamp())) {
+                latest = humMeasure;
+            }
+        }
+        this.latest = latest;
+
     }
-    
+
     public PhMeasure getLatest() {
-    	return this.latest;
+        return this.latest;
     }
+
+    // @Override
+    // public int compare(PhSensor ph1, PhSensor ph2) {
+    //     return ph1.getSensorId() > ph2.getSensorId() ? 1 : -1;
+    // }
 }
