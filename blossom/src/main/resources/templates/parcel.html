@@ -32,12 +32,46 @@
                                         </td>
                                         <td th:text="${parcel.location}">...</td>
                                         <td>
-                                            <a th:if="${parcel.plant}" th:href="'/plant/' + ${parcel.plant.plantId}" th:text="${parcel.plant.englishName}">..</a>
-                                            <span th:unless="${parcel.plant}">None</span>
+                                            <div th:if="${parcel.plant}">
+                                                <a th:href="'/plant/' + ${parcel.plant.plantId}" th:text="${parcel.plant.englishName}">..</a>
+                                                <button type="button" class="badge rounded-pill bg-dark" data-bs-toggle="modal" data-bs-target="#changePlantModal">Change plant</button>
+                                            </div>
+                                            <span th:unless="${parcel.plant}">None<button type="button" class="badge rounded-pill bg-dark" data-bs-toggle="modal" data-bs-target="#changePlantModal">Associate plant</button></span>
                                         </td>
                                     </tr>
                                 </tbody>                               
                             </table>
+                        </div>
+                        <input type="hidden" th:value="${parcel.parcelId}" id="pId">
+                        <input th:if="${parcel.plant}" type="hidden" th:value="${parcel.plant.plantId}" id="prevId">
+                        <!-- Modal -->
+                        <div class="modal fade" id="changePlantModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Plants</h5>
+                                    </div>
+                                    <form action="#" th:action="@{/parcel/editplant}" th:object="${plantForm}" method="post">
+                                        <div class="modal-body">
+                                            <th:block th:each="plant : ${plants}">
+                                                <div class="form-check">
+                                                    <!-- tentar colocar checked a planta que se encontrava antes -->
+                                                    <input class="form-check-input" type="radio" th:value="${plant.plantId}" th:field="*{currentPlantId}" th:id="${plant.plantId}">
+                                                    <label class="form-check-label" th:text="${plant.englishName}" th:for="${plant.plantId}">
+                                                    ..
+                                                    </label>
+                                                </div>
+                                            </th:block>
+                                            <input type="hidden" th:field="*{parcelId}" value="a">
+                                            <input type="hidden" th:if="${parcel.plant}"  th:field="${plantForm.previousPlantId}" value="a">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <input type="submit" class="btn btn-primary" value="Save changes" />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                         <br>
                         <div>
@@ -118,6 +152,15 @@
             </div>
         </div>
     </section>
+    <script>
+        const val = document.getElementById("pId");
+        document.getElementById("parcelId").value = val.value;
+
+        const pred = document.getElementById("prevId");
+        if (pred) {
+            document.getElementById("previousPlantId").value = pred.value;
+        }
+    </script>
 </div>
 
 </body>

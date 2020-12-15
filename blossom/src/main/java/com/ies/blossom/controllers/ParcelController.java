@@ -10,6 +10,7 @@ import com.ies.blossom.entitys.User;
 import com.ies.blossom.repositorys.ParcelRepository;
 import com.ies.blossom.repositorys.PlantRepository;
 import com.ies.blossom.repositorys.UserRepository;
+import com.ies.blossom.model.ChangePlantModel;
 import com.ies.blossom.model.ParcelModel;
 
 import java.sql.Date;
@@ -21,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +31,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ParcelController {
@@ -75,6 +80,12 @@ public class ParcelController {
             model.addAttribute("humSensorsLastMeasures", retHum);
         }
 
+        // ir buscar todas as plantas na bd
+        // talvez seja melhor colocar noutro método, esta funcionalidade é chamada poucas vezes
+        List<Plant> plants = this.plantRepository.findAll();
+        model.addAttribute("plantForm", new ChangePlantModel());
+        model.addAttribute("plants", plants);
+
         model.addAttribute("parcel", parcel);
         
         return "parcel.html";
@@ -119,6 +130,27 @@ public class ParcelController {
 
         model.addAttribute("created", true);
         return "forms/parcelForm.html";
+    }
+
+    @PostMapping("/parcel/editplant")
+    public String changePlant(@ModelAttribute ChangePlantModel change,
+                                HttpServletRequest request) {
+
+        Parcel parcel = this.parcelRepository.getOne(change.getParcelId());
+        Plant current = this.plantRepository.getOne(change.getCurrentPlantId());
+
+        if (change.getCurrentPlantId() != null) {
+            Plant previous = this.plantRepository.getOne(change.getPreviousPlantId());
+            previous.getParcels().remove(parcel);
+            this.plantRepository.save(previous);
+        }
+
+        current.getParcels().add(parcel);
+        this.plantRepository.save(current);
+
+        parcel.setPlant(current);
+        this.parcelRepository.save(parcel);
+        return "redirect:" + request.getHeader("Referer");
     }
     
     private static void makeData(User user, Parcel parcel, Collection<Plant> plants) throws ParseException {
