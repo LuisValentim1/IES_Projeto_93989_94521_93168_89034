@@ -7,12 +7,12 @@ public class MonitorPH {
 		private int id;
 		private String modo;
 		private int reg_freq;
-		private ArrayList<Integer> values;	
+		private ArrayList<Double> values = new ArrayList<Double>();	
 
-		public MonitorPH(String mode, int freq, int instant) {		//instant � uma op��o que permite gerar automaticamente valores de um certo numero de dias
+		public MonitorPH(int given_id, String mode, int freq, int instant) {		//instant � uma op��o que permite gerar automaticamente valores de um certo numero de dias
 			this.modo = mode;
 			this.reg_freq = freq;
-			this.id = 0;
+			this.id = given_id;
 			if(instant > 0) {
 				if(this.modo == "Low") {
 					this.generateAcidicSoil(instant);
@@ -28,8 +28,8 @@ public class MonitorPH {
 		
 		public void generateAcidicSoil(int days) {
 			if(days>0) {
-				for(int i = 0; i<this.reg_freq; i++) {
-					int value = getRandomNumberUsingInts(0,7);
+				for(int i = 0; i<this.reg_freq*days; i++) {
+					double value = getRandomDoubleInRange(0,7);
 					this.values.add(value);
 				}
 			}
@@ -37,8 +37,8 @@ public class MonitorPH {
 		
 		public void generateNeutralSoil(int days) {
 			if(days>0) {
-				for(int i = 0; i<this.reg_freq; i++) {
-					int value = getRandomNumberUsingInts(4,10);
+				for(int i = 0; i<this.reg_freq*days; i++) {
+					double value = getRandomNumberUsingInts(4,10);
 					this.values.add(value);
 				}
 			}
@@ -46,14 +46,14 @@ public class MonitorPH {
 		
 		public void generateBasicSoil(int days) {
 			if(days>0) {
-				for(int i = 0; i<this.reg_freq; i++) {
-					int value = getRandomNumberUsingInts(7,14);
+				for(int i = 0; i<this.reg_freq*days; i++) {
+					double value = getRandomNumberUsingInts(7,14);
 					this.values.add(value);
 				}
 			}
 		}
 		
-		public ArrayList<Integer> getValues(){
+		public ArrayList<Double> getValues(){
 			return this.values;
 		}
 		
@@ -70,5 +70,11 @@ public class MonitorPH {
 		    return random.ints(min, max)
 		      .findFirst()
 		      .getAsInt();
+		}
+		
+		public double getRandomDoubleInRange(double rangeMin, double rangeMax) {
+			Random r = new Random();
+			double randomValue = rangeMin + (rangeMax - rangeMin) * r.nextDouble();
+			return randomValue;
 		}
 	}
