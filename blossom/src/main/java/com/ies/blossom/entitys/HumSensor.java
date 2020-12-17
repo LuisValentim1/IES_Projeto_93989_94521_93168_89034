@@ -68,22 +68,6 @@ public class HumSensor {
 
     public void setMeasures(List<HumMeasure> measures) {
         this.measures = measures;
-        HumMeasure latest = null;
-    	for (HumMeasure humMeasure : this.getMeasures()) {
-    		if (latest == null || latest.getTimestamp().after(humMeasure.getTimestamp())) {
-    			latest = humMeasure;
-    		}
-		}
-    	this.latest = latest;
-    }
-    
-    public void addHumMeasure(HumMeasure measure) {
-    	this.measures.add(measure);
-    	this.latest = measure;
-    }
-    
-    public HumMeasure getLatest() {
-    	return this.latest;
     }
     
     @Override
