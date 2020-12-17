@@ -10,8 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "ph_sensors")
-public class PhSensor {
-
+// public class PhSensor implements Comparator<PhSensor> {
+public class PhSensor{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long sensorId;
@@ -29,9 +29,11 @@ public class PhSensor {
     private List<PhMeasure> measures = new ArrayList<PhMeasure>();
 
     @Transient
-	  private PhMeasure latest;
+    private PhMeasure latest;
 
-    public PhSensor() { super(); }
+    public PhSensor() {
+        super();
+    }
 
     public PhSensor(Parcel parcel, Date assocDate) {
         this.parcel = parcel;
@@ -85,4 +87,5 @@ public class PhSensor {
     	return false;
     	
     }
+
 }

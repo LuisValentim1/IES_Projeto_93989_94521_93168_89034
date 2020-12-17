@@ -39,7 +39,6 @@ public class Plant {
     public Plant() { super(); }
 
     public Plant(String cientificName, String englishName, Double phMax, Double phMin, Double humMin, Double humMax) {
-        this.plantId = plantId;
         this.cientificName = cientificName;
         this.englishName = englishName;
         this.phMax = phMax;
