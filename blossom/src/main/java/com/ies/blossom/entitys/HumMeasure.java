@@ -63,4 +63,20 @@ public class HumMeasure {
     public void setValue(Double value) {
         this.value = value;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	}
+    	if (! (obj instanceof HumMeasure)) {
+    		return false;
+    	}
+    	HumMeasure other = (HumMeasure) obj;
+    	if (this.getSensor() == other.getSensor() && this.getMeasureId() == other.getMeasureId()) {
+    		return true;
+    	}
+    	return false;
+    	
+    }
 }

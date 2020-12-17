@@ -125,4 +125,20 @@ public class User {
     public void setParcels(Set<Parcel> parcels) {
         this.parcels = parcels;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	}
+    	if (! (obj instanceof User)) {
+    		return false;
+    	}
+    	User other = (User) obj;
+    	if (this.getUserId() == other.getUserId()) {
+    		return true;
+    	}
+    	return false;
+    	
+    }
 }

@@ -70,31 +70,22 @@ public class PhSensor{
 
     public void setMeasures(List<PhMeasure> measures) {
         this.measures = measures;
-        this.updateLatestMeasure();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	}
+    	if (! (obj instanceof PhSensor)) {
+    		return false;
+    	}
+    	PhSensor other = (PhSensor) obj;
+    	if (this.getSensorId() == other.getSensorId()) {
+    		return true;
+    	}
+    	return false;
+    	
     }
 
-    public void addPhMeasure(PhMeasure measure) {
-        this.measures.add(measure);
-        this.updateLatestMeasure();
-    }
-
-    private void updateLatestMeasure() {
-        PhMeasure latest = null;
-        for (PhMeasure humMeasure : this.getMeasures()) {
-            if (latest == null || latest.getTimestamp().after(humMeasure.getTimestamp())) {
-                latest = humMeasure;
-            }
-        }
-        this.latest = latest;
-
-    }
-
-    public PhMeasure getLatest() {
-        return this.latest;
-    }
-
-    // @Override
-    // public int compare(PhSensor ph1, PhSensor ph2) {
-    //     return ph1.getSensorId() > ph2.getSensorId() ? 1 : -1;
-    // }
 }
