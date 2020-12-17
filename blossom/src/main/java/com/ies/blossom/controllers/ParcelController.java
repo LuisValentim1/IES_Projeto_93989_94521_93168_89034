@@ -164,46 +164,46 @@ public class ParcelController {
         return "redirect:" + request.getHeader("Referer");
     }
     
-    private static void makeData(User user, Parcel parcel, Collection<Plant> plants) throws ParseException {
+    // private static void makeData(User user, Parcel parcel, Collection<Plant> plants) throws ParseException {
     	
-    	user.setName("Jaime");
+    // 	user.setName("Jaime");
     	
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    // 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     	
-    	parcel.setLocation("Aveiro");
-        parcel.setOwner(user);
+    // 	parcel.setLocation("Aveiro");
+    //     parcel.setOwner(user);
         
-        Plant plant01 = new Plant("planta in parcel", "parcel planta", 2.0, 1.0, 1.0, 1.8);
-        parcel.setPlant(plant01);
+    //     Plant plant01 = new Plant("planta in parcel", "parcel planta", 2.0, 1.0, 1.0, 1.8);
+    //     parcel.setPlant(plant01);
         
-        HumSensor humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-        PhSensor phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-        parcel.addHumSensor(humsensor);
-        parcel.addPhSensor(phsensor);
-        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
-        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
-        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
-        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
-        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
-        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
+    //     HumSensor humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
+    //     PhSensor phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
+    //     parcel.addHumSensor(humsensor);
+    //     parcel.addPhSensor(phsensor);
+    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
+    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
+    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
+    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
+    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
+    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
         
-        humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-        phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-        parcel.addHumSensor(humsensor);
-        parcel.addPhSensor(phsensor);
-        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
-        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
-        humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
-        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
-        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
-        phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
+    //     humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
+    //     phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
+    //     parcel.addHumSensor(humsensor);
+    //     parcel.addPhSensor(phsensor);
+    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
+    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
+    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
+    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
+    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
+    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
         
 
-        plants.add(plant01);
-        plants.add(new Plant("planta02", "planta02", 2.0, 1.0, 1.0, 2.5));
-        plants.add(new Plant("planta03", "planta03", 2.0, 1.0, 1.0, 2.0));
-        plants.add(new Plant("plantatusCuatro", "planta04", 2.0, 1.0, 1.0, 1.5));
+    //     plants.add(plant01);
+    //     plants.add(new Plant("planta02", "planta02", 2.0, 1.0, 1.0, 2.5));
+    //     plants.add(new Plant("planta03", "planta03", 2.0, 1.0, 1.0, 2.0));
+    //     plants.add(new Plant("plantatusCuatro", "planta04", 2.0, 1.0, 1.0, 1.5));
     	
-    }
+    // }
     
 }
