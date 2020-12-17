@@ -111,4 +111,22 @@ public class Plant {
     public void setHumMax(Double humMax) {
         this.humMax = humMax;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	}
+    	if (! (obj instanceof Plant)) {
+    		return false;
+    	}
+    	Plant other = (Plant) obj;
+    	if (this.getPlantId() == other.getPlantId()) {
+    		return true;
+    	}
+    	return false;
+    	
+    }
+    
+    
 }

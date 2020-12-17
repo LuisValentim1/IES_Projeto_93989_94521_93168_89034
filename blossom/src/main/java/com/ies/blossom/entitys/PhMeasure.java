@@ -63,4 +63,20 @@ public class PhMeasure {
     public void setValue(Double value) {
         this.value = value;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	}
+    	if (! (obj instanceof Plant)) {
+    		return false;
+    	}
+    	PhMeasure other = (PhMeasure) obj;
+    	if (this.getSensor() == other.getSensor() && this.getMeasureId() == other.getMeasureId()) {
+    		return true;
+    	}
+    	return false;
+    	
+    }
 }

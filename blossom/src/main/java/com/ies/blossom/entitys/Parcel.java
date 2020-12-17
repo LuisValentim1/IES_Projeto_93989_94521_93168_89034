@@ -99,5 +99,21 @@ public class Parcel {
     	this.phSensors.add(sensor);
     }
     
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	}
+    	if (! (obj instanceof Parcel)) {
+    		return false;
+    	}
+    	
+    	Parcel other = (Parcel) obj;
+    	if (this.getParcelId() == other.getParcelId()) {
+    		return true;
+    	}
+    	return false;
+    }
+    
     
 }

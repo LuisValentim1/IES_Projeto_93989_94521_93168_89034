@@ -68,26 +68,37 @@ public class HumSensor {
 
     public void setMeasures(List<HumMeasure> measures) {
         this.measures = measures;
-        this.updateLatestMeasure();
-    }
-    
-    public void addHumMeasure(HumMeasure measure) {
-    	this.measures.add(measure);
-    	this.updateLatestMeasure();
-    }
-    
-    private void updateLatestMeasure() {
-    	HumMeasure latest = null;
+        HumMeasure latest = null;
     	for (HumMeasure humMeasure : this.getMeasures()) {
     		if (latest == null || latest.getTimestamp().after(humMeasure.getTimestamp())) {
     			latest = humMeasure;
     		}
 		}
     	this.latest = latest;
-    	
+    }
+    
+    public void addHumMeasure(HumMeasure measure) {
+    	this.measures.add(measure);
+    	this.latest = measure;
     }
     
     public HumMeasure getLatest() {
     	return this.latest;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	}
+    	if (! (obj instanceof Plant)) {
+    		return false;
+    	}
+    	HumSensor other = (HumSensor) obj;
+    	if (this.getSensorId() == other.getSensorId()) {
+    		return true;
+    	}
+    	return false;
+    	
     }
 }

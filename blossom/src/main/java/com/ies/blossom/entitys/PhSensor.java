@@ -68,26 +68,37 @@ public class PhSensor {
 
     public void setMeasures(List<PhMeasure> measures) {
         this.measures = measures;
-        this.updateLatestMeasure();
-    }
-    
-    public void addPhMeasure(PhMeasure measure) {
-    	this.measures.add(measure);
-    	this.updateLatestMeasure();
-    }
-    
-    private void updateLatestMeasure() {
-    	PhMeasure latest = null;
+        PhMeasure latest = null;
     	for (PhMeasure humMeasure : this.getMeasures()) {
     		if (latest == null || latest.getTimestamp().after(humMeasure.getTimestamp())) {
     			latest = humMeasure;
     		}
 		}
     	this.latest = latest;
-    	
+    }
+    
+    public void addPhMeasure(PhMeasure measure) {
+    	this.measures.add(measure);
+    	this.latest = measure;
     }
     
     public PhMeasure getLatest() {
     	return this.latest;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+    		return true;
+    	}
+    	if (! (obj instanceof Plant)) {
+    		return false;
+    	}
+    	PhSensor other = (PhSensor) obj;
+    	if (this.getSensorId() == other.getSensorId()) {
+    		return true;
+    	}
+    	return false;
+    	
     }
 }
