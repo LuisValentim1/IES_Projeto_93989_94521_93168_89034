@@ -27,59 +27,106 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><a th:href="@{'/profile/' + ${parcel.owner.userId}}" th:text="${parcel.owner.name}">..</a></td>
+                                        <td>
+                                            <a th:href="@{'/profile/' + ${parcel.owner.userId}}" th:text="${parcel.owner.name}">..</a>
+                                        </td>
                                         <td th:text="${parcel.location}">...</td>
                                         <td>
-                                            <a th:href="'/plant/' + ${parcel.plant.plantId}" th:text="${parcel.plant.englishName}">..</a>
+                                            <div th:if="${parcel.plant}">
+                                                <a th:href="'/plant/' + ${parcel.plant.plantId}" th:text="${parcel.plant.englishName}">..</a>
+                                                <button type="button" class="badge rounded-pill bg-dark" data-bs-toggle="modal" data-bs-target="#changePlantModal">Change plant</button>
+                                            </div>
+                                            <span th:unless="${parcel.plant}">None<button type="button" class="badge rounded-pill bg-dark" data-bs-toggle="modal" data-bs-target="#changePlantModal">Associate plant</button></span>
                                         </td>
                                     </tr>
                                 </tbody>                               
                             </table>
                         </div>
+                        <input type="hidden" th:value="${parcel.parcelId}" id="pId">
+                        <input th:if="${parcel.plant}" type="hidden" th:value="${parcel.plant.plantId}" id="prevId">
+                        <!-- Modal -->
+                        <div class="modal fade" id="changePlantModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Plants</h5>
+                                    </div>
+                                    <form action="#" th:action="@{/parcel/editplant}" th:object="${plantForm}" method="post">
+                                        <div class="modal-body">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" value="0" id="none" name="none" th:field="*{currentPlantId}">
+                                                <label class="form-check-label" for="none">None</label>
+                                            </div>
+                                            <th:block th:each="plant : ${plants}">
+                                                <div class="form-check">
+                                                    <!-- tentar colocar checked a planta que se encontrava antes -->
+                                                    <input class="form-check-input" type="radio" th:value="${plant.plantId}" th:field="*{currentPlantId}" th:id="${plant.plantId}">
+                                                    <label class="form-check-label" th:text="${plant.englishName}" th:for="${plant.plantId}">
+                                                    ..
+                                                    </label>
+                                                </div>
+                                            </th:block>
+                                            <input type="hidden" th:field="*{parcelId}" value="a">
+                                            <input type="hidden" th:if="${parcel.plant}"  th:field="${plantForm.previousPlantId}" value="a">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <input type="submit" class="btn btn-primary" value="Save changes" />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         <br>
-
-                        <div >
-                            <h3>Ph Sensors</h2>
-                                <p>Bellow will render dynamicly table with Sensors</p>
-                           
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Sensor Id</th>
-                                        <th scope="col">Last measure</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- tmb se pode colocar aqui os links para os sensores -->
-                                    <tr th:each="dic : ${phSensorsLastMeasures}">
-                                        <td>
-                                            <a th:href="'/phSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
-                                        </td>
-                                        <td th:text="${dic.value.value}"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div>
+                            <h3>Ph Sensors</h3>
+                            <div th:if="${phSensorsLastMeasures}">
+                                <table class="table" th:unless="${#maps.isEmpty(phSensorsLastMeasures)}">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Sensor Id</th>
+                                            <th scope="col">Last measure</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- tmb se pode colocar aqui os links para os sensores -->
+                                        <tr th:each="dic : ${phSensorsLastMeasures}">
+                                            <td>
+                                                <a th:href="'/phSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
+                                            </td>
+                                            <td th:if="${dic.value != null}" th:text="${dic.value.value}"></td>
+                                            <td th:unless="${dic.value != null}">No measures have been made</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p th:unless="${phSensorsLastMeasures}">No sensors associated</p>
+                            <a th:href="@{/phsensor/new(parcelId=${parcel.parcelId})}" class="btn btn-primary">Add ph sensor</a>
                         </div>
                         <div >
-                            <h3>Humidity Sensors</h2>
-                                <p>Bellow will render dynamicly table with Sensors</p>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Sensor Id</th>
-                                        <th scope="col">Last measure</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- tmb se pode colocar aqui os links para os sensores -->
-                                    <tr th:each="dic : ${humSensorsLastMeasures}">
-                                        <td>
-                                            <a th:href="'/humSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
-                                        </td>
-                                        <td th:text="${dic.value.value}"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <h3>Humidity Sensors</h3>
+                            <div th:if="${humSensorsLastMeasures}">
+                                <table class="table" th:unless="${#maps.isEmpty(humSensorsLastMeasures)}">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Sensor Id</th>
+                                            <th scope="col">Last measure</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- tmb se pode colocar aqui os links para os sensores -->
+                                        <tr th:each="dic : ${humSensorsLastMeasures}">
+                                            <td>
+                                                <a th:href="'/humSensor/' + ${dic.key.sensorId}" th:text="${dic.key.sensorId}">..</a>
+                                            </td>
+                                            <td th:if="${dic.value != null}" th:text="${dic.value.value}"></td>
+                                            <td th:unless="${dic.value != null}">No measures have been made</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p th:unless="${humSensorsLastMeasures}">No sensors associated</p>
+                            <a th:href="@{/humsensor/new(parcelId=${parcel.parcelId})}" class="btn btn-primary">Add humidity sensor</a>
                         </div>
                         
                         <div th:if="${goodConditions}">
@@ -91,24 +138,33 @@
                             Condições não são boas, ph e humidade não são adequadas a planta
                             </div>
                         </div>
-                        <div class="container" style="border: 1px black solid">
-                        	<div class="row">
-                        		<div class="col-md-12">
-                        			As seguintes plantas apresentam uma boa umidade e consequentemente, uma boa irrigação.
-                        		</div>
-                        	</div>
-                        	<div class="row" th:each="plant: ${plants}">
-                        		<div class="col-md-12">
-                        			<p th:text="${plant.cientificName}">...</p>
-                        			<p th:text="${plant.englishName}">...</p>
-                        		</div>
-                        	</div>
-                        </div>                
+                        <div th:if="${parcel.plant}" class="container" style="border: 1px black solid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    As seguintes plantas apresentam uma boa humidade e consequentemente, uma boa irrigação.
+                                </div>
+                            </div>
+                            <div class="row" th:each="plant: ${plants}">
+                                <div class="col-md-12">
+                                    <p th:text="${plant.cientificName}">...</p>
+                                    <p th:text="${plant.englishName}">...</p>
+                                </div>
+                            </div>
+                        </div>                                     
                     </body>
                 </div>
             </div>
         </div>
     </section>
+    <script>
+        const val = document.getElementById("pId");
+        document.getElementById("parcelId").value = val.value;
+
+        const pred = document.getElementById("prevId");
+        if (pred) {
+            document.getElementById("previousPlantId").value = pred.value;
+        }
+    </script>
 </div>
 
 </body>

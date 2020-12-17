@@ -1,66 +1,23 @@
-package com.ies.blossom.entitys;
+package com.ies.blossom.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-
-@Entity
-@Table(name = "plants")
-public class Plant {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long plantId;
-
-    @Column(name = "cientific_name")
+public class PlantModel {
     private String cientificName;
-
-    @Column(name = "english_name")
     private String englishName;
-
-    @Column(name = "ph_max")
     private Double phMax;
-
-    @Column(name = "ph_min")
     private Double phMin;
-
-    @Column(name = "hum_min")
     private Double humMin;
-
-    @Column(name = "hum_max")
     private Double humMax;
 
-    @OneToMany(mappedBy = "plant")
-    @JsonManagedReference
-    private Set<Parcel> parcels = new HashSet<>();
+    public PlantModel() {}
 
-    public Plant() { super(); }
-
-    public Plant(String cientificName, String englishName, Double phMax, Double phMin, Double humMin, Double humMax) {
+    public PlantModel(String cientificName, String englishName, Double phMax, Double phMin, Double humMin,
+            Double humMax) {
         this.cientificName = cientificName;
         this.englishName = englishName;
         this.phMax = phMax;
         this.phMin = phMin;
         this.humMin = humMin;
         this.humMax = humMax;
-    }
-
-    public Set<Parcel> getParcels() {
-        return parcels;
-    }
-
-    public void setParcels(Set<Parcel> parcels) {
-        this.parcels = parcels;
-    }
-
-    public Long getPlantId() {
-        return plantId;
-    }
-
-    public void setPlantId(Long plantId) {
-        this.plantId = plantId;
     }
 
     public String getCientificName() {
