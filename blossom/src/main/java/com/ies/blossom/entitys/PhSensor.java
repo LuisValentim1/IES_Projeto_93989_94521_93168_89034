@@ -77,7 +77,7 @@ public class PhSensor{
     	if (this == obj) {
     		return true;
     	}
-    	if (! (obj instanceof Plant)) {
+    	if (! (obj instanceof PhSensor)) {
     		return false;
     	}
     	PhSensor other = (PhSensor) obj;

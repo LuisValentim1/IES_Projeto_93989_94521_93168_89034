@@ -75,7 +75,7 @@ public class HumSensor {
     	if (this == obj) {
     		return true;
     	}
-    	if (! (obj instanceof Plant)) {
+    	if (! (obj instanceof HumSensor)) {
     		return false;
     	}
     	HumSensor other = (HumSensor) obj;

@@ -131,7 +131,7 @@ public class User {
     	if (this == obj) {
     		return true;
     	}
-    	if (! (obj instanceof Plant)) {
+    	if (! (obj instanceof User)) {
     		return false;
     	}
     	User other = (User) obj;

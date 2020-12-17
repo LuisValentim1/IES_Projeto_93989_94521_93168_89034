@@ -69,7 +69,7 @@ public class PhMeasure {
     	if (this == obj) {
     		return true;
     	}
-    	if (! (obj instanceof Plant)) {
+    	if (! (obj instanceof PhMeasure)) {
     		return false;
     	}
     	PhMeasure other = (PhMeasure) obj;

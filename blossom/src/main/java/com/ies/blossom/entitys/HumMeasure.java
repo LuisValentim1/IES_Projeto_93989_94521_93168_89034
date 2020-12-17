@@ -69,7 +69,7 @@ public class HumMeasure {
     	if (this == obj) {
     		return true;
     	}
-    	if (! (obj instanceof Plant)) {
+    	if (! (obj instanceof HumMeasure)) {
     		return false;
     	}
     	HumMeasure other = (HumMeasure) obj;
