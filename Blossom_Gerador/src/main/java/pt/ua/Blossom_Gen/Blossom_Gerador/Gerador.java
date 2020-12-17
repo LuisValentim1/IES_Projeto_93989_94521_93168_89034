@@ -12,7 +12,8 @@ public class Gerador {
 	
 	static int num_of_ph_monitors = 1;  		// Numero de monitores de ph que iremos gerar.
 	static int num_of_hum_monitors = 1; 		// Numero de monitores de humidade que iremos gerar.
-	static int regs_per_day = 48; 				// Numero de registos que os monitores fazem por dia.
+	// TODO ALTEREI DE 48 PARA 3 PARA SER MAIS FACIL DEBUG
+	static int regs_per_day = 3; 				// Numero de registos que os monitores fazem por dia.
 	static int days = 1;
 	static String monitor_type[] = {"Low", "Medium", "High"};     // Gerar monitores especificos
 																		   // Low -> ph acido / humidade baixa
@@ -68,38 +69,25 @@ public class Gerador {
 		int default_hum_id = Hum_Ids.get(0);
 		
 		//Ciclo para gerar monitores de PH
-		for(int i = 0; i<num_of_ph_monitors; i++) {
+		for(int i = 0; i<PH_Ids.size(); i++) {
 			int opt = getRandomNumberUsingInts(0, 2);
-			MonitorPH ph;
-			if(PH_Ids.size() != 0) {
-				ph = new MonitorPH(PH_Ids.get(0), monitor_type[opt], regs_per_day, days);
-				PH_Ids.remove(0);
-			}
-			else {
-				ph = new MonitorPH(default_ph_id, monitor_type[opt], regs_per_day, days);
-			}
-			monitoresPH.add(ph);	
+			monitoresPH.add(new MonitorPH(PH_Ids.get(i), monitor_type[opt], regs_per_day, days));	
 		}
 		
 		//Ciclo para gerar monitores de humidade
-		for(int i = 0; i<num_of_hum_monitors; i++) {
+		for(int i = 0; i<Hum_Ids.size(); i++) {
 			int opt = getRandomNumberUsingInts(0, 2);
-			MonitorHum humid;
-			if(Hum_Ids.size() != 0) {
-				humid = new MonitorHum(Hum_Ids.get(0), monitor_type[opt], regs_per_day, days);
-				Hum_Ids.remove(0);
-			}
-			else {
-				humid = new MonitorHum(default_hum_id, monitor_type[opt], regs_per_day, days);
-			}
-			monitoresHum.add(humid);
+			monitoresHum.add(new MonitorHum(Hum_Ids.get(i), monitor_type[opt], regs_per_day, days));
 		}
 		
 		//Adicionar todos os valores de pH à base de dados
 		for(int i = 0; i<monitoresPH.size(); i++) {
 			for(int z = 0; z<monitoresPH.get(i).getValues().size(); z++) {
-				String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(monitoresPH.get(i).getId()) + " \\\", \\\"value\\\" : \\\" " + Double.toString(monitoresPH.get(i).getValues().get(z)) +  " \\\"}\" http://localhost:8080/api/test/phmeasures";
-				//com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(monitoresPH.get(i).getId()) + " \", \"value\" : \" " + Integer.toString(monitoresPH.get(i).getValues().get(z)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
+				// String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(monitoresPH.get(i).getId()) + " \\\", \\\"value\\\" : \\\" " + Double.toString(monitoresPH.get(i).getValues().get(z)) +  " \\\"}\" http://localhost:8080/api/test/phmeasures";
+				// String com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(monitoresPH.get(i).getId()) + " \", \"value\" : \" " + Double.toString(monitoresPH.get(i).getValues().get(z)) + " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
+				// curl -X POST -H "Content-Type: application/json" -d '{"sensorId" : "4", "value" : "7.6"}' http://localhost:8080/api/test/phmeasures
+				// String com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \"" + Integer.toString(monitoresPH.get(i).getId()) + "\", \"value\" : \"" + Double.toString(monitoresPH.get(i).getValues().get(z)) +"\"}\' \"http://localhost:8080/api/test/phmeasures\"";
+				String[] com = {"curl", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{\"sensorId\" : \"" + Integer.toString(monitoresPH.get(i).getId()) + "\", \"value\" : \"" + Double.toString(monitoresPH.get(i).getValues().get(z)) +"\"}", "http://localhost:8080/api/test/phmeasures"};
 				try {
 					pr = rt.exec(com);
 				}catch(Exception e) {
@@ -111,8 +99,10 @@ public class Gerador {
 		//Adicionar todos os valores de humidade à base de dados
 		for(int i = 0; i<monitoresHum.size(); i++) {
 			for(int z = 0; z<monitoresHum.get(i).getValues().size(); z++) {
-				String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getValues().get(z)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
-				//com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(monitoresHum.get(i).getId()) + " \", \"value\" : \" " + Integer.toString(monitoresHum.get(i).getValues().get(z)) +  " \"}\' http://localhost:8080/api/test/hummeasures"; //Se estiver a correr em linux
+				// String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getValues().get(z)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
+				// String com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(monitoresHum.get(i).getId()) + " \", \"value\" : \" " + Double.toString(monitoresHum.get(i).getValues().get(z)) +  " \"}\' http://localhost:8080/api/test/hummeasures"; //Se estiver a correr em linux
+				// String com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \"" + Integer.toString(monitoresHum.get(i).getId()) + "\", \"value\" : \"" + Double.toString(monitoresHum.get(i).getValues().get(z)) +"\"}\' \"http://localhost:8080/api/test/hummeasures\"";
+				String[] com = {"curl", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{\"sensorId\" : \"" + Integer.toString(monitoresHum.get(i).getId()) + "\", \"value\" : \"" + Double.toString(monitoresHum.get(i).getValues().get(z)) +"\"}", "http://localhost:8080/api/test/hummeasures"};
 				try {
 					pr = rt.exec(com);
 				}catch(Exception e) {
@@ -130,8 +120,9 @@ public class Gerador {
 					String mode = p.getMode();
 					if(mode == "Low") {
 						p.generateAcidicSoil(1/regs_per_day);
-						String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(p.getId()) + " \\\", \\\"value\\\" : \\\" " + Double.toString(p.getValues().get(p.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/phmeasures";
-						//com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(p.getId()) + " \", \"value\" : \" " + Integer.toString(p.getValues().get(z)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
+						// String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(p.getId()) + " \\\", \\\"value\\\" : \\\" " + Double.toString(p.getValues().get(p.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/phmeasures";
+						String com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(p.getId()) + " \", \"value\" : \" " + Double.toString(p.getValues().get(p.getValues().size()-1)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
+						
 						try {
 							pr = rt.exec(com);
 						}catch(Exception e) {
@@ -140,8 +131,8 @@ public class Gerador {
 					}
 					if(mode == "Medium") {
 						p.generateNeutralSoil(1/regs_per_day);
-						String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(p.getId()) + " \\\", \\\"value\\\" : \\\" " + Double.toString(p.getValues().get(p.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/phmeasures";
-						//com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(p.getId()) + " \", \"value\" : \" " + Integer.toString(p.getValues().get(z)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
+						// String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(p.getId()) + " \\\", \\\"value\\\" : \\\" " + Double.toString(p.getValues().get(p.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/phmeasures";
+						String com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(p.getId()) + " \", \"value\" : \" " + Double.toString(p.getValues().get(p.getValues().size()-1)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
 						try {
 							pr = rt.exec(com);
 						}catch(Exception e) {
@@ -150,8 +141,8 @@ public class Gerador {
 					}
 					if(mode == "High") {
 						p.generateBasicSoil(1/regs_per_day);
-						String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(p.getId()) + " \\\", \\\"value\\\" : \\\" " + Double.toString(p.getValues().get(p.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/phmeasures";
-						//com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(p.getId()) + " \", \"value\" : \" " + Integer.toString(p.getValues().get(z)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
+						// String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(p.getId()) + " \\\", \\\"value\\\" : \\\" " + Double.toString(p.getValues().get(p.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/phmeasures";
+						String com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(p.getId()) + " \", \"value\" : \" " + Double.toString(p.getValues().get(p.getValues().size()-1)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
 						try {
 							pr = rt.exec(com);
 						}catch(Exception e) {
@@ -166,8 +157,8 @@ public class Gerador {
 					String mode = h.getMode();
 					if(mode == "Low") {
 						h.generateDrySoil(1/regs_per_day);
-						String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(h.getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
-						//com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(p.getId()) + " \", \"value\" : \" " + Integer.toString(p.getValues().get(z)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
+						// String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(h.getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
+						String com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(h.getId()) + " \", \"value\" : \" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
 						try {
 							pr = rt.exec(com);
 						}catch(Exception e) {
@@ -176,8 +167,8 @@ public class Gerador {
 					}
 					if(mode == "Medium") {
 						h.generateNeutralSoil(1/regs_per_day);
-						String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(h.getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
-						//com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(p.getId()) + " \", \"value\" : \" " + Integer.toString(p.getValues().get(z)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
+						// String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(h.getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
+						String com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(h.getId()) + " \", \"value\" : \" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
 						try {
 							pr = rt.exec(com);
 						}catch(Exception e) {
@@ -186,8 +177,8 @@ public class Gerador {
 					}
 					if(mode == "High") {
 						h.generateMoistSoil(1/regs_per_day);
-						String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(h.getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
-						//com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(p.getId()) + " \", \"value\" : \" " + Integer.toString(p.getValues().get(z)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
+						// String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(h.getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
+						String com = "curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(h.getId()) + " \", \"value\" : \" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \"}\' http://localhost:8080/api/test/phmeasures"; //Se estiver a correr em linux
 						try {
 							pr = rt.exec(com);
 						}catch(Exception e) {

@@ -33,7 +33,8 @@
                                         <td ><a th:href="@{'/parcel/'+${phSensor.parcel.parcelId}}" th:text="${phSensor.parcel.location}"></a></td>
                                         <td th:text="${phSensor.sensorId}">...</td>
                                         <td th:text="${phSensor.assocDate}">...</td>
-                                        <td th:text="${last_med.value}">NA</td>
+                                        <td th:if="${last_med}" th:text="${last_med.value}">..</td>
+                                        <td th:unless="${last_med}">None</td>
                                         <td ><a th:href="@{/phSensor/measures(sensorId=${phSensor.sensorId})}" >measures</a></td>
 
                                     </tr>

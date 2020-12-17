@@ -45,7 +45,8 @@ public class HumSensorController {
         HumSensor sensor = this.humSensorRepository.getOne(sensorId);
         model.addAttribute("humSensor", sensor);
 
-        model.addAttribute("last_med", sensor.getMeasures().get(0)); // vai buscar o mais antigo TODO
+        if (!sensor.getMeasures().isEmpty())
+            model.addAttribute("last_med", sensor.getMeasures().get(0)); // vai buscar o mais antigo TODO
         return "humSensor.html";
     }
     // humSensor/measures?sensorId=5

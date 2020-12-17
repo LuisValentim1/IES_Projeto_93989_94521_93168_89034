@@ -33,7 +33,8 @@
                                         <td ><a th:href="@{'/parcel/'+${humSensor.parcel.parcelId}}" th:text="${humSensor.parcel.location}"></a></td>
                                         <td th:text="${humSensor.sensorId}">...</td>
                                         <td th:text="${humSensor.assocDate}">...</td>
-                                        <td th:text="${last_med.value}">NA</td>
+                                        <td th:if="${last_med}" th:text="${last_med.value}">..</td>
+                                        <td th:unless="${last_med}">None</td>
                                         <td ><a th:href="@{/humSensor/measures(sensorId=${humSensor.sensorId})}" >measures</a></td>
 
                                     </tr>
