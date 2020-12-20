@@ -2,7 +2,9 @@ package com.ies.blossom.controllers;
 
 import com.ies.blossom.dto.MeasureDto;
 import com.ies.blossom.dto.ParcelDto;
+import com.ies.blossom.dto.PlantDto;
 import com.ies.blossom.dto.SensorDto;
+import com.ies.blossom.dto.UserDto;
 import com.ies.blossom.entitys.*;
 import com.ies.blossom.exceptions.ResourceNotFoundException;
 import com.ies.blossom.repositorys.*;
@@ -39,7 +41,7 @@ public class RestTestController {
     }
 
     @PostMapping("/users")
-    public User createUser(@RequestBody User user) {
+    public User createUser(@RequestBody UserDto user) {
         Date entryDate = new Date(System.currentTimeMillis());
         Timestamp lastJoined = new Timestamp(System.currentTimeMillis());
 
@@ -60,6 +62,7 @@ public class RestTestController {
         User user = this.userRepository.getOne(parcelDto.getOwner());
         Parcel parcel = new Parcel(user, parcelDto.getLocation());
         user.getParcels().add(parcel);
+        this.userRepository.save(user);
         return this.parcelRepository.save(parcel);
     }
 
@@ -73,6 +76,7 @@ public class RestTestController {
         Parcel parcel = this.parcelRepository.getOne(sensorDto.getParcelId());
         PhSensor sensor = new PhSensor(parcel, new Date(System.currentTimeMillis()));
         parcel.getPhSensors().add(sensor);
+        this.parcelRepository.save(parcel);
         return this.phSensorRepository.save(sensor);
     }
 
@@ -96,6 +100,7 @@ public class RestTestController {
         Parcel parcel = this.parcelRepository.getOne(sensorDto.getParcelId());
         HumSensor sensor = new HumSensor(parcel, new Date(System.currentTimeMillis()));
         parcel.getHumSensors().add(sensor);
+        this.parcelRepository.save(parcel);
         return this.humSensorRepository.save(sensor);
     }
 
@@ -122,8 +127,16 @@ public class RestTestController {
     }
 
     @PostMapping("/plants")
-    public Plant createPlant(@RequestBody Plant plant) {
-        return this.plantRepository.save(plant);
+    public Plant createPlant(@RequestBody PlantDto plant) {
+        Plant plant2save = new Plant(
+            plant.getCientificName(),
+            plant.getEnglishName(),
+            plant.getPhMax(),
+            plant.getPhMin(),
+            plant.getHumMin(),
+            plant.getHumMax()
+        );
+        return this.plantRepository.save(plant2save);
     }
 
     // Funcionalidades para o Luis
