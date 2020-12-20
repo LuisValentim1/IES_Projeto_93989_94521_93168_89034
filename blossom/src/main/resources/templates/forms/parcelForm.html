@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Parcel Form</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="container">
+        <div>
+            <h1>Parcel Form</h1>
+                
+            <form th:if="${not created}" action="#" th:action="@{/parcel/new}" th:object="${form}" method="post">
+                <div class="mb-3">
+                  <label for="location" class="form-label">Location</label>
+                  <input type="text" id="location" class="form-control" th:field="*{location}" aria-describedby="locationHelp">
+                  <div id="locationHelp" class="form-text">We'll never share your location with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="plant" class="form-label">Plant</label>
+                    <select id="plant" class="form-select" th:field="*{plant}">
+                        <option selected value="0">None</option>
+                        <option th:each="plant : *{plants}" th:value="${plant.plantId}" th:text="${plant.englishName}">..</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <!-- TODO
+                    <a th:href="@{/phsensor/new}" class="btn btn-primary">Associate new ph sensor</a>
+                    -->
+                </div>
+                <div class="mb-3">
+                    <!-- TODO
+                    <a th:href="@{/humsensor/new}" class="btn btn-primary">Associate new humidity sensor</a>
+                    -->
+                </div>
+                <p><input type="submit" class="btn btn-primary" value="Submit" /> <input type="reset" class="btn btn-danger" value="Reset" /></p>
+            </form>
+            <div th:if="${created}">
+                <p>New parcel created with sucess</p>
+                <a th:href="@{/}" class="btn btn-primary">Back to main page</a>
+            </div>
+        </div>
+    </div>
+</div>
