@@ -1,17 +1,17 @@
 version: "2.1" #Perguntar ao prof o que a versao faz
 services:
-  #ekar-mysql:
-  # container_name: mysql-container
-  #image: "mysql/mysql-server:5.7"
-  #volumes:
-  #  - ./dbdata:/var/lib/mysql
-  #environment:
-  #  MYSQL_DATABASE: user
-  #  MYSQL_ROOT_PASSWORD: password
-  #  MYSQL_ROOT_HOST: "%"
-  # ports:
-  #   - "3301:3306"
-  # restart: always
+  ekar-mysql:
+    container_name: mysql-container
+    image: "mysql/mysql-server:5.7"
+    volumes:
+      - ./dbdata:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: user
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - "3301:3306"
+    restart: always
 
   gerador-app:
     image: gerador-spring-boot-app
@@ -36,9 +36,8 @@ services:
       - /data/blossom-spring-boot-app
 
     depends_on:
-      #ekar-mysql:
-      # condition: service_healthy
-      - gerador-app
+      ekar-mysql:
+        condition: service_healthy
 
 networks:
   all:
