@@ -10,6 +10,7 @@ import com.ies.blossom.entitys.User;
 import com.ies.blossom.repositorys.ParcelRepository;
 import com.ies.blossom.repositorys.PlantRepository;
 import com.ies.blossom.repositorys.UserRepository;
+import com.ies.blossom.security.CustomUserDetails;
 import com.ies.blossom.model.ChangePlantModel;
 import com.ies.blossom.model.ParcelModel;
 
@@ -26,6 +27,7 @@ import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,7 +110,9 @@ public class ParcelController {
     }
     
     @PostMapping("/parcel/new")
-    public String newParcel(Model model, @ModelAttribute ParcelModel parcel) {
+    public String newParcel(Model model, @ModelAttribute ParcelModel parcel, Authentication auth) {
+        CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
+        
         // TODO verificar se a parcela já n tinha sido criada previamente
         Parcel parcel2save = new Parcel();
         parcel2save.setLocation(parcel.getLocation());
@@ -121,7 +125,7 @@ public class ParcelController {
         }
 
         // TODO tem de ser alterado para se associar à pessoa q fez login
-        User user = this.userRepository.getOne(1L);
+        User user = this.userRepository.getOne(userLogged.getId());
         user.getParcels().add(parcel2save);
         this.userRepository.save(user);
 

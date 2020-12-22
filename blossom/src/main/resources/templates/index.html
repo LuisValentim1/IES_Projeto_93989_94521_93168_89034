@@ -12,12 +12,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 align-middle">
-                    <h1>Welcome to blossom</h1>
+                    <h1 th:unless="${#request.userPrincipal}">Welcome to blossom</h1>
+                    <h1 th:if="${#request.userPrincipal}">Welcome <b>[[${#request.userPrincipal.principal.name}]]</b></h1>
+
                     <img src="https://camo.githubusercontent.com/4ba397f8b9f62231558b4844123db11f1ec043a588c100b7913cfeec3a3e742b/68747470733a2f2f692e696d6775722e636f6d2f6450634c7749782e706e67" alt="">
                     <p>Select one of the following </p>
                 </div>
             </div>
-            <p style="margin-top: 2rem;"><a th:href="@{/profile/1}">Experimentar o fluxo entre páginas com o único utilizador que existe na bd (Manuel)</a></p>
         </div>
     </section>
 </div>
