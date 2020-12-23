@@ -49,6 +49,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/profile").authenticated()
             .antMatchers("/parcel/**").authenticated()
             .antMatchers("/plant/**").authenticated()
+            .antMatchers("/humSensor/**").authenticated()
+            .antMatchers("/phSensor/**").authenticated()
             .anyRequest().permitAll()
             .and()
             .formLogin()
