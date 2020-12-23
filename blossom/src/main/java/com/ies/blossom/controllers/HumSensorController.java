@@ -55,7 +55,7 @@ public class HumSensorController {
         model.addAttribute("humSensor", sensor);
 
         if (!sensor.getMeasures().isEmpty())
-            model.addAttribute("last_med", sensor.getMeasures().get(sensor.getMeasures().size()-1)); // TODO sem certeza se funciona
+            model.addAttribute("last_med", sensor.getMeasures().get(0)); // TODO sem certeza se funciona
         return "humSensor.html";
     }
     // humSensor/measures?sensorId=5

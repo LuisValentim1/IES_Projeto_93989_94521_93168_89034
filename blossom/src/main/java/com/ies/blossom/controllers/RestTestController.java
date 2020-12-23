@@ -82,7 +82,7 @@ public class RestTestController {
 
     @PostMapping("/phmeasures")
     public PhMeasure createPhMeasure(@RequestBody MeasureDto measureDto) {
-        // System.out.println("A adicionar medida de ph");
+        System.out.println("A adicionar medida de ph");
         PhSensor sensor = this.phSensorRepository.getOne(measureDto.getSensorId());
         PhMeasure measure = new PhMeasure(sensor, new Timestamp(System.currentTimeMillis()), measureDto.getValue());
         sensor.getMeasures().add(measure);
@@ -106,7 +106,7 @@ public class RestTestController {
 
     @PostMapping("/hummeasures")
     public HumMeasure createHumMeasure(@RequestBody MeasureDto measureDto) {
-        // System.out.println("A adicionar medida de hum");
+        System.out.println("A adicionar medida de hum");
         HumSensor sensor = this.humSensorRepository.getOne(measureDto.getSensorId());
         HumMeasure measure = new HumMeasure(sensor, new Timestamp(System.currentTimeMillis()), measureDto.getValue());
         sensor.getMeasures().add(measure);
@@ -143,16 +143,18 @@ public class RestTestController {
     @GetMapping("/phids")
     public List<Long> getPhIds() {
         List<Long> ret = new ArrayList<Long>();
-        for (PhSensor sensor : this.phSensorRepository.findAll())
+        for (PhSensor sensor : this.phSensorRepository.findAll()) {
             ret.add(sensor.getSensorId());
+        }
         return ret;
     }
 
     @GetMapping("/humids")
     public List<Long> getHumIds() {
         List<Long> ret = new ArrayList<Long>();
-        for (HumSensor sensor : this.humSensorRepository.findAll())
+        for (HumSensor sensor : this.humSensorRepository.findAll()) {
             ret.add(sensor.getSensorId());
+        }
         return ret;
     }
 }
