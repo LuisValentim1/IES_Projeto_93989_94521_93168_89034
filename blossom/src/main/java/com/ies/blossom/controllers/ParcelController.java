@@ -59,9 +59,15 @@ public class ParcelController {
                 }else{
                     retPh.put(sensor, null);
                 }
-            }
+            }            
             // se houver sensores mais ainda n houver medicoes            
             model.addAttribute("phSensorsLastMeasures", retPh);
+            
+            Double phMeasure = parcel.PhMeasure();
+            model.addAttribute("phMeasure", phMeasure);
+            
+            model.addAttribute("goodPh", parcel.getPlant().isGoodPh(phMeasure));
+            System.out.println("GoodPH: " + parcel.getPlant().isGoodPh(phMeasure) + ", Hum: " + phMeasure);
         }
 
         // ir buscar todos as ultimas medidas relativas aos sensores de hum
@@ -77,6 +83,12 @@ public class ParcelController {
             // há sensores de humidade mas n há medicoes
             
             model.addAttribute("humSensorsLastMeasures", retHum);
+            
+            Double humMeasure = parcel.HumMeasure();
+            model.addAttribute("humMeasure", humMeasure.doubleValue());
+            
+            model.addAttribute("goodHum", parcel.getPlant().isGoodHum(humMeasure));
+            System.out.println("GoodHum: " + parcel.getPlant().isGoodHum(humMeasure) + ", Hum: " + humMeasure);
         }
 
         // ir buscar todas as plantas na bd

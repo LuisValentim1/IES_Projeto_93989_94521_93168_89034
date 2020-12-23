@@ -99,6 +99,28 @@ public class Parcel {
     	this.phSensors.add(sensor);
     }
     
+    public Double PhMeasure() {
+    	if(this.phSensors.isEmpty()) {
+    		return null;
+    	}
+    	double sum = 0;
+    	for (PhSensor sensor : phSensors) {
+    		sum+=sensor.getMeasures().get(0).getValue();
+		}
+    	return Double.valueOf(sum/this.phSensors.size());
+    }
+    
+    public Double HumMeasure() {
+    	if(this.humSensors.isEmpty()) {
+    		return null;
+    	}
+    	double sum = 0;
+    	for (HumSensor sensor : humSensors) {
+    		sum+=sensor.getMeasures().get(0).getValue();
+		}
+    	return Double.valueOf(sum/this.humSensors.size());
+    }
+    
     @Override
     public boolean equals(Object obj) {
     	if (this == obj) {

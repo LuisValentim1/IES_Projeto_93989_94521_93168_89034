@@ -111,6 +111,14 @@ public class Plant {
         this.humMax = humMax;
     }
     
+    public boolean isGoodPh(double phMeasure) {
+        return this.getPhMin() <= phMeasure && phMeasure <= this.getPhMax();
+    }
+    
+    public boolean isGoodHum(double humMeasure) {
+        return this.getPhMin() <= humMeasure && humMeasure <= this.getPhMax();
+    }
+    
     @Override
     public boolean equals(Object obj) {
     	if (this == obj) {
