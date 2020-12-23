@@ -10,30 +10,24 @@ import com.ies.blossom.entitys.User;
 import com.ies.blossom.repositorys.ParcelRepository;
 import com.ies.blossom.repositorys.PlantRepository;
 import com.ies.blossom.repositorys.UserRepository;
+import com.ies.blossom.security.CustomUserDetails;
 import com.ies.blossom.model.ChangePlantModel;
 import com.ies.blossom.model.ParcelModel;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ParcelController {
@@ -45,11 +39,15 @@ public class ParcelController {
     @Autowired
     private UserRepository userRepository;
 
-    // TODO Change the URL MAPPING TO parcel NAME DYNAMICALY //
-
     @GetMapping("/parcel/{id}")
-    public String getParcel(Model model, @PathVariable(value="id") Long parcelId) {
+    public String getParcel(Model model, @PathVariable(value="id") Long parcelId, Authentication auth) {
+        CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
         Parcel parcel = this.parcelRepository.getOne(parcelId);
+
+        if (parcel.getOwner().getUserId() != userLogged.getId()) {
+            model.addAttribute("notOwned", true);
+            return "parcel.html";
+        }
 
         // ir buscar todos as ultimas medidas relativas aos sensores de ph
         if (!parcel.getPhSensors().isEmpty()) {
@@ -108,20 +106,22 @@ public class ParcelController {
     }
     
     @PostMapping("/parcel/new")
-    public String newParcel(Model model, @ModelAttribute ParcelModel parcel) {
+    public String newParcel(Model model, @ModelAttribute ParcelModel parcel, Authentication auth) {
+        CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
+        
         // TODO verificar se a parcela já n tinha sido criada previamente
         Parcel parcel2save = new Parcel();
         parcel2save.setLocation(parcel.getLocation());
         
         if (parcel.getPlant() != 0) {
+            // plant == 0 means no plant is associated with parcel
             Plant plant = this.plantRepository.getOne(parcel.getPlant());
             plant.getParcels().add(parcel2save);
             parcel2save.setPlant(plant);
             this.plantRepository.save(plant);
         }
 
-        // TODO tem de ser alterado para se associar à pessoa q fez login
-        User user = this.userRepository.getOne(1L);
+        User user = this.userRepository.getOne(userLogged.getId());
         user.getParcels().add(parcel2save);
         this.userRepository.save(user);
 
@@ -140,6 +140,7 @@ public class ParcelController {
         Parcel parcel = this.parcelRepository.getOne(change.getParcelId());
 
         if (change.getCurrentPlantId() == 0L) {
+            // parcel without plant
             Plant previous = this.plantRepository.getOne(change.getPreviousPlantId());
             previous.getParcels().remove(parcel);
             this.plantRepository.save(previous);
@@ -151,6 +152,7 @@ public class ParcelController {
         Plant current = this.plantRepository.getOne(change.getCurrentPlantId());
 
         if (change.getPreviousPlantId() != null) {
+            // if changed plant
             Plant previous = this.plantRepository.getOne(change.getPreviousPlantId());
             previous.getParcels().remove(parcel);
             this.plantRepository.save(previous);

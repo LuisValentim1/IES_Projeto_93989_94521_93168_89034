@@ -29,16 +29,16 @@ public class User {
         this.isActive = isActive;
     }
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true, length = 45)
     private String email;
 
     @Column(name = "entry_date")
     private Date entryDate;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false, length = 64)
     private String password; // TODO é necessário encriptar a password
 
     @Column(name = "phone_number")

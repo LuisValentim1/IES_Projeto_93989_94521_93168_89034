@@ -17,14 +17,6 @@ public class PlantController {
 
     @Autowired
     private PlantRepository plantRepository;
-    /*
-    PlantRepository plantRepository;
-
-    public PlantController(PlantRepository plantRepository) {
-        this.plantRepository = plantRepository;
-    }*/
-
-    //TODO Change the URL MAPPING TO PLANT NAME DYNAMICALY //
 
     @GetMapping("/plant/{id}")
     public String getPlant(Model model, @PathVariable(value = "id") Long plantId) {
@@ -34,12 +26,18 @@ public class PlantController {
 
     @GetMapping("/plant/new")
     public String getForm(Model model){
+
+        // TODO permitir adicionar plantas apenas a users com role admin
+
         model.addAttribute("form", new PlantModel());
         return "forms/plantForm.html";
     }
 
     @PostMapping("/plant/new")
     public String createPlant(Model model, @ModelAttribute PlantModel plant) {
+
+        // TODO permitir adicionar plantas apenas a users com role admin
+        
         Plant plant2save = new Plant();
         plant2save.setCientificName(plant.getCientificName());
         plant2save.setEnglishName(plant.getEnglishName());

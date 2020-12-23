@@ -9,9 +9,9 @@
 
 <div layout:fragment="content">
     <section class="my-5">
-        <div style="text-align: center; justify-content: center;" class="container" th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
-            <h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h1>
-            <p th:utext="${errorMessage}">Error java.lang.NullPointerException</p>
+        <div style="text-align: center; justify-content: center;" class="container">
+            <h1 th:text="'Error code: ' + ${httpError}">404</h1>
+            <p th:text="${errorMessage}">Not Found</p>
             <a class="btn btn-primary" th:href="@{/}">Back to Home Page</a>
         </div>
     </section>
