@@ -1,14 +1,17 @@
 version: "2.1" #Perguntar ao prof o que a versao faz
 services:
   ekar-mysql:
-    container_name: mysql-container
+    container_name: thegeekyasian-mysql
     image: "mysql/mysql-server:5.7"
     volumes:
       - ./dbdata:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: user
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: thegeekyasian
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: "%"
+
+    networks:
+      - all
     ports:
       - "3301:3306"
     restart: always
