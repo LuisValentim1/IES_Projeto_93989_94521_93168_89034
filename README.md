@@ -1,18 +1,19 @@
 # blossom
 
-
 <img src="https://i.imgur.com/dPcLwIx.png" >
 
+## Class
 
-## Class 
-Introdução a Engenharia do Software 
+Introdução a Engenharia do Software
 
 ## Project abstract
+
 Web application with tracking capabilities in relation to soil moisture and
 PH, with subsequent advice on current status and ability to generate
 triggers at certain thresholds.
 
 ## Project description
+
 Blossom is a full stack web app project, fully developed by students from concept, to
 technical architecture, all the way to the final implementation, using enterprise frameworks
 and following agile methods of production .
@@ -23,6 +24,22 @@ Although everyone shall still work as a core developer instead of focusing solel
 assigned role.
 
 ## How to run the project
+
+- Full Project
+  While on the main folder (the one with docker-compose)
+
+Windows:
+'./deploy-windows.sh'
+
+Linux:
+'./deploy.sh'
+
+Alternatively:
+'docker-compose up --build'
+
+and to turn off
+'docker-compose down'
+
 Execute the following on the command line while on the "blossom folder"
 
 './mvnw spring-boot:run'
@@ -38,17 +55,11 @@ Since the project is deployed using a docker container all the depencies are rea
 -JPA
 -Srping MVC
 -Spring Dev Tools
--Spring SQL Driver 
+-Spring SQL Driver
 
 ## Data Sensing
+
 In the scope of this project we’ll generate semi-random data similar to what we’d find from
 actual real life soil monitoring. The part of our project responsible for the Data generation will
 be held in a separate docker container, this will prove beneficial in case we want to change
 our data source to real data as the project evolves.
-
-
-
-
-
-
-
