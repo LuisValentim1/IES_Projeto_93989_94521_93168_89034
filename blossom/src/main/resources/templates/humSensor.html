@@ -1,49 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
 <head>
-    <title>Plant Name</title>
+<title>Plant Name</title>
 </head>
 
 <div layout:fragment="content">
-    <section class="my-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <body>
-                        <div>
-                            <h2>Sensor Info</h2>
-                            <br />
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Type</th>
-                                        <th scope="col">Parcel</th>
-                                        <th scope="col">Id</th>
-                                        <th scope="col">Associated at</th>
-                                        <th scope="col">Last Measurement</th>
-                                        <th scope="col">Measurement List</th>
+	<section class="my-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<body>
+						<div>
+							<h2>Sensor Info</h2>
+							<br />
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">Type</th>
+										<th scope="col">Parcel</th>
+										<th scope="col">Id</th>
+										<th scope="col">Associated at</th>
+										<th scope="col">Last Measurement</th>
+										<th scope="col">Measurement List</th>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>HUM   </td>
-                                        <td ><a th:href="@{'/parcel/'+${humSensor.parcel.parcelId}}" th:text="${humSensor.parcel.location}"></a></td>
-                                        <td th:text="${humSensor.sensorId}">...</td>
-                                        <td th:text="${humSensor.assocDate}">...</td>
-                                        <td th:if="${last_med}" th:text="${last_med.value}">..</td>
-                                        <td th:unless="${last_med}">None</td>
-                                        <td ><a th:href="@{/humSensor/measures(sensorId=${humSensor.sensorId})}" >measures</a></td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>HUM</td>
+										<td><a
+											th:href="@{'/parcel/'+${humSensor.parcel.parcelId}}"
+											th:text="${humSensor.parcel.location}"></a></td>
+										<td th:text="${humSensor.sensorId}">...</td>
+										<td th:text="${humSensor.assocDate}">...</td>
+										<td th:if="${last_med}" th:text="${last_med.value}">..</td>
+										<td th:unless="${last_med}">None</td>
+										<td><a
+											th:href="@{/humSensor/measures(sensorId=${humSensor.sensorId})}">measures</a></td>
 
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </body>
-                </div>
-            </div>
-        </div>
-    </section>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</body>
+				</div>
+			</div>
+		</div>
+	</section>
 </div>

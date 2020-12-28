@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
 <head>
-    <title>Error page</title>
+<title>Error page</title>
 </head>
 <body>
 
-<div layout:fragment="content">
-    <section class="my-5">
-        <div style="text-align: center; justify-content: center;" class="container">
-            <h1 th:text="'Error code: ' + ${httpError}">404</h1>
-            <p th:text="${errorMessage}">Not Found</p>
-            <a class="btn btn-primary" th:href="@{/}">Back to Home Page</a>
-        </div>
-    </section>
-</div>
+	<div layout:fragment="content">
+		<section class="my-5">
+			<div style="text-align: center; justify-content: center;"
+				class="container">
+				<h1 th:text="'Error code: ' + ${httpError}">404</h1>
+				<p th:text="${errorMessage}">Not Found</p>
+				<a class="btn btn-primary" th:href="@{/}">Back to Home Page</a>
+			</div>
+		</section>
+	</div>
 
 </body>
 </html>
