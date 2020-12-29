@@ -51,6 +51,7 @@ public class ParcelController {
 
         // ir buscar todos as ultimas medidas relativas aos sensores de ph
         if (!parcel.getPhSensors().isEmpty()) {
+        	model.addAttribute("phNull", false);
             Map<PhSensor, PhMeasure> retPh = new HashMap<PhSensor, PhMeasure>();
             
             for (PhSensor sensor : parcel.getPhSensors()) {
@@ -68,10 +69,14 @@ public class ParcelController {
             
             model.addAttribute("goodPh", parcel.getPlant().isGoodPh(phMeasure));
             System.out.println("GoodPH: " + parcel.getPlant().isGoodPh(phMeasure) + ", Hum: " + phMeasure);
+        } else {
+        	model.addAttribute("phNull", true);
+        	
         }
 
         // ir buscar todos as ultimas medidas relativas aos sensores de hum
         if (!parcel.getHumSensors().isEmpty()) {
+        	model.addAttribute("humNull", false);
             Map<HumSensor, HumMeasure> retHum = new HashMap<HumSensor, HumMeasure>();
             for (HumSensor sensor : parcel.getHumSensors()) {
                 if (!sensor.getMeasures().isEmpty()) {
@@ -89,6 +94,8 @@ public class ParcelController {
             
             model.addAttribute("goodHum", parcel.getPlant().isGoodHum(humMeasure));
             System.out.println("GoodHum: " + parcel.getPlant().isGoodHum(humMeasure) + ", Hum: " + humMeasure);
+        } else {
+        	model.addAttribute("humNull", true);
         }
 
         // ir buscar todas as plantas na bd
