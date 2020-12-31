@@ -12,6 +12,7 @@ import com.ies.blossom.repositorys.PlantRepository;
 import com.ies.blossom.repositorys.UserRepository;
 import com.ies.blossom.security.CustomUserDetails;
 import com.ies.blossom.model.ChangePlantModel;
+import com.ies.blossom.model.GoodPlantModel;
 import com.ies.blossom.model.ParcelModel;
 
 import java.sql.Date;
@@ -60,10 +61,9 @@ public class ParcelController {
         
         makeData(parcel);
         
-
+	    GoodPlantModel plantmodel = parcel.checkPlantConditions();
         // ir buscar todos as ultimas medidas relativas aos sensores de ph
         if (!parcel.getPhSensors().isEmpty()) {
-        	model.addAttribute("phNull", false);
             Map<PhSensor, PhMeasure> retPh = new HashMap<PhSensor, PhMeasure>();
             
             for (PhSensor sensor : parcel.getPhSensors()) {
@@ -75,15 +75,6 @@ public class ParcelController {
             }            
             // se houver sensores mais ainda n houver medicoes            
             model.addAttribute("phSensorsLastMeasures", retPh);
-            
-            Double phMeasure = parcel.PhMeasure();            
-            model.addAttribute("phMeasure", phMeasure);
-            
-            model.addAttribute("goodPh", parcel.getPlant().isGoodPh(phMeasure));
-            System.out.println("GoodPH: " + parcel.getPlant().isGoodPh(phMeasure) + ", Hum: " + phMeasure);
-        } else {
-        	model.addAttribute("phNull", true);
-        	
         }
 
         // ir buscar todos as ultimas medidas relativas aos sensores de hum
@@ -99,16 +90,16 @@ public class ParcelController {
             }
             // há sensores de humidade mas n há medicoes
             
-            model.addAttribute("humSensorsLastMeasures", retHum);
-            
-            Double humMeasure = parcel.HumMeasure();
-            model.addAttribute("humMeasure", humMeasure.doubleValue());
-            
-            model.addAttribute("goodHum", parcel.getPlant().isGoodHum(humMeasure));
-            System.out.println("GoodHum: " + parcel.getPlant().isGoodHum(humMeasure) + ", Hum: " + humMeasure);
-        } else {
-        	model.addAttribute("humNull", true);
+            model.addAttribute("humSensorsLastMeasures", retHum);        
         }
+        
+        model.addAttribute("phNull", plantmodel.isPhNull());
+        model.addAttribute("phMeasure", plantmodel.getPhMeasure());
+        model.addAttribute("goodPh", plantmodel.isGoodPh());
+        
+        model.addAttribute("humNull", plantmodel.isHumNull());
+        model.addAttribute("humMeasure", plantmodel.getHumMeasure());
+        model.addAttribute("goodHum", plantmodel.isGoodHum());
 
         // ir buscar todas as plantas na bd
         // talvez seja melhor colocar noutro método, esta funcionalidade é chamada poucas vezes
@@ -199,9 +190,10 @@ public class ParcelController {
     
      private static void makeData(Parcel parcel) throws ParseException {
          parcel.setPlant(new Plant("Daisy", "Daisius", 2.0, 1.0, 1.0, 2.0));
-         Double[] lista = new Double[]{1.5, 1.6, 1.4};
+         Double[] lista = new Double[]{1.0, 1.6, 1.4};
+         Double[] lista2 = new Double[]{4.0, 1.6, 1.4};
          parcel.setHumSensors(makeHumSensors(parcel, lista));
-         parcel.setPhSensors(makePhSensors(parcel, lista));         	
+         parcel.setPhSensors(makePhSensors(parcel, lista2));         	
      }
      
      private static Set<HumSensor> makeHumSensors(Parcel parcel, Double[] lista) throws ParseException{

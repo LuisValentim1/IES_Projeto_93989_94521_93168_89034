@@ -2,6 +2,7 @@ package com.ies.blossom.entitys;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ies.blossom.model.GoodPlantModel;
 
 import javax.persistence.*;
 import java.text.DecimalFormat;
@@ -101,14 +102,16 @@ public class Parcel {
     }
     
     public Double PhMeasure() {
-    	if(this.phSensors.isEmpty()) {
+    	if(this.noPhMeasure()) {
     		return null;
     	}
     	
     	DecimalFormat formatter = new DecimalFormat("#0.00");
     	double sum = 0;
     	for (PhSensor sensor : phSensors) {
-    		sum+=sensor.getMeasures().get(0).getValue();
+    		if(!sensor.getMeasures().isEmpty()) {
+    			sum+=sensor.getMeasures().get(0).getValue();
+    		}
 		}
     	double value = Double.valueOf(sum/this.phSensors.size());
     	String tmp = formatter.format(value);
@@ -116,21 +119,77 @@ public class Parcel {
     	return Double.valueOf(tmp);
     }
     
+    public boolean noPhMeasure() {
+    	if(this.phSensors.isEmpty()) {
+    		return true;
+    	}
+    	boolean noMeasure = true;
+    	for (PhSensor sensor : phSensors) {
+    		if(!sensor.getMeasures().isEmpty()) {
+    			noMeasure = false;
+    			break;
+    		}
+		}
+    	return noMeasure;
+    }
+    
+    public GoodPlantModel checkPlantConditions() {
+    	Boolean phNull = this.noPhMeasure();
+    	Boolean humNull = this.noHumMeasure();
+    	
+    	Double phMeasure;
+    	Boolean goodPh;
+    	if(!phNull) {
+    		phMeasure = this.PhMeasure();
+    		goodPh = this.getPlant().isGoodPh(phMeasure);
+    	} else {
+    		phMeasure = null;
+    		goodPh = null;
+    	}
+    	
+    	Double humMeasure;
+    	Boolean goodHum;
+    	if(!humNull) {
+    		humMeasure = this.PhMeasure();
+    		goodHum = this.getPlant().isGoodPh(phMeasure);
+    	} else {
+    		humMeasure = null;
+    		goodHum = null;
+    	}   	
+    	return new GoodPlantModel(phNull, humNull, phMeasure, humMeasure, goodPh, goodHum, this);
+    }
+    
     public Double HumMeasure() {
-    	if(this.humSensors.isEmpty()) {
+    	if(this.noHumMeasure()) {
     		return null;
     	}
     	
     	DecimalFormat formatter = new DecimalFormat("#0.00");
     	double sum = 0;
     	for (HumSensor sensor : humSensors) {
-    		sum+=sensor.getMeasures().get(0).getValue();
+    		if(!sensor.getMeasures().isEmpty()) {
+    			sum+=sensor.getMeasures().get(0).getValue();
+    		}
 		}
     	double value = Double.valueOf(sum/this.humSensors.size());
     	String tmp = formatter.format(value);
     	
     	return Double.valueOf(tmp);
     }
+    
+    public boolean noHumMeasure() {
+		if(this.humSensors.isEmpty()) {
+    		return true;
+    	}
+		boolean noMeasure = true;
+		for (PhSensor sensor : phSensors) {
+    		if(!sensor.getMeasures().isEmpty()) {
+    			noMeasure = false;
+    			break;
+    		}
+		}
+    	return noMeasure;
+	}
     
     @Override
     public boolean equals(Object obj) {
@@ -146,7 +205,6 @@ public class Parcel {
     		return true;
     	}
     	return false;
-    }
-    
+    }    
     
 }
