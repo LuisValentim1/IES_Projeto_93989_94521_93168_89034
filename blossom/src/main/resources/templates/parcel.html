@@ -46,44 +46,66 @@
 														<button type="button" class="badge rounded-pill bg-dark"
 															data-bs-toggle="modal" data-bs-target="#changePlantModal">Associate
 															plant</button>
-													<div th:if="${phNull and humNull}">
-														Não existem dados sensoriais para saber o PH e a humidade da crop.
-													</div>
-													<div th:if="${!phNull and humNull}">
-														<div th:if="${goodPh}"> 
-															O ph da crop é adequado ao desenvolvimento da planta. Não existem dados sobre a humidade
-														</div>
-														<div th:if="${!goodPh}">
-															O ph da crop é prejudicial ao desenvolvimento da planta. Não existem dados sobre a humidade
-														</div>
-													</div>
-													<div th:if="${phNull and !humNull}">
-														<div th:if="${goodHum}"> 
-															A humidade da crop é adequado ao desenvolvimento da planta. Não existem dados sobre o ph
-														</div>
-														<div th:if="${!goodHum}">
-															A humidade da crop é prejudicial ao desenvolvimento da planta. Não existem dados sobre o ph
-														</div>
-													</div>
-													<div th:if="${!phNull and !humNull}">
-														<div th:if="${goodPh and goodHum}">
-															A humidade e ph da crop são adequado ao desenvolvimento da planta.
-														</div>
-														<div th:if="${!goodPh and goodHum}">
-															O ph da crop é prejudicial ao desenvolvimento da planta.
-														</div>
-														<div th:if="${goodPh and !goodHum}">
-															A humidade da crop é prejudicial ao desenvolvimento da planta.
-														</div>
-														<div th:if="${!goodPh and !goodHum}">
-															A humidade e ph da crop são prejudicial ao desenvolvimento da planta.
-														</div>
-													</div>
+													
+													
+													
 												</span>
 												</td>
 											</tr>
 										</tbody>
 									</table>
+									<div>
+										<div>Status da Crop</div>
+										<div th:if="${phNull and humNull}">
+											Não existem dados sensoriais para saber o PH e a humidade da crop.
+										</div>
+										<div th:if="${!phNull and humNull}">
+											<div th:if="${goodPh}"> 
+												O ph da crop é adequado ao desenvolvimento da planta. Não existem dados sobre a humidade
+											</div>
+											<div th:if="${!goodPh}">
+												O ph da crop é prejudicial ao desenvolvimento da planta. Não existem dados sobre a humidade
+											</div>
+											<div>
+											Ph da crop: <span th:text="${phMeasure}">...</span>
+											intervalo de Ph da planta: <span th:text="${parcel.plant.phMin}">...</span> - <span th:text="${parcel.plant.phMax}">
+											</div>
+										</div>
+										<div th:if="${phNull and !humNull}">
+											<div th:if="${goodHum}"> 
+												A humidade da crop é adequado ao desenvolvimento da planta. Não existem dados sobre o ph
+											</div>
+											<div th:if="${!goodHum}">
+												A humidade da crop é prejudicial ao desenvolvimento da planta. Não existem dados sobre o ph
+											</div>
+											<div>
+											Hum da crop: <span th:text="${humMeasure}">...</span>
+											intervalo de Hum da planta: <span th:text="${parcel.plant.humMin}">...</span> - <span th:text="${parcel.plant.humMax}">
+											</div>
+										</div>
+										<div th:if="${!phNull and !humNull}">
+												<div th:if="${goodPh and goodHum}">
+													A humidade e ph da crop são adequado ao desenvolvimento da planta.
+												</div>
+												<div th:if="${!goodPh and goodHum}">
+													O ph da crop é prejudicial ao desenvolvimento da planta.
+												</div>
+												<div th:if="${goodPh and !goodHum}">
+													A humidade da crop é prejudicial ao desenvolvimento da planta.
+												</div>
+												<div th:if="${!goodPh and !goodHum}">
+													A humidade e ph da crop são prejudicial ao desenvolvimento da planta.
+												</div>
+												<div>
+												Ph da crop: <span th:text="${phMeasure}">...</span>
+												intervalo de Ph da planta: <span th:text="${parcel.plant.phMin}">...</span> - <span th:text="${parcel.plant.phMax}">
+												</div>
+												<div>
+												Hum da crop: <span th:text="${humMeasure}">...</span>
+												intervalo de Hum da planta: <span th:text="${parcel.plant.humMin}">...</span> - <span th:text="${parcel.plant.humMax}">
+												</div>
+										</div>
+									</div>
 									<input type="hidden" th:value="${parcel.parcelId}" id="pId">
 									<input th:if="${parcel.plant}" type="hidden"
 										th:value="${parcel.plant.plantId}" id="prevId">

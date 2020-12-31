@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -103,22 +105,32 @@ public class Parcel {
     	if(this.phSensors.isEmpty()) {
     		return null;
     	}
+    	
+    	DecimalFormat formatter = new DecimalFormat("#0.00");
     	double sum = 0;
     	for (PhSensor sensor : phSensors) {
     		sum+=sensor.getMeasures().get(0).getValue();
 		}
-    	return Double.valueOf(sum/this.phSensors.size());
+    	double value = Double.valueOf(sum/this.phSensors.size());
+    	String tmp = formatter.format(value);
+        
+    	return Double.valueOf(tmp);
     }
     
     public Double HumMeasure() {
     	if(this.humSensors.isEmpty()) {
     		return null;
     	}
+    	
+    	DecimalFormat formatter = new DecimalFormat("#0.00");
     	double sum = 0;
     	for (HumSensor sensor : humSensors) {
     		sum+=sensor.getMeasures().get(0).getValue();
 		}
-    	return Double.valueOf(sum/this.humSensors.size());
+    	double value = Double.valueOf(sum/this.humSensors.size());
+    	String tmp = formatter.format(value);
+    	
+    	return Double.valueOf(tmp);
     }
     
     @Override
