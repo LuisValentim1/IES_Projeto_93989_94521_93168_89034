@@ -60,8 +60,7 @@ public class ParcelController {
         }
         
         makeData(parcel);
-        
-	    GoodPlantModel plantmodel = parcel.checkPlantConditions();
+      
         // ir buscar todos as ultimas medidas relativas aos sensores de ph
         if (!parcel.getPhSensors().isEmpty()) {
             Map<PhSensor, PhMeasure> retPh = new HashMap<PhSensor, PhMeasure>();
@@ -90,9 +89,11 @@ public class ParcelController {
             }
             // há sensores de humidade mas n há medicoes
             
+            
             model.addAttribute("humSensorsLastMeasures", retHum);        
         }
         
+        GoodPlantModel plantmodel = parcel.checkPlantConditions();
         model.addAttribute("phNull", plantmodel.isPhNull());
         model.addAttribute("phMeasure", plantmodel.getPhMeasure());
         model.addAttribute("goodPh", plantmodel.isGoodPh());

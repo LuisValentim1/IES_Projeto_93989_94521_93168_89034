@@ -135,29 +135,15 @@ public class Parcel {
     
     public GoodPlantModel checkPlantConditions() {
     	Boolean phNull = this.noPhMeasure();
+    	Double phMeasure = this.PhMeasure();
+    	Boolean goodPh = this.getPlant().isGoodPh(phMeasure);
     	Boolean humNull = this.noHumMeasure();
-    	
-    	Double phMeasure;
-    	Boolean goodPh;
-    	if(!phNull) {
-    		phMeasure = this.PhMeasure();
-    		goodPh = this.getPlant().isGoodPh(phMeasure);
-    	} else {
-    		phMeasure = null;
-    		goodPh = null;
-    	}
-    	
-    	Double humMeasure;
-    	Boolean goodHum;
-    	if(!humNull) {
-    		humMeasure = this.PhMeasure();
-    		goodHum = this.getPlant().isGoodPh(phMeasure);
-    	} else {
-    		humMeasure = null;
-    		goodHum = null;
-    	}   	
+    	Double humMeasure = this.PhMeasure();
+    	Boolean goodHum = this.getPlant().isGoodPh(phMeasure); 	
     	return new GoodPlantModel(phNull, humNull, phMeasure, humMeasure, goodPh, goodHum, this);
     }
+    
+    
     
     public Double HumMeasure() {
     	if(this.noHumMeasure()) {
