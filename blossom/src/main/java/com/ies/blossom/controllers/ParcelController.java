@@ -198,70 +198,41 @@ public class ParcelController {
     }
     
      private static void makeData(Parcel parcel) throws ParseException {
-    	
-    	
-     	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    	
-     	 parcel.setLocation("Aveiro");
-        
-         Plant plant01 = new Plant("Daisy", "Daisius", 2.0, 1.0, 1.0, 1.8);
-         parcel.setPlant(plant01);
-         
-         Set<HumSensor> humsensores = new HashSet<HumSensor>();
-        
-         HumSensor humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-         List<HumMeasure> humeasures = new ArrayList<HumMeasure>();
-         humeasures.add(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
-         humsensor.setMeasures(humeasures);
-         humsensores.add(humsensor);
-         
-         humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-02 00:00:00")).getTime()));
-         humeasures = new ArrayList<HumMeasure>();
-         humeasures.add(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 2.3));
-         humsensor.setMeasures(humeasures);
-         humsensores.add(humsensor);
-         
-         humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-02 00:00:00")).getTime()));
-         humeasures = new ArrayList<HumMeasure>();
-         humeasures.add(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
-         humsensor.setMeasures(humeasures);
-         humsensores.add(humsensor);
-         
-         humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-03 00:00:00")).getTime()));
-         humeasures = new ArrayList<HumMeasure>();
-         humeasures.add(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-04 00:00:00")).getTime()), 2.4));
-         humsensor.setMeasures(humeasures);
-         humsensores.add(humsensor);
-         
-         parcel.setHumSensors(humsensores);
-         
-         Set<PhSensor> phsensores  = new HashSet<PhSensor>();
-         
-         PhSensor phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-         List<PhMeasure> phmeasures = new ArrayList<PhMeasure>();
-         phmeasures.add(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
-         phsensor.setMeasures(phmeasures);
-         phsensores.add(phsensor);
-         
-         phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-02 00:00:00")).getTime()));
-         phmeasures = new ArrayList<PhMeasure>();
-         phmeasures.add(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 2.3));
-         phsensor.setMeasures(phmeasures);
-         phsensores.add(phsensor);
-         
-         phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-02 00:00:00")).getTime()));
-         phmeasures = new ArrayList<PhMeasure>();
-         phmeasures.add(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
-         phsensor.setMeasures(phmeasures);
-         phsensores.add(phsensor);
-         
-         phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-03 00:00:00")).getTime()));
-         phmeasures = new ArrayList<PhMeasure>();
-         phmeasures.add(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-04 00:00:00")).getTime()), 2.4));
-         phsensor.setMeasures(phmeasures);
-         phsensores.add(phsensor);
-         
-         parcel.setPhSensors(phsensores);    	
+         parcel.setPlant(new Plant("Daisy", "Daisius", 2.0, 1.0, 1.0, 2.0));
+         Double[] lista = new Double[]{1.5, 1.6, 1.4};
+         parcel.setHumSensors(makeHumSensors(parcel, lista));
+         parcel.setPhSensors(makePhSensors(parcel, lista));         	
      }
-    
+     
+     private static Set<HumSensor> makeHumSensors(Parcel parcel, Double[] lista) throws ParseException{
+    	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    	 
+    	 Set<HumSensor> humsensores = new HashSet<HumSensor>();
+    	 HumSensor humsensor;
+    	 List<HumMeasure> humeasures;
+    	 for (Double double1 : lista) {
+    		 humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
+             humeasures = new ArrayList<HumMeasure>();
+             humeasures.add(new HumMeasure(humsensor, new Timestamp((sdf.parse("2019-01-03 00:00:00")).getTime()) , double1));
+             humsensor.setMeasures(humeasures);
+             humsensores.add(humsensor);
+		}
+    	return humsensores;
+     }
+     
+     private static Set<PhSensor> makePhSensors(Parcel parcel, Double[] lista) throws ParseException{
+    	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    	 
+    	 Set<PhSensor> phsensores = new HashSet<PhSensor>();
+    	 PhSensor phsensor;
+    	 List<PhMeasure> phmeasures;
+    	 for (Double double1 : lista) {
+    		 phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
+             phmeasures = new ArrayList<PhMeasure>();
+             phmeasures.add(new PhMeasure(phsensor, new Timestamp((sdf.parse("2019-01-03 00:00:00")).getTime()), double1));
+             phsensor.setMeasures(phmeasures);
+             phsensores.add(phsensor);
+		}
+    	return phsensores;
+     }
 }
