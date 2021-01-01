@@ -55,7 +55,7 @@ public class PhSensorController {
         model.addAttribute("phSensor", sensor);
 
         if (!sensor.getMeasures().isEmpty())
-            model.addAttribute("last_med", sensor.getMeasures().get(0)); // TODO sem certeza se funciona
+            model.addAttribute("last_med", sensor.getMeasures().get(sensor.getMeasures().size()-1));
         return "phSensor.html";
     }
 
