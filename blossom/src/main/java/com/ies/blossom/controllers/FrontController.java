@@ -60,7 +60,7 @@ public class FrontController {
         Timestamp lastJoined = new Timestamp(System.currentTimeMillis());
 
         User user2save = new User(user.getName(), user.getEmail(), entryDate,
-        passwordEncoder.encode(user.getPassword()), user.getPhoneNumber(), lastJoined, true);
+                passwordEncoder.encode(user.getPassword()), user.getPhoneNumber(), lastJoined, true);
 
         this.userRepository.save(user2save);
         model.addAttribute("created", true);

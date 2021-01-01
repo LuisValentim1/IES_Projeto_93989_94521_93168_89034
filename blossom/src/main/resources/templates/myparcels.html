@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <link th:href = "@{/css/myparcels.css}" rel="stylesheet" >
+    <title>Welcome to Our Site</title>
+</head>
+
+<!--https://source.unsplash.com/collection/297224/1600x900  FOTOS DE PLANTAS-->
+
+<body layout:fragment="content">
+    <div >
+        <h1 style=>My Parcels</h1>
+        <button style="text-align: center" type="button" class="btn btn-primary">Add Parcel</button>
+        <p>TODO: Conditional Phrase. 
+        Your plants are: Healthy! | Warning Your Parcel: Is in danger
+        </p>
+    </div>
+    
+    <div class="row row-cols-3">
+        <div class="center col-sm"  th:each="parcel : ${user.parcels}">
+            <style>
+                .property-image {background-image: url("https://source.unsplash.com/collection/297224/1600x900");}
+            </style>
+            <!--TODO Adicionar uma propriedade de foto na parcela, é automaticamente gerada pelo link acima, preciso que esla esteja em user.parcel.image para poder dar render de varias diferentes-->
+            <div class="property-card">
+              <a href="#">
+                <div class="property-image">
+                  <div class="property-image-title">
+                    <!-- Optional <h5>Card Title</h5> If you want it, turn on the CSS also. -->
+                  </div>
+                </div></a>
+              <div class="property-description">
+                <h5 th:text="${parcel.location}"> Card Title </h5>
+                <h6>Plant:</h6>
+                <p th:text="${parcel.plant}">Lorem Ipsum Dipsum hortata. Mixcall Horcho. Mixwell Chingo. More Bingo. Lorem Ipum doth be hard.</p>
+              </div>
+              <a href="#">
+                <div class="property-social-icons">
+                  <!-- I would usually put multipe divs inside here set to flex. Some people might use Ul li. Multiple Solutions -->
+                </div>
+              </a>
+            </div>
+          </div>
+          
+          <!-- END -->
+        </div>
+</body>

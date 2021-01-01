@@ -11,21 +11,30 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
 @Controller
 public class UserController {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/profile")
     public String getIssues(Model model, Authentication auth) throws ParseException {
         CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
 
         User user = this.userRepository.findByEmail(userLogged.getUsername());
-	    model.addAttribute("user", user);
-	    return "user.html";
-    	
+        model.addAttribute("user", user);
+        return "user.html";
+
     }
-    
+
+    @GetMapping("/myparcels")
+    public String getParcels(Model model, Authentication auth) throws ParseException {
+        CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
+
+        User user = this.userRepository.findByEmail(userLogged.getUsername());
+        model.addAttribute("user", user);
+        return "myparcels.html";
+
+    }
+
 }
