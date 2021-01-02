@@ -8,7 +8,11 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
 
 </head>
 <body>
@@ -38,30 +42,23 @@
     </div>
 </nav>
 
-<h1>Hello, im admin bros</h1>
+<h3 style="text-align: center;">Admin center</h3>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Entry Date</th>
-            <th scope="col">Phone number</th>
-            <th scope="col">Last joined</th>
-            <th scope="col">Parcels</th>
-        <tr>
-    </thead>
-    <tbody>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.name}">...</td>
-            <td th:text="${user.email}">...</td>
-            <td th:text="${user.entryDate}">...</td>
-            <td th:text="${user.phoneNumber}">...</td>
-            <td th:text="${user.lastJoined}">...</td>
-            <td>parcels</td>
-        </tr>
-    </tbody>                               
-</table>
+<section>
+    <div class="container">
+        <p>Currently, there are <strong th:text="${#lists.size(users)}"></strong> clients using the app.</p>
+    </div>
+    <div class="container">
+        <canvas style="width: 50%; height: 10%;" id="joinedChart"></canvas>
+    </div>
+
+    <div class="container">
+        <canvas style="width: 50%; height: 10%;" id="lastJoinedChart"></canvas>
+    </div>    
+
+    <input type="hidden" id="joinedData" th:value="${joinedData}" />
+    <input type="hidden" id="lastJoinedData" th:value="${lastJoinedData}" />
+</section>
 
 <!-- Footer -->
 <footer class="container py-5">
@@ -74,6 +71,6 @@
 
 <!-- Optional Section -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-
+<script src="javascript/admin.js"></script>
 </body>
 </html>
