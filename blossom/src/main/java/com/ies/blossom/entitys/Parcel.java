@@ -2,11 +2,17 @@ package com.ies.blossom.entitys;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import com.ies.blossom.model.GoodPlantModel;
 
 import javax.persistence.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -102,80 +108,135 @@ public class Parcel {
     }
     
     public Double PhMeasure() {
-    	if(this.noPhMeasure()) {
-    		return null;
-    	}
-    	
-    	DecimalFormat formatter = new DecimalFormat("#0.00");
-    	double sum = 0;
-    	for (PhSensor sensor : phSensors) {
-    		if(!sensor.getMeasures().isEmpty()) {
-    			sum+=sensor.getMeasures().get(0).getValue();
-    		}
-		}
-    	double value = Double.valueOf(sum/this.phSensors.size());
-    	String tmp = formatter.format(value);
-        
-    	return Double.valueOf(tmp);
+    	return this.measure(false);
+    }
+    
+    public Double HumMeasure() {
+    	return this.measure(true);
     }
     
     public boolean noPhMeasure() {
-    	if(this.phSensors.isEmpty()) {
-    		return true;
-    	}
-    	boolean noMeasure = true;
-    	for (PhSensor sensor : phSensors) {
-    		if(!sensor.getMeasures().isEmpty()) {
-    			noMeasure = false;
-    			break;
-    		}
-		}
-    	return noMeasure;
+    	return this.noMeasure(false, null);
+    }
+    
+    public boolean noHumMeasure() {
+		return this.noMeasure(true, null);
+	}
+    
+    public Map<Sensor, Measure> getPhSensorTable(){
+    	return this.getSensorTable(false);
+    }
+    
+    public Map<Sensor, Measure> getHumSensorTable(){
+    	return this.getSensorTable(true);
+    }
+    
+    public Double generalHumMeasurePercentage() {
+    	return this.generalMeasurePercentage(true);
+    }
+    
+    public Double generalPhMeasurePercentage() {
+    	return this.generalMeasurePercentage(false);
     }
     
     public GoodPlantModel checkPlantConditions() {
-    	Boolean phNull = this.noPhMeasure();
-    	Double phMeasure = this.PhMeasure();
-    	Boolean goodPh = this.getPlant().isGoodPh(phMeasure);
-    	Boolean humNull = this.noHumMeasure();
-    	Double humMeasure = this.PhMeasure();
-    	Boolean goodHum = this.getPlant().isGoodPh(phMeasure); 	
-    	return new GoodPlantModel(phNull, humNull, phMeasure, humMeasure, goodPh, goodHum, this);
+    	return new GoodPlantModel(this, 60.00);
     }
     
+    private Double generalMeasurePercentage(boolean isHumidity) {
+    	Set<Sensor> sensores = this.getSensores(isHumidity);
+    	if(this.noMeasure(isHumidity, sensores)){
+    		return null;
+    	}
+    	
+    	int count = 0;
+    	for (Sensor sensor : sensores) {
+    		Boolean isGood = sensor.isGood(this.getPlant());
+    		if(isGood != null && isGood.booleanValue()) {
+    			count++;
+    		}
+		}
+    	DecimalFormat formatter = new DecimalFormat("#0.00");
+    	return Double.valueOf(formatter.format(Double.valueOf(100*count/sensores.size()))); 
+    }
     
-    
-    public Double HumMeasure() {
-    	if(this.noHumMeasure()) {
+    private Double measure(boolean isHumidity) {
+    	
+    	Set<Sensor> sensores = this.getSensores(isHumidity);
+    	if (this.noMeasure(isHumidity, sensores)) {
     		return null;
     	}
     	
     	DecimalFormat formatter = new DecimalFormat("#0.00");
+    	
     	double sum = 0;
-    	for (HumSensor sensor : humSensors) {
-    		if(!sensor.getMeasures().isEmpty()) {
-    			sum+=sensor.getMeasures().get(0).getValue();
+    	for (Sensor sensor :  sensores) {
+    		if(!sensor.isEmpty()) {
+    			sum+=sensor.getLatest().getValue();
     		}
 		}
-    	double value = Double.valueOf(sum/this.humSensors.size());
-    	String tmp = formatter.format(value);
+    	return Double.valueOf(formatter.format(Double.valueOf(sum/sensores.size())));
     	
-    	return Double.valueOf(tmp);
     }
     
-    public boolean noHumMeasure() {
-		if(this.humSensors.isEmpty()) {
+    private boolean noMeasure(boolean isHumidity, Set<Sensor> sensores) {
+    	
+    	if(this.isEmpty(isHumidity)) {
     		return true;
     	}
-		boolean noMeasure = true;
-		for (PhSensor sensor : phSensors) {
-    		if(!sensor.getMeasures().isEmpty()) {
+    	
+    	if(sensores == null) {
+    		sensores = this.getSensores(isHumidity);
+    	}
+    	
+    	boolean noMeasure = true;
+    	for (Sensor sensor : sensores) {
+    		if(!sensor.isEmpty()) {
     			noMeasure = false;
     			break;
     		}
 		}
     	return noMeasure;
-	}
+    }
+    
+    private boolean isEmpty(boolean isHumidity) {
+    	if(isHumidity) {
+    		return this.humSensors.isEmpty();
+    	} else {
+    		return this.phSensors.isEmpty();
+    	}
+    }
+    
+    private Set<Sensor> getSensores(boolean isHumidity) {
+    	Set<Sensor> set = new HashSet<Sensor>();
+    	if(isHumidity) {
+    		for (HumSensor sensor : this.humSensors) {
+    			set.add((Sensor) sensor);
+			}
+    	} else {
+    		for (PhSensor sensor : this.phSensors) {
+    			set.add((Sensor) sensor);
+			}
+    	}
+    	return set;    	
+    }
+    
+    private Map<Sensor, Measure> getSensorTable(boolean isHumidity){
+    	if(this.isEmpty(isHumidity)) {
+    		return null;
+    	}
+    	
+    	Map<Sensor, Measure> mapa = new HashMap<Sensor, Measure>();
+    	Set<Sensor> set = this.getSensores(isHumidity);
+    	for (Sensor sensor : set) {
+			if(sensor.isEmpty()) {
+				mapa.put(sensor, sensor.getLatest());
+			} else {
+				mapa.put(sensor, null);
+			}
+		}
+    	return mapa;    	
+    }
     
     @Override
     public boolean equals(Object obj) {

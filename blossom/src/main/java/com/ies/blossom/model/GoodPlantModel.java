@@ -5,23 +5,47 @@ import com.ies.blossom.entitys.Parcel;
 public class GoodPlantModel {
 	
 	
-	private Boolean phNull;
-	private Boolean humNull;
-	private Double phMeasure;
-	private Double humMeasure;
-	private Boolean goodPh;
-	private Boolean goodHum;
-	private Parcel parcel;
-	public GoodPlantModel(Boolean phNull, Boolean humNull, Double phMeasure, Double humMeasure, Boolean goodPh,
-			Boolean goodHum, Parcel parcel) {
-		super();
-		this.phNull = phNull;
-		this.humNull = humNull;
-		this.phMeasure = phMeasure;
-		this.humMeasure = humMeasure;
-		this.goodPh = goodPh;
-		this.goodHum = goodHum;
+	public Boolean phNull;
+	public Boolean humNull;
+	public Double goodPhPercentage;
+	public Double goodHumPercentage;
+	public Boolean goodPh;
+	public Boolean goodHum;
+	public Parcel parcel;
+	
+	public GoodPlantModel(Parcel parcel, double acceptablePercentage) {
+		
 		this.parcel = parcel;
+		
+		this.phNull = parcel.noPhMeasure();
+		if (this.phNull == null) {
+			this.goodPhPercentage = null;
+			this.goodPh = null;
+			
+		} else {
+			this.goodPhPercentage = parcel.generalPhMeasurePercentage();
+			if (this.goodPhPercentage < acceptablePercentage) {
+				this.goodPh = false;
+			} else {
+				this.goodPh = true;
+			}
+		}
+		
+		
+		
+		this.humNull = parcel.noHumMeasure();
+		if (this.humNull == null) {
+			this.goodHumPercentage = null;
+			this.goodHum = null;
+		} else {
+			this.goodHumPercentage = parcel.generalHumMeasurePercentage();
+			if (this.goodHumPercentage < acceptablePercentage) {
+				this.goodHum = false;
+			} else {
+				this.goodHum = true;
+			}
+		}
+		
 	}
 	
 	public Boolean isPhNull() {
@@ -31,10 +55,10 @@ public class GoodPlantModel {
 		return humNull;
 	}
 	public Double getPhMeasure() {
-		return phMeasure;
+		return goodPhPercentage;
 	}
 	public Double getHumMeasure() {
-		return humMeasure;
+		return goodHumPercentage;
 	}
 	public Boolean isGoodPh() {
 		return goodPh;

@@ -1,5 +1,6 @@
 package com.ies.blossom.controllers;
 
+import com.ies.blossom.Testing;
 import com.ies.blossom.entitys.HumMeasure;
 import com.ies.blossom.entitys.HumSensor;
 import com.ies.blossom.entitys.Parcel;
@@ -59,9 +60,9 @@ public class ParcelController {
             return "parcel.html";
         }
         
-        makeData(parcel);
-      
-        // ir buscar todos as ultimas medidas relativas aos sensores de ph
+        Testing.makeData(parcel);
+        
+     // ir buscar todos as ultimas medidas relativas aos sensores de ph
         if (!parcel.getPhSensors().isEmpty()) {
             Map<PhSensor, PhMeasure> retPh = new HashMap<PhSensor, PhMeasure>();
             
@@ -71,14 +72,13 @@ public class ParcelController {
                 }else{
                     retPh.put(sensor, null);
                 }
-            }            
+            }
             // se houver sensores mais ainda n houver medicoes            
             model.addAttribute("phSensorsLastMeasures", retPh);
         }
 
         // ir buscar todos as ultimas medidas relativas aos sensores de hum
         if (!parcel.getHumSensors().isEmpty()) {
-        	model.addAttribute("humNull", false);
             Map<HumSensor, HumMeasure> retHum = new HashMap<HumSensor, HumMeasure>();
             for (HumSensor sensor : parcel.getHumSensors()) {
                 if (!sensor.getMeasures().isEmpty()) {
@@ -88,19 +88,10 @@ public class ParcelController {
                 }
             }
             // há sensores de humidade mas n há medicoes
-            
-            
-            model.addAttribute("humSensorsLastMeasures", retHum);        
+            model.addAttribute("humSensorsLastMeasures", retHum);
         }
         
-        GoodPlantModel plantmodel = parcel.checkPlantConditions();
-        model.addAttribute("phNull", plantmodel.isPhNull());
-        model.addAttribute("phMeasure", plantmodel.getPhMeasure());
-        model.addAttribute("goodPh", plantmodel.isGoodPh());
-        
-        model.addAttribute("humNull", plantmodel.isHumNull());
-        model.addAttribute("humMeasure", plantmodel.getHumMeasure());
-        model.addAttribute("goodHum", plantmodel.isGoodHum());
+        model.addAttribute("goodPlantModel", parcel.checkPlantConditions());
 
         // ir buscar todas as plantas na bd
         // talvez seja melhor colocar noutro método, esta funcionalidade é chamada poucas vezes
@@ -189,43 +180,5 @@ public class ParcelController {
         return "redirect:" + request.getHeader("Referer");
     }
     
-     private static void makeData(Parcel parcel) throws ParseException {
-         parcel.setPlant(new Plant("Daisy", "Daisius", 2.0, 1.0, 1.0, 2.0));
-         Double[] lista = new Double[]{1.0, 1.6, 1.4};
-         Double[] lista2 = new Double[]{4.0, 1.6, 1.4};
-         parcel.setHumSensors(makeHumSensors(parcel, lista));
-         parcel.setPhSensors(makePhSensors(parcel, lista2));         	
-     }
-     
-     private static Set<HumSensor> makeHumSensors(Parcel parcel, Double[] lista) throws ParseException{
-    	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    	 
-    	 Set<HumSensor> humsensores = new HashSet<HumSensor>();
-    	 HumSensor humsensor;
-    	 List<HumMeasure> humeasures;
-    	 for (Double double1 : lista) {
-    		 humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-             humeasures = new ArrayList<HumMeasure>();
-             humeasures.add(new HumMeasure(humsensor, new Timestamp((sdf.parse("2019-01-03 00:00:00")).getTime()) , double1));
-             humsensor.setMeasures(humeasures);
-             humsensores.add(humsensor);
-		}
-    	return humsensores;
-     }
-     
-     private static Set<PhSensor> makePhSensors(Parcel parcel, Double[] lista) throws ParseException{
-    	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    	 
-    	 Set<PhSensor> phsensores = new HashSet<PhSensor>();
-    	 PhSensor phsensor;
-    	 List<PhMeasure> phmeasures;
-    	 for (Double double1 : lista) {
-    		 phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-             phmeasures = new ArrayList<PhMeasure>();
-             phmeasures.add(new PhMeasure(phsensor, new Timestamp((sdf.parse("2019-01-03 00:00:00")).getTime()), double1));
-             phsensor.setMeasures(phmeasures);
-             phsensores.add(phsensor);
-		}
-    	return phsensores;
-     }
+    
 }

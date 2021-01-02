@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "ph_sensors")
 // public class PhSensor implements Comparator<PhSensor> {
-public class PhSensor{
+public class PhSensor implements Sensor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long sensorId;
@@ -67,6 +67,14 @@ public class PhSensor{
     public List<PhMeasure> getMeasures() {
         return measures;
     }
+    
+    public List<Measure> measures() {
+    	List<Measure> lista = new ArrayList<Measure>();
+    	for (PhMeasure measure : this.measures) {
+    		lista.add((Measure) measure);
+		}
+    	return lista;
+    }
 
     public void setMeasures(List<PhMeasure> measures) {
         this.measures = measures;
@@ -87,5 +95,27 @@ public class PhSensor{
     	return false;
     	
     }
+
+	@Override
+	public boolean isEmpty() {
+		return this.measures.isEmpty();
+	}
+
+	@Override
+	public Measure getLatest() {
+		if(this.isEmpty()) {
+			return null;
+		}
+		return this.measures.get(0);
+	}
+	
+	@Override
+	public Boolean isGood(Plant plant) {
+		Double value = this.getLatest().getValue();
+		if (value == null) {
+			return null;
+		}
+		return (plant.getPhMin() <= value) && (value <= plant.getPhMax());
+	}
 
 }

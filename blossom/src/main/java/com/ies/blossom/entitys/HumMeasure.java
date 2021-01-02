@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "hum_measures")
-public class HumMeasure {
+public class HumMeasure implements Measure {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -79,4 +79,9 @@ public class HumMeasure {
     	return false;
     	
     }
+
+	@Override
+	public Sensor sensor() {
+		return this.sensor();
+	}
 }
