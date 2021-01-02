@@ -51,6 +51,10 @@ public class CustomUserDetails implements UserDetails {
         return user.getActive();
     }
 
+    public boolean isAdmin() {
+        return user.getRole() == "admin";
+    }
+
     public String getName() {
         return user.getName();
     }
