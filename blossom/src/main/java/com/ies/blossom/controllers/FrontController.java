@@ -45,7 +45,7 @@ public class FrontController {
             return "index.html";
         }
 
-        List<User> users = this.userRepository.findAll(Sort.by(Sort.Direction.DESC, "entryDate"));
+        List<User> users = this.userRepository.findAllUsersNotAdmin();
 
         model.addAttribute("users", users);
 
