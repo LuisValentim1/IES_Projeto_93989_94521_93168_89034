@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<!-- Main Navigation
+
 <nav class="navbar navbar-expand-md navbar-dark bg-success">
     <a class="navbar-brand" th:href="@{/}">Blossom</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
@@ -26,18 +26,6 @@
             <li class="nav-item active">
                 <a class="nav-link" th:href="@{/}">Home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/contact}">Contact Us</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/about}">About Us</a>
-            </li>
-            <li th:unless="${#request.userPrincipal}" class="nav-item">
-                <a class="nav-link" th:href="@{/login}">Login</a>
-            </li>
-            <li th:unless="${#request.userPrincipal}" class="nav-item">
-                <a class="nav-link" th:href="@{/register}">Join in</a>
-            </li>
             <li th:if="${#request.userPrincipal}" class="nav-item">
                 <a class="nav-link" th:href="@{/profile}">Profile</a>
             </li>
@@ -48,13 +36,32 @@
             </li>
         </ul>
     </div>
-</nav>-->
+</nav>
 
 <h1>Hello, im admin bros</h1>
 
-<ul>
-    <li th:each="user : ${users}" th:text="${user.name}"></li>
-</ul>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Entry Date</th>
+            <th scope="col">Phone number</th>
+            <th scope="col">Last joined</th>
+            <th scope="col">Parcels</th>
+        <tr>
+    </thead>
+    <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.name}">...</td>
+            <td th:text="${user.email}">...</td>
+            <td th:text="${user.entryDate}">...</td>
+            <td th:text="${user.phoneNumber}">...</td>
+            <td th:text="${user.lastJoined}">...</td>
+            <td>parcels</td>
+        </tr>
+    </tbody>                               
+</table>
 
 <!-- Footer -->
 <footer class="container py-5">
