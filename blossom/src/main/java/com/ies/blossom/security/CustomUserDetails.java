@@ -52,7 +52,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public boolean isAdmin() {
-        return user.getRole() == "admin";
+        return user.getRole().equals("admin");
     }
 
     public String getName() {
