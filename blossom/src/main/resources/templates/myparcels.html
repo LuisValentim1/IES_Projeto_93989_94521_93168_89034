@@ -3,15 +3,49 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <link th:href = "@{/css/myparcels.css}" rel="stylesheet" >
+    
+    <link th:href = "@{/css/notification.css}" rel="stylesheet" >
     <title>Welcome to Our Site</title>
 </head>
 
 <!--https://source.unsplash.com/collection/297224/1600x900  FOTOS DE PLANTAS-->
 
 <body layout:fragment="content">
+  <!--General Notification - Is good - Is Bad-->
+  <div id="container">
+    <div id="success-box">
+      <div class="dot"></div>
+      <div class="dot two"></div>
+      <div class="face">
+        <div class="eye"></div>
+        <div class="eye right"></div>
+        <div class="mouth happy"></div>
+      </div>
+      <div class="shadow scale"></div>
+      <div class="message"><h1 class="alert">Success!</h1><p class="paragrafo">yay, everything is working.</p></div>
+      <button class="button-box"><h1 class="green">continue</h1></button>
+    </div>
+    <div id="error-box">
+      <div class="dot"></div>
+      <div class="dot two"></div>
+      <div class="face2">
+        <div class="eye"></div>
+        <div class="eye right"></div>
+        <div class="mouth sad"></div>
+      </div>
+      <div class="shadow move"></div>
+      <div class="message"><h1 class="alert">Error!</h1><p class="paragrafo">oh no, something went wrong.</div>
+      <button class="button-box"><h1 class="red">try again</h1></button>
+    </div>
+  </div>
+  <!--End of General Notification-->
+
+
+
+
+
     <div >
-        <h1 style=>My Parcels</h1>
+        <h1 style="color:black">My Parcels</h1>
         <button style="text-align: center" type="button" class="btn btn-primary">Add Parcel</button>
         <p>TODO: Conditional Phrase. 
         Your plants are: Healthy! | Warning Your Parcel: Is in danger
