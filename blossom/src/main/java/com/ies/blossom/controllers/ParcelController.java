@@ -1,6 +1,5 @@
 package com.ies.blossom.controllers;
 
-import com.ies.blossom.Testing;
 import com.ies.blossom.entitys.HumMeasure;
 import com.ies.blossom.entitys.HumSensor;
 import com.ies.blossom.entitys.Parcel;
@@ -59,8 +58,6 @@ public class ParcelController {
             model.addAttribute("notOwned", true);
             return "parcel.html";
         }
-        
-        Testing.makeData(parcel);
         
      // ir buscar todos as ultimas medidas relativas aos sensores de ph
         if (!parcel.getPhSensors().isEmpty()) {
