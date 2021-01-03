@@ -65,7 +65,7 @@ public class ParcelController {
             
             for (PhSensor sensor : parcel.getPhSensors()) {
                 if (!sensor.getMeasures().isEmpty()) {
-                    retPh.put(sensor, sensor.getMeasures().get(0)); // em vez de ir buscar o primeiro pode ir buscar o ultimo
+                    retPh.put(sensor, sensor.getMeasures().get(sensor.getMeasures().size()-1));
                 }else{
                     retPh.put(sensor, null);
                 }
@@ -79,7 +79,7 @@ public class ParcelController {
             Map<HumSensor, HumMeasure> retHum = new HashMap<HumSensor, HumMeasure>();
             for (HumSensor sensor : parcel.getHumSensors()) {
                 if (!sensor.getMeasures().isEmpty()) {
-                    retHum.put(sensor, sensor.getMeasures().get(0)); // em vez de ir buscar o primeiro pode ir buscar o ultimo
+                    retHum.put(sensor, sensor.getMeasures().get(sensor.getMeasures().size()-1));
                 }else{
                     retHum.put(sensor, null);
                 }
