@@ -19,8 +19,14 @@ import com.ies.blossom.entitys.Plant;
 public class Testing {
 	
 	
-	 public static void makeData(Parcel parcel) {
-         parcel.setPlant(new Plant("Daisy", "Daisius", 2.0, 1.0, 1.0, 2.0));
+	 public static void makeData(Parcel parcel, List<Plant> plants) {
+		 plants = new ArrayList<Plant>();
+		 Plant plant = new Plant("Daisy", "Daisius", 2.0, 1.0, 1.0, 2.0);
+         parcel.setPlant(plant);
+         plants.add(plant);
+         plants.add(new Plant("Rosa", "Rosita", 1.5, 1.0, 1.0, 2.5));
+         plants.add(new Plant("Margarida", "Margaridus", 0.5, 0.3, 1.0, 2.5));
+         
          Double[] lista = new Double[]{1.0, 1.6, 1.4};
          Double[] lista2 = new Double[]{4.0, 1.6, 1.4};
          try {

@@ -1,5 +1,6 @@
 package com.ies.blossom.controllers;
 
+import com.ies.blossom.Testing;
 import com.ies.blossom.entitys.HumMeasure;
 import com.ies.blossom.entitys.HumSensor;
 import com.ies.blossom.entitys.Parcel;
@@ -59,6 +60,9 @@ public class ParcelController {
             return "parcel.html";
         }
         
+        List<Plant> plants2 = this.plantRepository.findAll();
+        Testing.makeData(parcel, plants2);
+        
      // ir buscar todos as ultimas medidas relativas aos sensores de ph
         if (!parcel.getPhSensors().isEmpty()) {
             Map<PhSensor, PhMeasure> retPh = new HashMap<PhSensor, PhMeasure>();
@@ -88,8 +92,7 @@ public class ParcelController {
             model.addAttribute("humSensorsLastMeasures", retHum);
         }
         
-        model.addAttribute("goodPlantModel", parcel.checkPlantConditions());
-
+        model.addAttribute("goodPlant", parcel.checkPlantConditions());
         // ir buscar todas as plantas na bd
         // talvez seja melhor colocar noutro método, esta funcionalidade é chamada poucas vezes
         List<Plant> plants = this.plantRepository.findAll();
@@ -97,6 +100,8 @@ public class ParcelController {
         model.addAttribute("plants", plants);
 
         model.addAttribute("parcel", parcel);
+        
+        
         
         return "parcel.html";
     }
