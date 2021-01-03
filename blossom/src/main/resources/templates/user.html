@@ -34,7 +34,7 @@
             </table>
         </div>
     </section>
-    <section class="my-5">
+    <section class="my-5" th:unless="${#request.userPrincipal.principal.admin}">
         <div class="container">
             <h2 style="text-align: center; vertical-align: middle">Parcelas associadas </h2>
             <ul class="list-group" style="text-align: center; vertical-align: middle" th:each="parcel : ${user.parcels}">
@@ -45,6 +45,7 @@
             </ul>
             <br>
             <a th:href="@{/parcel/new}" class="btn btn-success">Add new parcel</a>
+            <a th:href="@{/comment/new}" class="btn btn-success">Add new comment</a>
         </div>
         <div class="container" style="margin-top: 2rem;">
             <button id="apagar">Gerar dados aleatórios</button>

@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.cors().and().csrf().disable()
             .authorizeRequests()
             .antMatchers("/resources/**").permitAll()
             .antMatchers("/profile").authenticated()
@@ -51,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/plant/**").authenticated()
             .antMatchers("/humSensor/**").authenticated()
             .antMatchers("/phSensor/**").authenticated()
+            .antMatchers("/api/**").permitAll()
             .anyRequest().permitAll()
             .and()
             .formLogin()
@@ -59,4 +60,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .logout().logoutSuccessUrl("/").permitAll();
     }
+
+    /* TODO este código ajuda a configurar a aplicação de forma a que só aceitemos por exemplo posts de 
+        certas fontes
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    } */
 }

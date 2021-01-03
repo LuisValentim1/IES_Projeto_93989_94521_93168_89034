@@ -1,5 +1,7 @@
 package com.ies.blossom.security;
 
+import java.sql.Timestamp;
+
 import com.ies.blossom.entitys.User;
 import com.ies.blossom.repositorys.UserRepository;
 
@@ -16,8 +18,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = this.userRepository.findByEmail(email);
+
         if (user == null)
             throw new UsernameNotFoundException("User not found");
+
+        user.setLastJoined(new Timestamp(System.currentTimeMillis()));
+        this.userRepository.save(user);
+
         return new CustomUserDetails(user);
     }
     

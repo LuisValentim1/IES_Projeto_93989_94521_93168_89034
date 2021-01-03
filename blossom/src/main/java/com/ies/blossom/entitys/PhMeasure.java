@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "ph_measures")
-public class PhMeasure {
+public class PhMeasure implements Measure {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
