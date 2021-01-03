@@ -34,7 +34,7 @@
             </table>
         </div>
     </section>
-    <section class="my-5">
+    <section class="my-5" th:unless="${#request.userPrincipal.principal.admin}">
         <div class="container">
             <h2 style="text-align: center; vertical-align: middle">Parcelas associadas </h2>
             <ul class="list-group" style="text-align: center; vertical-align: middle" th:each="parcel : ${user.parcels}">
