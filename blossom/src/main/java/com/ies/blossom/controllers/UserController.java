@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
 @Controller
 public class UserController {
 
@@ -32,9 +31,19 @@ public class UserController {
         CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
 
         User user = this.userRepository.findByEmail(userLogged.getUsername());
-	    model.addAttribute("user", user);
-	    return "user.html";
-    	
+        model.addAttribute("user", user);
+        return "user.html";
+
+    }
+
+    @GetMapping("/myparcels")
+    public String getParcels(Model model, Authentication auth) throws ParseException {
+        CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
+
+        User user = this.userRepository.findByEmail(userLogged.getUsername());
+        model.addAttribute("user", user);
+        return "myparcels.html";
+
     }
 
     @GetMapping("/comment/new")
