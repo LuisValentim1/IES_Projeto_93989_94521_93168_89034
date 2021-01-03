@@ -79,9 +79,4 @@ public class PhMeasure implements Measure {
     	return false;
     	
     }
-
-	@Override
-	public Sensor sensor() {
-		return this.sensor();
-	}
 }

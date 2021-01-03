@@ -5,6 +5,5 @@ import java.sql.Timestamp;
 public interface Measure {
 	
 	public Double getValue();
-    public Sensor sensor();
 
 }
