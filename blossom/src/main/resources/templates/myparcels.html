@@ -12,6 +12,7 @@
 
 <body layout:fragment="content">
   <!--General Notification - Is good - Is Bad-->
+  <br>
   <div id="container">
     <div id="success-box">
       <div class="dot"></div>
@@ -22,7 +23,7 @@
         <div class="mouth happy"></div>
       </div>
       <div class="shadow scale"></div>
-      <div class="message"><h1 class="alert">Success!</h1><p class="paragrafo">yay, everything is working.</p></div>
+      <div class="message"><h1 class="alert">Great!</h1><p class="paragrafo">yay, everything is healthy.</p></div>
       <button class="button-box"><h1 class="green">continue</h1></button>
     </div>
     <div id="error-box">
@@ -34,7 +35,7 @@
         <div class="mouth sad"></div>
       </div>
       <div class="shadow move"></div>
-      <div class="message"><h1 class="alert">Error!</h1><p class="paragrafo">oh no, something went wrong.</div>
+      <div class="message"><h1 class="alert">Oh no</h1><p class="paragrafo">Your pacels needs your attention.</div>
       <button class="button-box"><h1 class="red">try again</h1></button>
     </div>
   </div>
@@ -43,15 +44,16 @@
 
 
 
-
-    <div >
-        <h1 style="color:black">My Parcels</h1>
-        <button style="text-align: center" type="button" class="btn btn-primary">Add Parcel</button>
-        <p>TODO: Conditional Phrase. 
-        Your plants are: Healthy! | Warning Your Parcel: Is in danger
-        </p>
-    </div>
     
+    <div >
+      <br>
+      <br>
+        <h1 style="color:black">My Parcels</h1>
+        <a class="btn btn-primary" th:href="@{/parcel/new}">Add Parcel</a>
+        <br>
+        <br>
+    </div>
+    <!-- My Parcel Cards-->
     <div class="row row-cols-3">
         <div class="center col-sm"  th:each="parcel : ${user.parcels}">
             <style>
@@ -69,6 +71,8 @@
                 <h5 th:text="${parcel.location}"> Card Title </h5>
                 <h6>Plant:</h6>
                 <p th:text="${parcel.plant}">Lorem Ipsum Dipsum hortata. Mixcall Horcho. Mixwell Chingo. More Bingo. Lorem Ipum doth be hard.</p>
+                <img src="https://www.flaticon.com/svg/static/icons/svg/1721/1721539.svg" width="35" alt="">
+                <img src="https://www.flaticon.com/svg/static/icons/svg/564/564619.svg" width="35" alt="">
               </div>
               <a href="#">
                 <div class="property-social-icons">
