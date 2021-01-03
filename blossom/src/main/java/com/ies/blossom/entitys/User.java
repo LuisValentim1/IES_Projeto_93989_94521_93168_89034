@@ -50,9 +50,16 @@ public class User {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "role")
+    private String role = "user";
+
     @OneToMany(mappedBy = "owner")
     @JsonManagedReference
     private Set<Parcel> parcels = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private Set<Avaliation> avaliations = new HashSet<Avaliation>();
 
     public Long getUserId() {
         return userId;
@@ -140,5 +147,29 @@ public class User {
     	}
     	return false;
     	
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Set<Avaliation> getAvaliations() {
+        return avaliations;
+    }
+
+    public void setAvaliations(Set<Avaliation> avaliations) {
+        this.avaliations = avaliations;
     }
 }

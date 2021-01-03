@@ -3,8 +3,10 @@ package com.ies.blossom.controllers;
 import com.ies.blossom.entitys.Plant;
 import com.ies.blossom.model.PlantModel;
 import com.ies.blossom.repositorys.PlantRepository;
+import com.ies.blossom.security.CustomUserDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +27,14 @@ public class PlantController {
     }
 
     @GetMapping("/plant/new")
-    public String getForm(Model model){
+    public String getForm(Model model, Authentication auth){
+        CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
 
-        // TODO permitir adicionar plantas apenas a users com role admin
+        if (!userLogged.isAdmin()) {
+            model.addAttribute("httpError", "401");
+            model.addAttribute("errorMessage", userLogged.getName() + ", you are not allowed to see this content.");
+            return "messageError.html";
+        }
 
         model.addAttribute("form", new PlantModel());
         return "forms/plantForm.html";
