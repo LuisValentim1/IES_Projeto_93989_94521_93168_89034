@@ -5,10 +5,12 @@ import java.sql.Timestamp;
 
 import com.ies.blossom.dto.UserDto;
 import com.ies.blossom.entitys.User;
+import com.ies.blossom.repositorys.AvaliationRepository;
 import com.ies.blossom.repositorys.UserRepository;
 import com.ies.blossom.security.CustomUserDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,9 @@ import java.util.TreeMap;
 public class FrontController {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AvaliationRepository avaliationRepository;
 
     @GetMapping("")
     public String viewIndex(Authentication auth, Model model) {
@@ -50,7 +55,8 @@ public class FrontController {
         List<User> users = this.userRepository.findAllUsersNotAdmin();
 
         model.addAttribute("users", users);
-        
+
+        model.addAttribute("comments", this.avaliationRepository.findAll(Sort.by(Sort.Direction.DESC, "timestamp")));
         model.addAttribute("joinedData", this.getJoinedData(users));
         model.addAttribute("lastJoinedData", this.getLastJoinedData(users));
 

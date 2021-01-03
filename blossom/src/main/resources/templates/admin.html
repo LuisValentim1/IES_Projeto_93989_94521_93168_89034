@@ -55,7 +55,29 @@
 
     <div class="container">
         <canvas style="width: 50%; height: 10%;" id="lastJoinedChart"></canvas>
-    </div>    
+    </div>
+
+    <div class="container">
+        <h2>Latest client reviews</h2>
+        <table class="table table-light">
+            <thead>
+                <tr>
+                    <th scope="col">User name</th>
+                    <th scope="col">Timestamp</th>
+                    <th scope="col">stars</th>
+                    <th scope="col">comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="comment : ${comments}">
+                    <td th:text="${comment.user.name}">...</th>
+                    <td th:text="${comment.timestamp}">...</td>
+                    <td th:text="${comment.stars}">...</td>
+                    <td th:text="${comment.comment}">...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <input type="hidden" id="joinedData" th:value="${joinedData}" />
     <input type="hidden" id="lastJoinedData" th:value="${lastJoinedData}" />

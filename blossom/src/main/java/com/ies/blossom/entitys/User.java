@@ -57,6 +57,10 @@ public class User {
     @JsonManagedReference
     private Set<Parcel> parcels = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private Set<Avaliation> avaliations = new HashSet<Avaliation>();
+
     public Long getUserId() {
         return userId;
     }
@@ -159,5 +163,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Set<Avaliation> getAvaliations() {
+        return avaliations;
+    }
+
+    public void setAvaliations(Set<Avaliation> avaliations) {
+        this.avaliations = avaliations;
     }
 }
