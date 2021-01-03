@@ -50,7 +50,7 @@ public class ParcelController {
     private UserRepository userRepository;
 
     @GetMapping("/parcel/{id}")
-    public String getParcel(Model model, @PathVariable(value="id") Long parcelId, Authentication auth) throws ParseException {
+    public String getParcel(Model model, @PathVariable(value="id") Long parcelId, Authentication auth) {
         CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
         Parcel parcel = this.parcelRepository.getOne(parcelId);
 
