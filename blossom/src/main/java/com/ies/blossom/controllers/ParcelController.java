@@ -1,6 +1,5 @@
 package com.ies.blossom.controllers;
 
-import com.ies.blossom.Testing;
 import com.ies.blossom.entitys.HumMeasure;
 import com.ies.blossom.entitys.HumSensor;
 import com.ies.blossom.entitys.Parcel;

@@ -214,7 +214,8 @@ public class Parcel {
     //
     
     private GoodPlantMeasureModel checkPlantMeasureConditions(boolean isHumidity, Plant plant, Set<Sensor> sensores) {
-    	if(this.noMeasure(isHumidity, null)) {
+    	sensores = this.getSensores(isHumidity, sensores);
+    	if(this.noMeasure(isHumidity, sensores)) {
     		return null;
     	} 
     	Double percentage = this.generalMeasurePercentage(isHumidity, plant, sensores);
