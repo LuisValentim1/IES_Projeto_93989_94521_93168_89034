@@ -59,10 +59,7 @@ public class ParcelController {
             model.addAttribute("notOwned", true);
             return "parcel.html";
         }
-        
-        List<Plant> plants2 = this.plantRepository.findAll();
-        Testing.makeData(parcel, plants2);
-        
+              
      // ir buscar todos as ultimas medidas relativas aos sensores de ph
         if (!parcel.getPhSensors().isEmpty()) {
             Map<PhSensor, PhMeasure> retPh = new HashMap<PhSensor, PhMeasure>();
