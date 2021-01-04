@@ -52,13 +52,22 @@
 										</tbody>
 									</table>
 									<div>
-										<div>PH NUll: <span th:text="${goodPlantModel.phNull}">...</span></div>
-										<div>GOOD PH Percentage: <span th:text="${goodPlantModel.goodPhPercentage}">...</span></div>
-										<div>GOOD PH? <span th:text="${goodPlantModel.goodPh}">...</span></div>
-										<div>HUM NUll: <span th:text="${goodPlantModel.humNull}">...</span></div>
-										<div>GOOD HUM Percentage: <span th:text="${goodPlantModel.goodHumPercentage}">...</span></div>
-										<div>GOOD HUM? <span th:text="${goodPlantModel.goodHum}">...</span></div>
+										<div th:if="${goodPlant.phStatus != null}">
+											<span th:text="${goodPlant.phStatus.percentage}">...</span>
+											<span th:text="${goodPlant.phStatus.good}">...</span>
+										</div>
+										<div th:unless="${goodPlant.phStatus != null}">
+											PH é nulo, e por isso não pode-e fazer avaliação da planta para a medida.
+										</div>
+										<div th:if="${goodPlant.humStatus != null}">
+											<span th:text="${goodPlant.humStatus.percentage}">...</span>
+											<span th:text="${goodPlant.humStatus.good}">...</span>
+										</div>
+										<div th:unless="${goodPlant.phStatus != null}">
+											Humidade é nula, e por isso não pode-e fazer avaliação da planta para a medida.
+										</div>
 									</div>
+									
 									<input type="hidden" th:value="${parcel.parcelId}" id="pId">
 									<input th:if="${parcel.plant}" type="hidden"
 										th:value="${parcel.plant.plantId}" id="prevId">
@@ -163,12 +172,7 @@
 											class="btn btn-primary">Add humidity sensor</a>
 									</div>
 
-									<div th:if="${goodConditions}">
-										<h2>Results</h2>
-										<div th:if="${goodConditions}">Condições são boas</div>
-										<div th:unless="${goodConditions}">Condições não são
-											boas, ph e humidade não são adequadas a planta</div>
-									</div>
+									
 									<div th:if="${parcel.plant}" class="container"
 										style="border: 1px black solid">
 										<div class="row">
