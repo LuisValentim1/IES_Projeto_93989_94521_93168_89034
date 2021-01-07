@@ -11,6 +11,7 @@ import com.ies.blossom.entitys.Parcel;
 import com.ies.blossom.entitys.PhSensor;
 import com.ies.blossom.entitys.User;
 import com.ies.blossom.repositorys.AvaliationRepository;
+import com.ies.blossom.repositorys.ParcelRepository;
 import com.ies.blossom.repositorys.UserRepository;
 import com.ies.blossom.security.CustomUserDetails;
 
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,6 +39,9 @@ public class FrontController {
     @Autowired
     private AvaliationRepository avaliationRepository;
 
+    @Autowired
+    private ParcelRepository parcelRepository;
+
     @GetMapping("")
     public String viewIndex(Authentication auth, Model model) {
         if (auth == null)
@@ -49,6 +54,35 @@ public class FrontController {
         if (auth == null)
             return "index.html";
         return this.showIndex(auth, model);
+    }
+
+    @GetMapping("/parcelhealth/{id}")
+    public String parcelHealth(Authentication auth, Model model, @PathVariable(value = "id") Long parcelId) {
+        CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
+
+        if (parcelId == null || userLogged == null) {
+            model.addAttribute("httpError", "500");
+            model.addAttribute("errorMessage", "Error loading page.");
+            return "messageError.html";
+        }
+
+        if (!userLogged.isAdmin()) {
+            model.addAttribute("httpError", "401");
+            model.addAttribute("errorMessage", "You're not allowed to see this secret content.");
+            return "messageError.html";
+        }
+
+        Parcel parcel = this.parcelRepository.getOne(parcelId);
+
+        if (checkHum(parcel))
+            model.addAttribute("humidity", true);
+
+        if (checkPh(parcel))
+            model.addAttribute("ph", true);
+
+        model.addAttribute("parcel", parcel);
+
+        return "adminCheckParcel.html";
     }
 
     private String showIndex(Authentication auth, Model model) {
