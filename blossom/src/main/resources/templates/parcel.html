@@ -51,7 +51,7 @@
 											</tr>
 										</tbody>
 									</table>
-									<div>
+									<div th:if="${goodPlant != null}">
 										<div th:if="${goodPlant.phStatus != null}">
 											<span th:text="${goodPlant.phStatus.percentage}">...</span>
 											<span th:text="${goodPlant.phStatus.good}">...</span>
@@ -66,6 +66,9 @@
 										<div th:unless="${goodPlant.phStatus != null}">
 											Humidade é nula, e por isso não pode-e fazer avaliação da planta para a medida.
 										</div>
+									</div>
+									<div th:unless="${goodPlant !=null}">
+									Crop não tem planta para fazer analise!
 									</div>
 									
 									<input type="hidden" th:value="${parcel.parcelId}" id="pId">

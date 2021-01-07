@@ -137,6 +137,9 @@ public class Parcel {
     }
     
     public GoodPlantModel checkPlantConditions() {
+    	if(this.getPlant() == null) {
+    		return null;
+    	}
     	GoodPlantMeasureModel phStatus = this.checkPlantMeasureConditions(false, this.getPlant(), null);
     	GoodPlantMeasureModel humStatus = this.checkPlantMeasureConditions(true, this.getPlant(), null);
     	return new GoodPlantModel(phStatus, humStatus);
