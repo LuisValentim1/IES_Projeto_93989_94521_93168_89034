@@ -107,6 +107,9 @@ public class HumSensor implements Sensor {
 
 	@Override
 	public Boolean isGood(Plant plant) {
+		if(plant == null) {
+			return null;
+		}
 		Double value = this.getLatest().getValue();
 		if (value == null) {
 			return null;

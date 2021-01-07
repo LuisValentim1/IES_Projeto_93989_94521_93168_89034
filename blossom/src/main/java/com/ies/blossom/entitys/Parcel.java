@@ -227,6 +227,10 @@ public class Parcel {
     }
     
     private Boolean plantIsGoodForParcelMeasure(boolean isHumidity, Plant plant, Set<Sensor> sensores) {
+    	if(plant == null) {
+    		return null;
+    	}
+    	
     	Double percentage = this.generalMeasurePercentage(isHumidity, plant, sensores);
     	
     	if(percentage == null) {
@@ -241,6 +245,9 @@ public class Parcel {
 	}
 
 	private Double generalMeasurePercentage(boolean isHumidity, Plant plant, Set<Sensor> sensores) {
+		if(plant == null) {
+			return null;
+		}
     	sensores = this.getSensores(isHumidity, sensores);
     	if(this.noMeasure(isHumidity, sensores)){
     		return null;
