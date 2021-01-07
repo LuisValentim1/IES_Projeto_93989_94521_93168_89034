@@ -13,8 +13,8 @@
 <body layout:fragment="content">
   <!--General Notification - Is good - Is Bad-->
   <br>
-  <div id="container">
-    <div id="success-box">
+  <div id="container"> <!--  th:if="${noError != null}">-->
+    <div id="success-box"><!--   th:if="${noError}">-->
       <div class="dot"></div>
       <div class="dot two"></div>
       <div class="face">
@@ -26,7 +26,7 @@
       <div class="message"><h1 class="alert">Great!</h1><p class="paragrafo">yay, everything is healthy.</p></div>
       <button class="button-box"><h1 class="green">continue</h1></button>
     </div>
-    <div id="error-box">
+    <div id="error-box"> <!--   th:unless="${noError}">-->
       <div class="dot"></div>
       <div class="dot two"></div>
       <div class="face2">
@@ -66,7 +66,8 @@
                   <div class="property-image-title">
                     <!-- Optional <h5>Card Title</h5> If you want it, turn on the CSS also. -->
                   </div>
-                </div></a>
+                </div>
+              </a>
               <div class="property-description">
                 <h5 th:text="${parcel.location}"> Card Title </h5>
                 <h6>Plant:</h6>
@@ -79,8 +80,8 @@
                   <!-- I would usually put multipe divs inside here set to flex. Some people might use Ul li. Multiple Solutions -->
                 </div>
               </a>
-            </div>
-          </div>
+       </div>
+   </div>
           
           <!-- END -->
         </div>

@@ -137,12 +137,9 @@ public class Parcel {
     }
     
     public GoodPlantModel checkPlantConditions() {
-    	if(this.getPlant() == null) {
-    		return null;
-    	}
     	GoodPlantMeasureModel phStatus = this.checkPlantMeasureConditions(false, this.getPlant(), null);
     	GoodPlantMeasureModel humStatus = this.checkPlantMeasureConditions(true, this.getPlant(), null);
-    	return new GoodPlantModel(phStatus, humStatus);
+    	return new GoodPlantModel(this, phStatus, humStatus);
     }
     
     public List<Plant> bestPlants(List<Plant> plants) {
@@ -217,6 +214,10 @@ public class Parcel {
     //
     
     private GoodPlantMeasureModel checkPlantMeasureConditions(boolean isHumidity, Plant plant, Set<Sensor> sensores) {
+    	if(plant == null) {
+    		return null;
+    	}
+    	
     	sensores = this.getSensores(isHumidity, sensores);
     	if(this.noMeasure(isHumidity, sensores)) {
     		return null;

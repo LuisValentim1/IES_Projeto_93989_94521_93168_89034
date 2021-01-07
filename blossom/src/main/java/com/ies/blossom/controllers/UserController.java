@@ -1,10 +1,14 @@
 package com.ies.blossom.controllers;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.ies.blossom.dto.AvaliationDto;
 import com.ies.blossom.entitys.Avaliation;
+import com.ies.blossom.entitys.Parcel;
 import com.ies.blossom.entitys.User;
+import com.ies.blossom.model.GoodPlantModel;
 import com.ies.blossom.repositorys.AvaliationRepository;
 import com.ies.blossom.repositorys.UserRepository;
 import com.ies.blossom.security.CustomUserDetails;
@@ -42,9 +46,23 @@ public class UserController {
 
         User user = this.userRepository.findByEmail(userLogged.getUsername());
         model.addAttribute("user", user);
+        Map<Parcel, GoodPlantModel> mapa = new HashMap<Parcel, GoodPlantModel>();
+        Boolean everythingGood = null;
+        for (Parcel parcel : user.getParcels()) {
+			GoodPlantModel gpm = parcel.checkPlantConditions();
+			if (everythingGood != false) {
+				everythingGood = gpm.isGood();
+			}
+			mapa.put(parcel, gpm);
+		}
+        
+        model.addAttribute("ParcelConditions", mapa);
+        model.addAttribute("noError", everythingGood);
         return "myparcels.html";
 
     }
+    
+    
 
     @GetMapping("/comment/new")
     public String getFormComment(Model model) {
