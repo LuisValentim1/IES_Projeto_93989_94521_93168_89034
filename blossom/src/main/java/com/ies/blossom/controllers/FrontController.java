@@ -68,6 +68,10 @@ public class FrontController {
 
         healthyPlants(users);
 
+        for (User user : users)
+            for (Parcel parcel : user.getParcels())
+                System.out.println("Parcela q vai aparecer: " + parcel.getParcelId());
+
         return "admin.html";
     }
 
@@ -97,12 +101,15 @@ public class FrontController {
     private boolean checkHum(Parcel parcel) {
         if (parcel.getPlant() == null)
             return false;
+        
+        if (parcel.getHumSensors().isEmpty())
+            return false;
 
         double wrong = 0.0;
         double sensors = 0.0;
         for (HumSensor sensor : parcel.getHumSensors()) {
             if (sensor.getMeasures().isEmpty())
-                return false;
+                continue;
             
             double measure = sensor.getMeasures().get(sensor.getMeasures().size()-1).getValue();
             if (measure < parcel.getPlant().getHumMin() || measure > parcel.getPlant().getHumMax())
@@ -125,11 +132,14 @@ public class FrontController {
         if (parcel.getPlant() == null)
             return false;
 
+        if (parcel.getPhSensors().isEmpty())
+            return false;
+
         double wrong = 0.0;
         double sensors = 0.0;
         for (PhSensor sensor : parcel.getPhSensors()) {
             if (sensor.getMeasures().isEmpty())
-                return false;
+                continue;
 
             double measure = sensor.getMeasures().get(sensor.getMeasures().size()-1).getValue();
             if (measure < parcel.getPlant().getPhMin() || measure > parcel.getPlant().getPhMax())
