@@ -65,6 +65,12 @@ public class Gerador {
 		}
 		
 		//Valores default para evitar erros / A ser alterado no futuro 
+		PH_Ids.add(1);
+		PH_Ids.add(2);
+		PH_Ids.add(3);
+		Hum_Ids.add(1);
+		Hum_Ids.add(2);
+		Hum_Ids.add(3);
 		int default_ph_id = PH_Ids.get(0);
 		int default_hum_id = Hum_Ids.get(0);
 		
@@ -216,6 +222,19 @@ public class Gerador {
 				TimeUnit.MINUTES.sleep(real_freq * 60);
 			}
 			
+		}
+		for(MonitorPH phM:monitoresPH) {
+			for(Double i : phM.getValues()) {
+				System.out.println(i);
+			}
+			System.out.println("-------");
+		}
+		
+		for(MonitorHum phM:monitoresHum) {
+			for(int i : phM.getValues()) {
+				System.out.println(i);
+			}
+			System.out.println("-------");
 		}
 		System.out.println("Done.");
 	}
