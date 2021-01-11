@@ -51,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/plant/**").authenticated()
             .antMatchers("/humSensor/**").authenticated()
             .antMatchers("/phSensor/**").authenticated()
+            .antMatchers("/parcelhealth/**").authenticated()
             .antMatchers("/api/**").permitAll()
             .anyRequest().permitAll()
             .and()

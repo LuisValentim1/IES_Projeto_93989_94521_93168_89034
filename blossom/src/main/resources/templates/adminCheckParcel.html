@@ -45,66 +45,50 @@
 <h3 style="text-align: center;">Admin center</h3>
 
 <section>
-    <div class="container">
-        <p>Currently, there are <strong th:text="${#lists.size(users)}"></strong> clients using the app.</p>
-        <a th:href="@{/plant/new}" class="btn btn-primary">Add new plant</a>
-    </div>
-    <div class="container">
-        <canvas style="width: 50%; height: 10%;" id="joinedChart"></canvas>
-    </div>
-
-    <div class="container">
-        <canvas style="width: 50%; height: 10%;" id="lastJoinedChart"></canvas>
-    </div>
-
-    <div class="container">
-        <h2>Latest client reviews</h2>
+    <div class="container" th:if="${humidity}">
+        <h5>Há um problema relativo à humidade</h5>
         <table class="table table-light">
             <thead>
                 <tr>
-                    <th scope="col">User name</th>
-                    <th scope="col">Timestamp</th>
-                    <th scope="col">stars</th>
-                    <th scope="col">comment</th>
+                    <th scope="col">Sensor id</th>
+                    <th scope="col">Last measure</th>
+                    <th scope="col">Parcel plant</th>
+                    <th scope="col">Expected humidity</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="comment : ${comments}">
-                    <td th:text="${comment.user.name}">...</th>
-                    <td th:text="${comment.timestamp}">...</td>
-                    <td th:text="${comment.stars}">...</td>
-                    <td th:text="${comment.comment}">...</td>
+                <tr th:each="sensor : ${parcel.humSensors}" th:if="${not #lists.isEmpty(sensor.measures)}">
+                    <td th:text="${sensor.sensorId}">...</th>
+                    <td th:text="${sensor.measures[#lists.size(sensor.measures) - 1].value}">...</td>
+                    <td th:text="${parcel.plant.englishName}">...</td>
+                    <td th:text="${parcel.plant.humMin} + ' -- ' + ${parcel.plant.humMax}">...</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <input type="hidden" id="joinedData" th:value="${joinedData}" />
-    <input type="hidden" id="lastJoinedData" th:value="${lastJoinedData}" />
-
-    <div class="container">
-        <h4>Clientes com plantas a passar mal</h4>
+    <div class="container" th:if="${ph}">
+        <h5>Há um problema relativo ao ph</h5>
         <table class="table table-light">
             <thead>
                 <tr>
-                    <th scope="col">User name</th>
-                    <th scope="col">parcel id</th>
-                    <th scope="col">parcel location</th>
-                    <th scope="col">verifie</th>
+                    <th scope="col">Sensor id</th>
+                    <th scope="col">Last measure</th>
+                    <th scope="col">Parcel plant</th>
+                    <th scope="col">Expected ph</th>
                 </tr>
             </thead>
             <tbody>
-                <div th:each="user : ${users}" th:if="${not #lists.isEmpty(user.parcels)}">
-                    <tr th:each="parcel : ${user.parcels}">
-                        <td th:text="${user.name}">...</th>
-                        <td th:text="${parcel.parcelId}">...</td>
-                        <td th:text="${parcel.location}">...</td>
-                        <td><a th:href="'/parcelhealth/' + ${parcel.parcelId}">More info</a></td>
-                    </tr>
-                </div>
+                <tr th:each="sensor : ${parcel.phSensors}" th:if="${not #lists.isEmpty(sensor.measures)}">
+                    <td th:text="${sensor.sensorId}">...</th>
+                    <td th:text="${sensor.measures[#lists.size(sensor.measures) - 1].value}">...</td>
+                    <td th:text="${parcel.plant.englishName}">...</td>
+                    <td th:text="${parcel.plant.phMin} + ' -- ' + ${parcel.plant.phMax}">...</td>
+                </tr>
             </tbody>
         </table>
     </div>
+    
 </section>
 
 <!-- Footer -->
@@ -118,6 +102,5 @@
 
 <!-- Optional Section -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-<script th:src="@{/javascript/admin.js}"></script>
 </body>
 </html>
