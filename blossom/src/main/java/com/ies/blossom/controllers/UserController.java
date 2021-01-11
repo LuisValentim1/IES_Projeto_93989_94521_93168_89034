@@ -12,10 +12,8 @@ import com.ies.blossom.model.GoodPlantModel;
 import com.ies.blossom.repositorys.AvaliationRepository;
 import com.ies.blossom.repositorys.UserRepository;
 import com.ies.blossom.security.CustomUserDetails;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.AllNestedConditions;
 import org.springframework.security.core.Authentication;
@@ -74,6 +72,7 @@ public class UserController {
         		isGood = false;
         	}
         }
+        
         model.addAttribute("noError", isGood);
         model.addAttribute("goodPlants", mapa);
         
