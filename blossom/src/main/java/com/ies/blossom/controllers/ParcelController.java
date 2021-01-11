@@ -84,6 +84,7 @@ public class ParcelController {
                     retHum.put(sensor, null);
                 }
             }
+            
             // há sensores de humidade mas n há medicoes
             model.addAttribute("humSensorsLastMeasures", retHum);
         }

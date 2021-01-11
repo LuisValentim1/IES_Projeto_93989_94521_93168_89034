@@ -1,15 +1,21 @@
 package com.ies.blossom.controllers;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.ies.blossom.dto.AvaliationDto;
 import com.ies.blossom.entitys.Avaliation;
+import com.ies.blossom.entitys.Parcel;
 import com.ies.blossom.entitys.User;
+import com.ies.blossom.model.GoodPlantModel;
 import com.ies.blossom.repositorys.AvaliationRepository;
 import com.ies.blossom.repositorys.UserRepository;
 import com.ies.blossom.security.CustomUserDetails;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.AllNestedConditions;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,14 +43,44 @@ public class UserController {
     }
 
     @GetMapping("/myparcels")
-    public String getParcels(Model model, Authentication auth) throws ParseException {
+    public String getParcels(Model model, Authentication auth) throws ParseException {    	
         CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
-
         User user = this.userRepository.findByEmail(userLogged.getUsername());
         model.addAttribute("user", user);
+                
+        boolean allnull = true;
+        boolean everythingGood = true;
+        Map<Parcel, Boolean> mapa = new HashMap<Parcel, Boolean>();
+        for (Parcel parcel : user.getParcels()) {
+        	mapa.put(parcel, parcel.checkPlantConditions().isGood());
+        	Boolean isgood = mapa.get(parcel);
+        	if(isgood != null) {
+        		allnull = false;
+        		if(!isgood) {
+        			everythingGood = false;
+        		}
+        	}
+		}
+        
+        Boolean isGood;
+        if(allnull) {
+        	isGood = null;
+        } else {
+        	if (everythingGood) {
+        		isGood = true;
+        	} else {
+        		isGood = false;
+        	}
+        }
+        
+        model.addAttribute("noError", isGood);
+        model.addAttribute("goodPlants", mapa);
+        
         return "myparcels.html";
 
     }
+    
+    
 
     @GetMapping("/comment/new")
     public String getFormComment(Model model) {

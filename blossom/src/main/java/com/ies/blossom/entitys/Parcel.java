@@ -139,7 +139,7 @@ public class Parcel {
     public GoodPlantModel checkPlantConditions() {
     	GoodPlantMeasureModel phStatus = this.checkPlantMeasureConditions(false, this.getPlant(), null);
     	GoodPlantMeasureModel humStatus = this.checkPlantMeasureConditions(true, this.getPlant(), null);
-    	return new GoodPlantModel(phStatus, humStatus);
+    	return new GoodPlantModel(this, phStatus, humStatus);
     }
     
     public List<Plant> bestPlants(List<Plant> plants) {
@@ -214,6 +214,10 @@ public class Parcel {
     //
     
     private GoodPlantMeasureModel checkPlantMeasureConditions(boolean isHumidity, Plant plant, Set<Sensor> sensores) {
+    	if(plant == null) {
+    		return null;
+    	}
+    	
     	sensores = this.getSensores(isHumidity, sensores);
     	if(this.noMeasure(isHumidity, sensores)) {
     		return null;
@@ -224,6 +228,10 @@ public class Parcel {
     }
     
     private Boolean plantIsGoodForParcelMeasure(boolean isHumidity, Plant plant, Set<Sensor> sensores) {
+    	if(plant == null) {
+    		return null;
+    	}
+    	
     	Double percentage = this.generalMeasurePercentage(isHumidity, plant, sensores);
     	
     	if(percentage == null) {
@@ -238,6 +246,9 @@ public class Parcel {
 	}
 
 	private Double generalMeasurePercentage(boolean isHumidity, Plant plant, Set<Sensor> sensores) {
+		if(plant == null) {
+			return null;
+		}
     	sensores = this.getSensores(isHumidity, sensores);
     	if(this.noMeasure(isHumidity, sensores)){
     		return null;
