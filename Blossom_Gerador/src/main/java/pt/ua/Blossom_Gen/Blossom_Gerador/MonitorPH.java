@@ -29,7 +29,7 @@ public class MonitorPH {
 		public void generateAcidicSoil(int days) {
 			if(days>0) {
 				for(int i = 0; i<this.reg_freq*days; i++) {
-					double value = getRandomDoubleInRange(0,7);
+					double value = getRandomDoubleInRange(4,6);
 					this.values.add(value);
 				}
 			}
@@ -38,7 +38,7 @@ public class MonitorPH {
 		public void generateNeutralSoil(int days) {
 			if(days>0) {
 				for(int i = 0; i<this.reg_freq*days; i++) {
-					double value = getRandomNumberUsingInts(4,10);
+					double value = getRandomNumberUsingInts(6,8);
 					this.values.add(value);
 				}
 			}
@@ -47,7 +47,7 @@ public class MonitorPH {
 		public void generateBasicSoil(int days) {
 			if(days>0) {
 				for(int i = 0; i<this.reg_freq*days; i++) {
-					double value = getRandomNumberUsingInts(7,14);
+					double value = getRandomNumberUsingInts(7,9);
 					this.values.add(value);
 				}
 			}
