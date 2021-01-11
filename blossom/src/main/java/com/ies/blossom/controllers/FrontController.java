@@ -4,8 +4,14 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 import com.ies.blossom.dto.UserDto;
+import com.ies.blossom.entitys.HumMeasure;
+import com.ies.blossom.entitys.HumSensor;
+import com.ies.blossom.entitys.Measure;
+import com.ies.blossom.entitys.Parcel;
+import com.ies.blossom.entitys.PhSensor;
 import com.ies.blossom.entitys.User;
 import com.ies.blossom.repositorys.AvaliationRepository;
+import com.ies.blossom.repositorys.ParcelRepository;
 import com.ies.blossom.repositorys.UserRepository;
 import com.ies.blossom.security.CustomUserDetails;
 
@@ -17,7 +23,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +39,9 @@ public class FrontController {
     @Autowired
     private AvaliationRepository avaliationRepository;
 
+    @Autowired
+    private ParcelRepository parcelRepository;
+
     @GetMapping("")
     public String viewIndex(Authentication auth, Model model) {
         if (auth == null)
@@ -43,6 +54,35 @@ public class FrontController {
         if (auth == null)
             return "index.html";
         return this.showIndex(auth, model);
+    }
+
+    @GetMapping("/parcelhealth/{id}")
+    public String parcelHealth(Authentication auth, Model model, @PathVariable(value = "id") Long parcelId) {
+        CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
+
+        if (parcelId == null || userLogged == null) {
+            model.addAttribute("httpError", "500");
+            model.addAttribute("errorMessage", "Error loading page.");
+            return "messageError.html";
+        }
+
+        if (!userLogged.isAdmin()) {
+            model.addAttribute("httpError", "401");
+            model.addAttribute("errorMessage", "You're not allowed to see this secret content.");
+            return "messageError.html";
+        }
+
+        Parcel parcel = this.parcelRepository.getOne(parcelId);
+
+        if (checkHum(parcel))
+            model.addAttribute("humidity", true);
+
+        if (checkPh(parcel))
+            model.addAttribute("ph", true);
+
+        model.addAttribute("parcel", parcel);
+
+        return "adminCheckParcel.html";
     }
 
     private String showIndex(Authentication auth, Model model) {
@@ -60,7 +100,94 @@ public class FrontController {
         model.addAttribute("joinedData", this.getJoinedData(users));
         model.addAttribute("lastJoinedData", this.getLastJoinedData(users));
 
+        healthyPlants(users);
+
+        for (User user : users)
+            for (Parcel parcel : user.getParcels())
+                System.out.println("Parcela q vai aparecer: " + parcel.getParcelId());
+
         return "admin.html";
+    }
+
+    private void healthyPlants(List<User> users) {
+        for (User user : users) {
+            for (Parcel parcel : user.getParcels()) {
+                System.out.println("A tratar da parcela: " + parcel.toString());
+                boolean flag1 = false, flag2 = false;
+                if (!parcel.getHumSensors().isEmpty()) {
+                    flag1 = checkHum(parcel);
+                }
+                if (!parcel.getPhSensors().isEmpty()) {
+                    flag2 = checkPh(parcel);
+                }
+
+                // se uma das flags for verdadeira quer dizer que algo está errado com esta parcela
+                // portanto ela continua associada ao user para que se possa trabalhar com a parcela na view
+                if (flag1 || flag2)
+                    continue;
+
+                System.out.println("A remover: " + parcel.toString());
+                user.getParcels().remove(parcel);
+            }
+        }
+    }
+
+    private boolean checkHum(Parcel parcel) {
+        if (parcel.getPlant() == null)
+            return false;
+        
+        if (parcel.getHumSensors().isEmpty())
+            return false;
+
+        double wrong = 0.0;
+        double sensors = 0.0;
+        for (HumSensor sensor : parcel.getHumSensors()) {
+            if (sensor.getMeasures().isEmpty())
+                continue;
+            
+            double measure = sensor.getMeasures().get(sensor.getMeasures().size()-1).getValue();
+            if (measure < parcel.getPlant().getHumMin() || measure > parcel.getPlant().getHumMax())
+                wrong += 1;
+            sensors += 1;
+        }
+
+        // se + que 40% dos sensores detetarem valores anómalos
+        // notificar que terreno pode precisar de cuidados
+        double percentage = wrong/sensors;
+        System.out.println("Percentage na hum " + percentage);
+
+        if (percentage < 0.4)
+            return false;
+
+        return true;
+    }
+
+    private boolean checkPh(Parcel parcel) {
+        if (parcel.getPlant() == null)
+            return false;
+
+        if (parcel.getPhSensors().isEmpty())
+            return false;
+
+        double wrong = 0.0;
+        double sensors = 0.0;
+        for (PhSensor sensor : parcel.getPhSensors()) {
+            if (sensor.getMeasures().isEmpty())
+                continue;
+
+            double measure = sensor.getMeasures().get(sensor.getMeasures().size()-1).getValue();
+            if (measure < parcel.getPlant().getPhMin() || measure > parcel.getPlant().getPhMax())
+                wrong += 1;
+            sensors += 1;
+        }
+
+        double percentage = wrong/sensors;
+        System.out.println("Percentage no ph " + percentage);
+
+        if (percentage < 0.4)
+            return false;
+
+        return true;
     }
 
     private String getLastJoinedData(List<User> users) {

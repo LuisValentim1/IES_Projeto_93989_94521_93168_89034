@@ -344,4 +344,9 @@ public class Parcel {
     	}
     	return set;    	
     }
+
+	@Override
+	public String toString() {
+		return "Parcel [location=" + location + ", parcelId=" + parcelId + "]";
+	}
 }

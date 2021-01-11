@@ -140,6 +140,12 @@ public class Plant {
     	return false;
     	
     }
+
+    @Override
+    public String toString() {
+        return "Plant [cientificName=" + cientificName + ", englishName=" + englishName + ", humMax=" + humMax
+                + ", humMin=" + humMin + ", phMax=" + phMax + ", phMin=" + phMin + "]";
+    }
     
     
 }
