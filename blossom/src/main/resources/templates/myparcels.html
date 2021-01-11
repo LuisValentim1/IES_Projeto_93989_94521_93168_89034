@@ -13,8 +13,8 @@
 <body layout:fragment="content">
   <!--General Notification - Is good - Is Bad-->
   <br>
-  <div id="container"> <!--  th:if="${noError != null}">-->
-    <div id="success-box"><!--   th:if="${noError}">-->
+  <div id="container" th:if="${noError != null}"> 
+    <div id="success-box" th:if="${noError}">
       <div class="dot"></div>
       <div class="dot two"></div>
       <div class="face">
@@ -26,7 +26,7 @@
       <div class="message"><h1 class="alert">Great!</h1><p class="paragrafo">yay, everything is healthy.</p></div>
       <button class="button-box"><h1 class="green">continue</h1></button>
     </div>
-    <div id="error-box"> <!--   th:unless="${noError}">-->
+    <div id="error-box" th:unless="${noError}">
       <div class="dot"></div>
       <div class="dot two"></div>
       <div class="face2">
@@ -41,10 +41,6 @@
   </div>
   <!--End of General Notification-->
 
-
-
-
-    
     <div >
       <br>
       <br>
@@ -55,13 +51,13 @@
     </div>
     <!-- My Parcel Cards-->
     <div class="row row-cols-3">
-        <div class="center col-sm"  th:each="parcel : ${user.parcels}">
+        <div class="center col-sm"  th:each="parcel : ${goodPlants}">
             <style>
                 .property-image {background-image: url("https://source.unsplash.com/collection/297224/1600x900");}
             </style>
             <!--TODO Adicionar uma propriedade de foto na parcela, é automaticamente gerada pelo link acima, preciso que esla esteja em user.parcel.image para poder dar render de varias diferentes-->
             <div class="property-card">
-              <a href="#">
+              <a th:href="@{'/parcel/' + ${parcel.key.parcelId}}">
                 <div class="property-image">
                   <div class="property-image-title">
                     <!-- Optional <h5>Card Title</h5> If you want it, turn on the CSS also. -->
@@ -69,19 +65,25 @@
                 </div>
               </a>
               <div class="property-description">
-                <h5 th:text="${parcel.location}"> Card Title </h5>
+                <h5 th:text="${parcel.key.location}"> Card Title </h5>
                 <h6>Plant:</h6>
-                <p th:text="${parcel.plant}">Lorem Ipsum Dipsum hortata. Mixcall Horcho. Mixwell Chingo. More Bingo. Lorem Ipum doth be hard.</p>
-                <img src="https://www.flaticon.com/svg/static/icons/svg/1721/1721539.svg" width="35" alt="">
-                <img src="https://www.flaticon.com/svg/static/icons/svg/564/564619.svg" width="35" alt="">
+                <p th:text="${parcel.key.plant.englishName}"></p>
+                <div th:if="${parcel.value != null}">
+                	<div th:if="${parcel.value}">
+                		<img src="https://www.flaticon.com/svg/static/icons/svg/1721/1721539.svg" width="35" alt="">
+                	</div>
+                	<div th:unless="${parcel.value}">
+                		<img src="https://www.flaticon.com/svg/static/icons/svg/564/564619.svg" width="35" alt="">
+                	</div>
+                </div>
               </div>
-              <a href="#">
+              <a th:href="@{'/parcel/' + ${parcel.key.parcelId}}">
                 <div class="property-social-icons">
                   <!-- I would usually put multipe divs inside here set to flex. Some people might use Ul li. Multiple Solutions -->
                 </div>
               </a>
-       </div>
-   </div>
+            </div>
+          </div>
           
           <!-- END -->
         </div>

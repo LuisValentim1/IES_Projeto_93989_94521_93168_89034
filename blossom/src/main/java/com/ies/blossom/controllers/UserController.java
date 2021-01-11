@@ -12,8 +12,12 @@ import com.ies.blossom.model.GoodPlantModel;
 import com.ies.blossom.repositorys.AvaliationRepository;
 import com.ies.blossom.repositorys.UserRepository;
 import com.ies.blossom.security.CustomUserDetails;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.AllNestedConditions;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,22 +46,39 @@ public class UserController {
 
     @GetMapping("/myparcels")
     public String getParcels(Model model, Authentication auth) throws ParseException {
+    	Logger logger = LoggerFactory.getLogger(this.getClass());
+    	
         CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
-
         User user = this.userRepository.findByEmail(userLogged.getUsername());
         model.addAttribute("user", user);
-        Map<Parcel, GoodPlantModel> mapa = new HashMap<Parcel, GoodPlantModel>();
-        Boolean everythingGood = null;
+                
+        boolean allnull = true;
+        boolean everythingGood = true;
+        Map<Parcel, Boolean> mapa = new HashMap<Parcel, Boolean>();
         for (Parcel parcel : user.getParcels()) {
-			GoodPlantModel gpm = parcel.checkPlantConditions();
-			if (everythingGood != false) {
-				everythingGood = gpm.isGood();
-			}
-			mapa.put(parcel, gpm);
+        	mapa.put(parcel, parcel.checkPlantConditions().isGood());
+        	Boolean isgood = mapa.get(parcel);
+        	if(isgood != null) {
+        		allnull = false;
+        		if(!isgood) {
+        			everythingGood = false;
+        		}
+        	}
 		}
         
-        model.addAttribute("ParcelConditions", mapa);
-        model.addAttribute("noError", everythingGood);
+        Boolean isGood;
+        if(allnull) {
+        	isGood = null;
+        } else {
+        	if (everythingGood) {
+        		isGood = true;
+        	} else {
+        		isGood = false;
+        	}
+        }
+        model.addAttribute("noError", isGood);
+        model.addAttribute("goodPlants", mapa);
+        
         return "myparcels.html";
 
     }
