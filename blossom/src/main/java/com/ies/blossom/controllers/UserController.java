@@ -45,9 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/myparcels")
-    public String getParcels(Model model, Authentication auth) throws ParseException {
-    	Logger logger = LoggerFactory.getLogger(this.getClass());
-    	
+    public String getParcels(Model model, Authentication auth) throws ParseException {    	
         CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
         User user = this.userRepository.findByEmail(userLogged.getUsername());
         model.addAttribute("user", user);
