@@ -82,12 +82,14 @@ public class RestTestController {
 
     @PostMapping("/phmeasures")
     public PhMeasure createPhMeasure(@RequestBody MeasureDto measureDto) {
-        System.out.println("A adicionar medida de ph");
-        PhSensor sensor = this.phSensorRepository.getOne(measureDto.getSensorId());
-        PhMeasure measure = new PhMeasure(sensor, new Timestamp(System.currentTimeMillis()), measureDto.getValue());
-        sensor.getMeasures().add(measure);
-        this.phSensorRepository.save(sensor);
-        return this.phMeasureRepository.save(measure);
+        System.out.println("A adicionar medida de ph com id " + measureDto.getSensorId());
+
+        return new PhMeasure();
+        // PhSensor sensor = this.phSensorRepository.getOne(measureDto.getSensorId());
+        // PhMeasure measure = new PhMeasure(sensor, new Timestamp(System.currentTimeMillis()), measureDto.getValue());
+        // sensor.getMeasures().add(measure);
+        // this.phSensorRepository.save(sensor);
+        // return this.phMeasureRepository.save(measure);
     }
 
     @GetMapping("/humsensors")
@@ -106,12 +108,14 @@ public class RestTestController {
 
     @PostMapping("/hummeasures")
     public HumMeasure createHumMeasure(@RequestBody MeasureDto measureDto) {
-        System.out.println("A adicionar medida de hum");
-        HumSensor sensor = this.humSensorRepository.getOne(measureDto.getSensorId());
-        HumMeasure measure = new HumMeasure(sensor, new Timestamp(System.currentTimeMillis()), measureDto.getValue());
-        sensor.getMeasures().add(measure);
-        this.humSensorRepository.save(sensor);
-        return this.humMeasureRepository.save(measure);
+        System.out.println("A adicionar medida de hum com id" + measureDto.getSensorId());
+
+        return new HumMeasure();
+        // HumSensor sensor = this.humSensorRepository.getOne(measureDto.getSensorId());
+        // HumMeasure measure = new HumMeasure(sensor, new Timestamp(System.currentTimeMillis()), measureDto.getValue());
+        // sensor.getMeasures().add(measure);
+        // this.humSensorRepository.save(sensor);
+        // return this.humMeasureRepository.save(measure);
     }
 
     @GetMapping("/plants")

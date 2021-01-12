@@ -1,6 +1,7 @@
 package com.ies.blossom.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.ies.blossom.entitys.User;
 import com.ies.blossom.repositorys.AvaliationRepository;
@@ -14,6 +15,7 @@ import com.ies.blossom.repositorys.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,8 +47,14 @@ public class ApiController {
     @Autowired
     private AvaliationRepository avaliationRepository;
 
+    // Métodos associados a users
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return this.userRepository.findAll();
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable(value = "id") Long userId) {
+        return this.userRepository.findById(userId).get();
     }
 }
