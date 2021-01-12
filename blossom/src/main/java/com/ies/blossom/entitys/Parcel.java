@@ -43,7 +43,7 @@ public class Parcel {
 
     @ManyToOne()
     @JoinColumn(name = "plant_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Plant plant;
 
     //Constructors

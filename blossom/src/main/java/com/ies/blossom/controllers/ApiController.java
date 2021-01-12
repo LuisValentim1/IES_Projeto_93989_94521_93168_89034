@@ -2,13 +2,22 @@ package com.ies.blossom.controllers;
 
 import java.sql.Timestamp;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import com.ies.blossom.dto.ParcelDto;
+import com.ies.blossom.dto.PlantDto;
+import com.ies.blossom.dto.SensorDto;
 import com.ies.blossom.dto.UserDto;
 import com.ies.blossom.encoders.PasswordEncoder;
+import com.ies.blossom.entitys.Parcel;
+import com.ies.blossom.entitys.PhSensor;
+import com.ies.blossom.entitys.Plant;
 import com.ies.blossom.entitys.User;
 import com.ies.blossom.exceptions.ResourceNotFoundException;
+import com.ies.blossom.exceptions.ResourceNotOwnedException;
 import com.ies.blossom.repositorys.AvaliationRepository;
 import com.ies.blossom.repositorys.HumMeasureRepository;
 import com.ies.blossom.repositorys.HumSensorRepository;
@@ -114,4 +123,240 @@ public class ApiController {
 
         this.userRepository.delete(user);
     }
+
+    // Métodos para plantas
+    @GetMapping("/plants")
+    public List<Plant> getAllPlants() {
+        return this.plantRepository.findAll();
+    }
+
+    @GetMapping("/plants/{id}")
+    public Plant getPlant(@PathVariable(value = "id") Long plantId) {
+        return this.plantRepository.findById(plantId).orElseThrow(
+            () -> new ResourceNotFoundException("Plant not found with id: " + plantId)
+        );
+    }
+
+    @PostMapping("/plants")
+    public Plant createPlant(@RequestBody PlantDto plant) {
+        Plant plant2save = new Plant(
+            plant.getCientificName(),
+            plant.getEnglishName(),
+            plant.getPhMax(),
+            plant.getPhMin(),
+            plant.getHumMin(),
+            plant.getHumMax()
+        );
+        return this.plantRepository.save(plant2save);
+    }
+
+    @PutMapping("/plants")
+    public Plant updatePlant(@RequestBody PlantDto plant) {
+        Plant plant2save = this.plantRepository.findById(plant.getId()).orElseThrow(
+            () -> new ResourceNotFoundException("Plant not found with id: " + plant.getId())
+        );
+        
+        plant2save.setCientificName(plant.getCientificName());
+        plant2save.setEnglishName(plant.getEnglishName());
+        plant2save.setPhMax(plant.getPhMax());
+        plant2save.setPhMin(plant.getPhMin());
+        plant2save.setHumMax(plant.getHumMax());
+        plant2save.setHumMin(plant.getHumMin());
+
+        return this.plantRepository.save(plant2save);
+    }
+
+    @DeleteMapping("/plants/{id}")
+    public void deletePlant(@PathVariable(value = "id") Long plantId) {
+        Plant plant = this.plantRepository.findById(plantId).orElseThrow(
+            () -> new ResourceNotFoundException("Plant not found with id: " + plantId)
+        );
+        this.plantRepository.delete(plant);
+    }
+
+    // Métodos para parcelas
+    @GetMapping("/parcels")
+    public List<Parcel> getAllParcels() {
+        return this.parcelRepository.findAll();
+    }
+
+    @GetMapping("/parcels/{id}")
+    public Parcel getParcel(@PathVariable(value = "id") Long parcelId) {
+        return this.parcelRepository.findById(parcelId).orElseThrow(
+            () -> new ResourceNotFoundException("Parcel not found with id: " + parcelId)
+        );
+    }
+
+    @PostMapping("/parcels")
+    public Parcel createParcel(@RequestBody ParcelDto parcel) {
+        User user = this.userRepository.findById(parcel.getOwner()).orElseThrow(
+            () -> new ResourceNotFoundException("User not found with id: " + parcel.getOwner())
+        );
+
+        Parcel parcel2save = new Parcel();
+        
+        Plant plant = null;
+        if (parcel.getPlantId() != null) {
+            plant = this.plantRepository.findById(parcel.getPlantId()).orElseThrow(
+                () -> new ResourceNotFoundException("Plant not found with id: " + parcel.getPlantId())
+            );
+
+            parcel2save.setPlant(plant);
+            plant.getParcels().add(parcel2save);
+            this.plantRepository.save(plant);
+        }
+        parcel2save.setOwner(user);
+        user.getParcels().add(parcel2save);
+        this.userRepository.save(user);
+
+        parcel2save.setLocation(parcel.getLocation());
+
+        return this.parcelRepository.save(parcel2save);
+    }
+
+    @PutMapping("/parcels")
+    public Parcel updateParcel(@RequestBody ParcelDto parcel) {
+        Parcel parcel2save = this.parcelRepository.findById(parcel.getId()).orElseThrow(
+            () -> new ResourceNotFoundException("Parcel not found with id: " + parcel.getId())
+        );
+
+        if (parcel.getPlantId() != null) {
+            if (parcel.getPlantId() != -1L) {
+                Plant plant = this.plantRepository.findById(parcel.getPlantId()).orElseThrow(
+                    () -> new ResourceNotFoundException("Plant not found with id: " + parcel.getPlantId())
+                );
+
+                if (parcel2save.getPlant() != null) {
+                    Plant oldPlant = this.plantRepository.findById(parcel2save.getPlant().getPlantId()).get();
+                    oldPlant.getParcels().remove(parcel2save);
+                    this.plantRepository.save(oldPlant);
+                }
+
+                parcel2save.setPlant(plant);
+                plant.getParcels().add(parcel2save);
+                this.plantRepository.save(plant);
+                
+            } else {
+                // colocar a parcela sem planta caso venha plantId == -1
+                if (parcel2save.getPlant() != null) {
+                    Plant oldPlant = this.plantRepository.findById(parcel2save.getPlant().getPlantId()).get();
+                    oldPlant.getParcels().remove(parcel2save);
+                    this.plantRepository.save(oldPlant);
+                }
+                
+                parcel2save.setPlant(null);
+            }
+            
+        }
+
+        parcel2save.setLocation(parcel.getLocation());
+
+        return this.parcelRepository.save(parcel2save);
+    }
+
+    @DeleteMapping("/parcels/{id}")
+    public void deleteParcel(@PathVariable(value = "id") Long parcelId) {
+        Parcel parcel = this.parcelRepository.findById(parcelId).orElseThrow(
+            () -> new ResourceNotFoundException("Parcel not found with id: " + parcelId)
+        );
+        this.parcelRepository.delete(parcel);
+    }
+
+    // Métodos para sensores de ph
+    @GetMapping("/phsensors")
+    public List<PhSensor> getAllPhSensors() {
+        return this.phSensorRepository.findAll();
+    }
+
+    @GetMapping("/phsensors/{id}")
+    public PhSensor getPhSensor(@PathVariable(value = "id") Long sensorId) {
+        return this.phSensorRepository.findById(sensorId).orElseThrow(
+            () -> new ResourceNotFoundException("Ph sensor not found with id: " + sensorId)
+        );
+    }
+
+    @GetMapping("/phsensors/parcel/{id}")
+    public Set<PhSensor> getPhSensorsByParcel(@PathVariable(value = "id") Long parcelId) {
+        Parcel parcel = this.parcelRepository.findById(parcelId).orElseThrow(
+            () -> new ResourceNotFoundException("Parcel not found with id: " + parcelId)
+        );
+        return parcel.getPhSensors();
+    }
+
+    @GetMapping("phsensors/owner/{id}")
+    public List<PhSensor> getPhSensorByOwner(@PathVariable(value = "id") Long userId) {
+        User user = this.userRepository.findById(userId).orElseThrow(
+            () -> new ResourceNotFoundException("User not found with id: " + userId)
+        );
+        List<PhSensor> ret = new ArrayList<PhSensor>();
+
+        user.getParcels().forEach(
+            parcel -> {
+                parcel.getPhSensors().forEach(
+                    sensor -> ret.add(sensor)
+                );
+            }
+        );
+
+        return ret;
+    }
+
+    @PostMapping("phsensors")
+    public PhSensor createPhSensor(@RequestBody SensorDto sensor) {
+        Parcel parcel = this.parcelRepository.findById(sensor.getParcelId()).orElseThrow(
+            () -> new ResourceNotFoundException("Parcel not found with id: " + sensor.getParcelId())
+        );
+
+        PhSensor sensor2save = new PhSensor(parcel, new Date(System.currentTimeMillis()));
+        parcel.getPhSensors().add(sensor2save);
+        this.parcelRepository.save(parcel);
+
+        return this.phSensorRepository.save(sensor2save);
+    }
+
+    @PutMapping("phsensors")
+    public PhSensor updatePhSensor(@RequestBody SensorDto sensor) {
+        Parcel newParcel = this.parcelRepository.findById(sensor.getParcelId()).orElseThrow(
+            () -> new ResourceNotFoundException("Parcel not found with id: " + sensor.getParcelId())
+        );
+
+        PhSensor sensor2save = this.phSensorRepository.findById(sensor.getId()).orElseThrow(
+            () -> new ResourceNotFoundException("Sensor not found with id: " + sensor.getId())
+        );
+
+        User user = this.userRepository.findById(sensor.getOwnerId()).orElseThrow(
+            () -> new ResourceNotFoundException("User not found with id: " + sensor.getOwnerId())
+        );
+
+        Parcel oldParcel = this.parcelRepository.getOne(sensor2save.getParcel().getParcelId());
+
+        // se a nova parcela não pertencer ao user
+        if (!user.getParcels().contains(newParcel))
+            throw new ResourceNotOwnedException("Not owned parcel with id: " + newParcel.getParcelId());
+        
+        oldParcel.getPhSensors().remove(sensor2save);
+        this.parcelRepository.save(oldParcel);
+
+        newParcel.getPhSensors().add(sensor2save);
+        sensor2save.setParcel(newParcel);
+        this.parcelRepository.save(newParcel);
+
+        return this.phSensorRepository.save(sensor2save); 
+    }
+
+    @DeleteMapping("phsensors/{id}")
+    public void deletePhSensor(@PathVariable(value = "id") Long sensorId) {
+        PhSensor sensor = this.phSensorRepository.findById(sensorId).orElseThrow(
+            () -> new ResourceNotFoundException("Ph sensor not found with id: " + sensorId)
+        );
+        this.phSensorRepository.delete(sensor);
+    }
+
+    // Métodos para medidas de ph
+
+    // Métodos para sensores de humidade
+
+    // Métodos para medidas de humidade
+
+    // Métodos para avaliacões
 }

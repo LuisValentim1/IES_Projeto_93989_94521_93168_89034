@@ -1,5 +1,6 @@
 package com.ies.blossom.entitys;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -33,7 +34,7 @@ public class Plant {
     private Double humMax;
 
     @OneToMany(mappedBy = "plant")
-    @JsonManagedReference
+    @JsonBackReference
     private Set<Parcel> parcels = new HashSet<>();
 
     public Plant() { super(); }
