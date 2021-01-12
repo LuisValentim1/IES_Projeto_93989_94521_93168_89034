@@ -64,16 +64,6 @@ public class Gerador {
 		    }
 		}
 		
-		//Valores default para evitar erros / A ser alterado no futuro 
-		PH_Ids.add(1);
-		PH_Ids.add(2);
-		PH_Ids.add(3);
-		Hum_Ids.add(1);
-		Hum_Ids.add(2);
-		Hum_Ids.add(3);
-		int default_ph_id = PH_Ids.get(0);
-		int default_hum_id = Hum_Ids.get(0);
-		
 		//Ciclo para gerar monitores de PH
 		for(int i = 0; i<PH_Ids.size(); i++) {
 			int opt = getRandomNumberUsingInts(0, 2);
@@ -106,10 +96,13 @@ public class Gerador {
 		for(int i = 0; i<monitoresHum.size(); i++) {
 			for(int z = 0; z<monitoresHum.get(i).getValues().size(); z++) {
 				//Curl em windows
-				// String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getValues().get(z)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
-				
+				String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getValues().get(z)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
+				System.out.println(com);
 				//Curl em Linux
-				String[] com = {"curl", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{\"sensorId\" : \"" + Integer.toString(monitoresHum.get(i).getId()) + "\", \"value\" : \"" + Double.toString(monitoresHum.get(i).getValues().get(z)) +"\"}", "http://localhost:8080/api/test/hummeasures"};
+				//String comL = "curl -X POST -H \"Content-Type: application/json\" -d \"{\"sensorId\" : \" " + Integer.toString(monitoresHum.get(i).getId()) + " \", \"value\\\" : \" " + Integer.toString(monitoresHum.get(i).getValues().get(z)) +  " \"}\" http://localhost:8080/api/test/hummeasures";
+				String cu = "curl -X POST -H \"Content-Type: application/json\" -d '{\"sensorId\" : \"4\", \"value\" : \"7.3\"}' http://localhost:8080/api/test/phmeasures";
+				
+				System.out.println(cu);
 				try {
 					pr = rt.exec(com);
 				}catch(Exception e) {
@@ -205,8 +198,8 @@ public class Gerador {
 						h.generateMoistSoil(1/regs_per_day);
 						
 						//Curl em windows
-						// String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(h.getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
-						
+						//String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(h.getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
+
 						//Curl em linux
 						String[] com = {"curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(h.getId()) + " \", \"value\" : \" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \"}\' http://localhost:8080/api/test/phmeasures"}; 
 						try {
@@ -223,6 +216,8 @@ public class Gerador {
 			}
 			
 		}
+		
+		/**
 		for(MonitorPH phM:monitoresPH) {
 			for(Double i : phM.getValues()) {
 				System.out.println(i);
@@ -236,9 +231,10 @@ public class Gerador {
 			}
 			System.out.println("-------");
 		}
+				**/
 		System.out.println("Done.");
 	}
-	
+
 	public static int getRandomNumberUsingInts(int min, int max) {  //Retirado de https://www.baeldung.com/java-generating-random-numbers-in-range
 	    Random random = new Random();
 	    return random.ints(min, max)
