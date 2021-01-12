@@ -96,13 +96,10 @@ public class Gerador {
 		for(int i = 0; i<monitoresHum.size(); i++) {
 			for(int z = 0; z<monitoresHum.get(i).getValues().size(); z++) {
 				//Curl em windows
-				String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getValues().get(z)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
-				System.out.println(com);
+				//String com = "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"sensorId\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getId()) + " \\\", \\\"value\\\" : \\\" " + Integer.toString(monitoresHum.get(i).getValues().get(z)) +  " \\\"}\" http://localhost:8080/api/test/hummeasures";
+
 				//Curl em Linux
-				//String comL = "curl -X POST -H \"Content-Type: application/json\" -d \"{\"sensorId\" : \" " + Integer.toString(monitoresHum.get(i).getId()) + " \", \"value\\\" : \" " + Integer.toString(monitoresHum.get(i).getValues().get(z)) +  " \"}\" http://localhost:8080/api/test/hummeasures";
-				String cu = "curl -X POST -H \"Content-Type: application/json\" -d '{\"sensorId\" : \"4\", \"value\" : \"7.3\"}' http://localhost:8080/api/test/phmeasures";
-				
-				System.out.println(cu);
+				String[] com = {"curl", "-X", "POST", "-H", "Content-Type: application/json", "-d", "{\"sensorId\" : \"" + Integer.toString(monitoresHum.get(i).getId()) + "\", \"value\" : \"" + Integer.toString(monitoresHum.get(i).getValues().get(z)) +"\"}", "http://localhost:8080/api/test/hummeasures"};
 				try {
 					pr = rt.exec(com);
 				}catch(Exception e) {
@@ -231,7 +228,8 @@ public class Gerador {
 			}
 			System.out.println("-------");
 		}
-				**/
+		**/
+		
 		System.out.println("Done.");
 	}
 
