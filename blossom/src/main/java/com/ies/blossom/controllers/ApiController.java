@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import com.ies.blossom.dto.AvaliationDto;
@@ -13,7 +12,6 @@ import com.ies.blossom.dto.ParcelDto;
 import com.ies.blossom.dto.PlantDto;
 import com.ies.blossom.dto.SensorDto;
 import com.ies.blossom.dto.UserDto;
-import com.ies.blossom.encoders.PasswordEncoder;
 import com.ies.blossom.entitys.Avaliation;
 import com.ies.blossom.entitys.HumMeasure;
 import com.ies.blossom.entitys.HumSensor;
