@@ -2,6 +2,7 @@ package com.ies.blossom.dto;
 
 public class UserDto {
     
+    private Long id;
     private String name;
     private String email;
     private String password;
@@ -52,6 +53,14 @@ public class UserDto {
     public String toString() {
         return "UserDto [email=" + email + ", name=" + name + ", password=" + password + ", phoneNumber=" + phoneNumber
                 + "]";
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     
