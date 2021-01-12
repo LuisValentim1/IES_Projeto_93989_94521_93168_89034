@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <link th:href = "@{/css/index.css}" rel="stylesheet" >
+    <title>Welcome to Our Site</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <section class="my-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 align-middle">
+                    <h1 th:unless="${#request.userPrincipal}">Welcome to blossom</h1>
+                    <h1 th:if="${#request.userPrincipal}">Welcome <b>[[${#request.userPrincipal.principal.name}]]</b></h1>
+
+                    <img src="https://camo.githubusercontent.com/4ba397f8b9f62231558b4844123db11f1ec043a588c100b7913cfeec3a3e742b/68747470733a2f2f692e696d6775722e636f6d2f6450634c7749782e706e67" alt="">
+                    <p>Select one of the following </p>
+                    <a th:unless="${#request.userPrincipal}" class="btn btn-success" th:href="@{/login}">Login</a>
+                    <a th:unless="${#request.userPrincipal}" class="btn btn-success" th:href="@{/register}">Sign Up</a>
+                    <a th:if="${#request.userPrincipal}" class="btn btn-success" th:href="@{/myparcels}">My Parcels</a>
+                    
+                </div>
+                
+            </div>
+
+            <!-- Como Funciona-->
+            <div th:unless="${#request.userPrincipal}" class="row">
+                <section id=timeline>
+                    <h1>How it works!</h1>
+                    <p class="leader">It's pretty simple, just follow along.</p>
+                    <div class="demo-card-wrapper">
+                        <div class="demo-card demo-card--step1">
+                            <div class="head">
+                                <div class="number-box">
+                                    <span>01</span>
+                                </div>
+                                <h2><span class="small">Create a</span> Parcel</h2>
+                            </div>
+                            <div class="body">
+                                <p>The first step is to create a parcel of land. A parcel consists of "Sensors + Plant" You can create multiple parcels with multiple plants!</p>
+                                <img src="https://i.imgur.com/TaMq79H.png" alt="Graphic">
+                            </div>
+                        </div>
+                
+                        <div class="demo-card demo-card--step2">
+                            <div class="head">
+                                <div class="number-box">
+                                    <span>02</span>
+                                </div>
+                                <h2><span class="small">Add your</span> Sensors</h2>
+                            </div>
+                            <div class="body">
+                                <p>A good soil requires monitoring, you can add your Ph and Humidity Sensors!</p>
+                                <img src="https://i.imgur.com/kKFqHUd.png" alt="Graphic">
+                            </div>
+                        </div>
+                
+                        <div class="demo-card demo-card--step3">
+                            <div class="head">
+                                <div class="number-box">
+                                    <span>03</span>
+                                </div>
+                                <h2><span class="small">Get a recomended</span> Plant</h2>
+                            </div>
+                            <div class="body">
+                                <p>If you still don't know what to plant blossom gives you recomendations based on the pH levels of your soil! Else skip to the next step</p>
+                                <img src="https://i.imgur.com/ntcUDwh.png" alt="Graphic">
+                            </div>
+                        </div>
+                
+                        <div class="demo-card demo-card--step4">
+                            <div class="head">
+                                <div class="number-box">
+                                    <span>04</span>
+                                </div>
+                                <h2><span class="small">Add your</span>Plant</h2>
+                            </div>
+                            <div class="body">
+                                <p>Select the plant which you are going to plant</p>
+                                <img src="https://i.imgur.com/1DzP5Ic.png" alt="Graphic">
+                            </div>
+                        </div>
+                
+                        <div class="demo-card demo-card--step5">
+                            <div class="head">
+                                <div class="number-box">
+                                    <span>05</span>
+                                </div>
+                                <h2><span class="small">Start</span> Monitoring</h2>
+                            </div>
+                            <div class="body">
+                                <p>This is the easy part, just sit back and blossom will give you any warnings if your plants are in danger and tell you when you need to water them</p>
+                                <img src="https://i.imgur.com/SFLcwWt.png" alt="Graphic">
+                            </div>
+                        </div>
+                    
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+</body>
+</html>
