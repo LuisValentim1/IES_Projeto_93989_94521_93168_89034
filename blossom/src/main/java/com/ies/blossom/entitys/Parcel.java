@@ -1,6 +1,7 @@
 package com.ies.blossom.entitys;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ies.blossom.model.GoodPlantMeasureModel;
 import com.ies.blossom.model.GoodPlantModel;
@@ -135,32 +136,38 @@ public class Parcel {
     public void addPhSensor(PhSensor sensor) {
     	this.phSensors.add(sensor);
     }
-    
+	
+	@JsonIgnore
     public GoodPlantModel checkPlantConditions() {
     	GoodPlantMeasureModel phStatus = this.checkPlantMeasureConditions(false, this.getPlant(), null);
     	GoodPlantMeasureModel humStatus = this.checkPlantMeasureConditions(true, this.getPlant(), null);
     	return new GoodPlantModel(this, phStatus, humStatus);
     }
-    
+	
+	@JsonIgnore
     public List<Plant> bestPlants(List<Plant> plants) {
     	return this.bestPlantsFor(plants, true, true, null);
     }
     
     //Public methods which use same private method(PH/HUM)
     //
-    //
+	//
+	@JsonIgnore
     public boolean noPhMeasure() {
     	return this.noMeasure(false, null);
     }
-    
+	
+	@JsonIgnore
     public boolean noHumMeasure() {
 		return this.noMeasure(true, null);
 	}
-    
+	
+	@JsonIgnore
     public Map<Sensor, Measure> getPhSensorTable(){
     	return this.getSensorTable(false, null);
     }
-    
+	
+	@JsonIgnore
     public Map<Sensor, Measure> getHumSensorTable(){
     	return this.getSensorTable(true, null);
     }

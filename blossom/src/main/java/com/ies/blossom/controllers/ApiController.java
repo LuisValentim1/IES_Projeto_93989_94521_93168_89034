@@ -7,12 +7,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ies.blossom.dto.AvaliationDto;
+import com.ies.blossom.dto.MeasureDto;
 import com.ies.blossom.dto.ParcelDto;
 import com.ies.blossom.dto.PlantDto;
 import com.ies.blossom.dto.SensorDto;
 import com.ies.blossom.dto.UserDto;
 import com.ies.blossom.encoders.PasswordEncoder;
+import com.ies.blossom.entitys.Avaliation;
+import com.ies.blossom.entitys.HumMeasure;
+import com.ies.blossom.entitys.HumSensor;
 import com.ies.blossom.entitys.Parcel;
+import com.ies.blossom.entitys.PhMeasure;
 import com.ies.blossom.entitys.PhSensor;
 import com.ies.blossom.entitys.Plant;
 import com.ies.blossom.entitys.User;
@@ -283,7 +289,7 @@ public class ApiController {
         return parcel.getPhSensors();
     }
 
-    @GetMapping("phsensors/owner/{id}")
+    @GetMapping("/phsensors/owner/{id}")
     public List<PhSensor> getPhSensorByOwner(@PathVariable(value = "id") Long userId) {
         User user = this.userRepository.findById(userId).orElseThrow(
             () -> new ResourceNotFoundException("User not found with id: " + userId)
@@ -301,7 +307,7 @@ public class ApiController {
         return ret;
     }
 
-    @PostMapping("phsensors")
+    @PostMapping("/phsensors")
     public PhSensor createPhSensor(@RequestBody SensorDto sensor) {
         Parcel parcel = this.parcelRepository.findById(sensor.getParcelId()).orElseThrow(
             () -> new ResourceNotFoundException("Parcel not found with id: " + sensor.getParcelId())
@@ -314,7 +320,7 @@ public class ApiController {
         return this.phSensorRepository.save(sensor2save);
     }
 
-    @PutMapping("phsensors")
+    @PutMapping("/phsensors")
     public PhSensor updatePhSensor(@RequestBody SensorDto sensor) {
         Parcel newParcel = this.parcelRepository.findById(sensor.getParcelId()).orElseThrow(
             () -> new ResourceNotFoundException("Parcel not found with id: " + sensor.getParcelId())
@@ -344,7 +350,7 @@ public class ApiController {
         return this.phSensorRepository.save(sensor2save); 
     }
 
-    @DeleteMapping("phsensors/{id}")
+    @DeleteMapping("/phsensors/{id}")
     public void deletePhSensor(@PathVariable(value = "id") Long sensorId) {
         PhSensor sensor = this.phSensorRepository.findById(sensorId).orElseThrow(
             () -> new ResourceNotFoundException("Ph sensor not found with id: " + sensorId)
@@ -353,10 +359,210 @@ public class ApiController {
     }
 
     // Métodos para medidas de ph
+    @GetMapping("/phmeasures")
+    public List<PhMeasure> getAllPhMeasures() {
+        return this.phMeasureRepository.findAll();
+    }
+
+    @GetMapping("/phmeasures/sensor/{id}")
+    public List<PhMeasure> getAllPhMeasuresBySensor(@PathVariable(value = "id") Long sensorId) {
+        PhSensor sensor = this.phSensorRepository.findById(sensorId).orElseThrow(
+            () -> new ResourceNotFoundException("Ph sensor not found with id: " + sensorId)
+        );
+        return sensor.getMeasures();
+    }
+
+    @PostMapping("/phmeasures")
+    public PhMeasure addPhMeasure(@RequestBody MeasureDto measure) {
+        PhSensor sensor = this.phSensorRepository.findById(measure.getSensorId()).orElseThrow(
+            () -> new ResourceNotFoundException("Ph sensor not found with id: " + measure.getSensorId())
+        );
+        PhMeasure measure2save = new PhMeasure(
+            sensor,
+            new Timestamp(System.currentTimeMillis()),
+            measure.getValue()
+        );
+        sensor.getMeasures().add(measure2save);
+        this.phSensorRepository.save(sensor);
+
+        return this.phMeasureRepository.save(measure2save);
+    }
 
     // Métodos para sensores de humidade
+    @GetMapping("/humsensors")
+    public List<HumSensor> getAllHumSensors() {
+        return this.humSensorRepository.findAll();
+    }
 
+    @GetMapping("/humsensors/{id}")
+    public HumSensor getHumSensor(@PathVariable(value = "id") Long sensorId) {
+        return this.humSensorRepository.findById(sensorId).orElseThrow(
+            () -> new ResourceNotFoundException("Humidity sensor not found with id: " + sensorId)
+        );
+    }
+
+    @GetMapping("/humsensors/parcel/{id}")
+    public Set<HumSensor> getHumSensorsByParcel(@PathVariable(value = "id") Long parcelId) {
+        Parcel parcel = this.parcelRepository.findById(parcelId).orElseThrow(
+            () -> new ResourceNotFoundException("Parcel not found with id: " + parcelId)
+        );
+        return parcel.getHumSensors();
+    }
+
+    @GetMapping("/humsensors/owner/{id}")
+    public List<HumSensor> getHumSensorByOwner(@PathVariable(value = "id") Long userId) {
+        User user = this.userRepository.findById(userId).orElseThrow(
+            () -> new ResourceNotFoundException("User not found with id: " + userId)
+        );
+        List<HumSensor> ret = new ArrayList<HumSensor>();
+
+        user.getParcels().forEach(
+            parcel -> {
+                parcel.getHumSensors().forEach(
+                    sensor -> ret.add(sensor)
+                );
+            }
+        );
+
+        return ret;
+    }
+
+    @PostMapping("/humsensors")
+    public HumSensor createHumSensor(@RequestBody SensorDto sensor) {
+        Parcel parcel = this.parcelRepository.findById(sensor.getParcelId()).orElseThrow(
+            () -> new ResourceNotFoundException("Parcel not found with id: " + sensor.getParcelId())
+        );
+
+        HumSensor sensor2save = new HumSensor(parcel, new Date(System.currentTimeMillis()));
+        parcel.getHumSensors().add(sensor2save);
+        this.parcelRepository.save(parcel);
+
+        return this.humSensorRepository.save(sensor2save);
+    }
+
+    @PutMapping("/humsensors")
+    public HumSensor updateHumSensor(@RequestBody SensorDto sensor) {
+        Parcel newParcel = this.parcelRepository.findById(sensor.getParcelId()).orElseThrow(
+            () -> new ResourceNotFoundException("Parcel not found with id: " + sensor.getParcelId())
+        );
+
+        HumSensor sensor2save = this.humSensorRepository.findById(sensor.getId()).orElseThrow(
+            () -> new ResourceNotFoundException("Humidity sensor not found with id: " + sensor.getId())
+        );
+
+        User user = this.userRepository.findById(sensor.getOwnerId()).orElseThrow(
+            () -> new ResourceNotFoundException("User not found with id: " + sensor.getOwnerId())
+        );
+
+        Parcel oldParcel = this.parcelRepository.getOne(sensor2save.getParcel().getParcelId());
+
+        // se a nova parcela não pertencer ao user
+        if (!user.getParcels().contains(newParcel))
+            throw new ResourceNotOwnedException("Not owned parcel with id: " + newParcel.getParcelId());
+        
+        oldParcel.getHumSensors().remove(sensor2save);
+        this.parcelRepository.save(oldParcel);
+
+        newParcel.getHumSensors().add(sensor2save);
+        sensor2save.setParcel(newParcel);
+        this.parcelRepository.save(newParcel);
+
+        return this.humSensorRepository.save(sensor2save); 
+    }
+
+    @DeleteMapping("/humsensors/{id}")
+    public void deleteHumSensor(@PathVariable(value = "id") Long sensorId) {
+        HumSensor sensor = this.humSensorRepository.findById(sensorId).orElseThrow(
+            () -> new ResourceNotFoundException("Humidity sensor not found with id: " + sensorId)
+        );
+        this.humSensorRepository.delete(sensor);
+    }
     // Métodos para medidas de humidade
+    @GetMapping("/hummeasures")
+    public List<HumMeasure> getAllHumMeasures() {
+        return this.humMeasureRepository.findAll();
+    }
+
+    @GetMapping("/hummeasures/sensor/{id}")
+    public List<HumMeasure> getAllHumMeasuresBySensor(@PathVariable(value = "id") Long sensorId) {
+        HumSensor sensor = this.humSensorRepository.findById(sensorId).orElseThrow(
+            () -> new ResourceNotFoundException("Humidity sensor not found with id: " + sensorId)
+        );
+        return sensor.getMeasures();
+    }
+
+    @PostMapping("/hummeasures")
+    public HumMeasure addHumMeasure(@RequestBody MeasureDto measure) {
+        HumSensor sensor = this.humSensorRepository.findById(measure.getSensorId()).orElseThrow(
+            () -> new ResourceNotFoundException("Humidity sensor not found with id: " + measure.getSensorId())
+        );
+        HumMeasure measure2save = new HumMeasure(
+            sensor,
+            new Timestamp(System.currentTimeMillis()),
+            measure.getValue()
+        );
+        sensor.getMeasures().add(measure2save);
+        this.humSensorRepository.save(sensor);
+
+        return this.humMeasureRepository.save(measure2save);
+    }
 
     // Métodos para avaliacões
+    @GetMapping("/avaliations")
+    public List<Avaliation> getAllAvaliations() {
+        return this.avaliationRepository.findAll();
+    }
+
+    @GetMapping("/avaliations/{id}")
+    public Avaliation getAvaliation(@PathVariable(value = "id") Long id) {
+        return this.avaliationRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Avaliation not found with id: " + id)
+        );
+    }
+
+    @GetMapping("/avaliations/user/{id}")
+    public Set<Avaliation> getAvaliationByUser(@PathVariable(value = "id") Long id) {
+        User user = this.userRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("User not found with id: " + id)
+        );
+        return user.getAvaliations();
+    }
+
+    @PostMapping("/avaliations")
+    public Avaliation addAvaliation(@RequestBody AvaliationDto avaliation) {
+        User user = this.userRepository.findById(avaliation.getUserId()).orElseThrow(
+            () -> new ResourceNotFoundException("User not found with id: " + avaliation.getUserId())
+        );
+        
+        Avaliation avaliation2save = new Avaliation(
+            user,
+            avaliation.getStars(),
+            avaliation.getComment()
+        );
+        user.getAvaliations().add(avaliation2save);
+        this.userRepository.save(user);
+
+        return this.avaliationRepository.save(avaliation2save);
+    }
+
+    @PutMapping("/avaliations")
+    public Avaliation updateAvaliation(@RequestBody AvaliationDto avaliation) {
+        Avaliation avaliation2save = this.avaliationRepository.findById(avaliation.getId()).orElseThrow(
+            () -> new ResourceNotFoundException("Avaliation not found with id: " + avaliation.getId())
+        );
+
+        avaliation2save.setStars(avaliation.getStars());
+        avaliation2save.setComment(avaliation.getComment());
+
+        return this.avaliationRepository.save(avaliation2save);
+    }
+
+    @DeleteMapping("/avaliations/{id}")
+    public void deleteAvaliation(@PathVariable(value = "id") Long id) {
+        Avaliation avaliation = this.avaliationRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Avaliation not found with id: " + id)
+        );
+
+        this.avaliationRepository.delete(avaliation);
+    }
 }
