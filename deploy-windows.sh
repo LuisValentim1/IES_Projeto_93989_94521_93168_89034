@@ -9,6 +9,10 @@ function trap_ctrlc() {
 
 trap "trap_ctrlc" 2
 
+cd ./Blossom_Gerador &&
+  mvn clean package -DskipTests &&
+	cd .. &&
+
 cd ./blossom &&
   mvn clean package -DskipTests &&
  cd .. &&

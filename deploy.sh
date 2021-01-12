@@ -9,6 +9,10 @@ function trap_ctrlc() {
 
 trap "trap_ctrlc" 2
 
+cd ./Blossom_Gerador &&
+ sudo mvn clean package -DskipTests &&
+ cd .. &&
+
 cd ./blossom &&
  sudo mvn clean package -DskipTests &&
  cd .. &&
