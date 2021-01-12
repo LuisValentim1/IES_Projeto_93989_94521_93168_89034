@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ies.blossom.entitys.User;
+import com.ies.blossom.exceptions.ResourceNotFoundException;
 import com.ies.blossom.repositorys.AvaliationRepository;
 import com.ies.blossom.repositorys.HumMeasureRepository;
 import com.ies.blossom.repositorys.HumSensorRepository;
@@ -55,6 +56,8 @@ public class ApiController {
 
     @GetMapping("/users/{id}")
     public User getUser(@PathVariable(value = "id") Long userId) {
-        return this.userRepository.findById(userId).get();
+        return this.userRepository.findById(userId).orElseThrow(
+            () -> new ResourceNotFoundException("User not found with id: " + userId)
+        );
     }
 }
