@@ -25,6 +25,8 @@ services:
       - all
     ports:
       - "8020:8020" #TODO Ver Porta no spring e mudar se necessário
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   blossom-app:
     image: blossom-spring-boot-app
