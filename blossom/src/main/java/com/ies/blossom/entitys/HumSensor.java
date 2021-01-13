@@ -27,9 +27,6 @@ public class HumSensor implements Sensor {
     @OneToMany(mappedBy = "sensor")
     @JsonManagedReference
     private List<HumMeasure> measures = new ArrayList<HumMeasure>();
-    
-    @Transient
-	  private HumMeasure latest;
 
     public HumSensor() { super(); }
 
@@ -102,7 +99,7 @@ public class HumSensor implements Sensor {
 
 	@Override
 	public Measure getLatest() {
-		return this.measures.get(0);
+		return this.measures.get(this.measures.size()-1);
 	}
 
 	@Override

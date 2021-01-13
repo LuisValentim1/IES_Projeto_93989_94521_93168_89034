@@ -2,6 +2,7 @@ package com.ies.blossom.dto;
 
 public class MeasureDto {
 
+    private Long id;
     private Long sensorId;
     private Double value;
 
@@ -26,5 +27,13 @@ public class MeasureDto {
 
     public void setValue(Double value) {
         this.value = value;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

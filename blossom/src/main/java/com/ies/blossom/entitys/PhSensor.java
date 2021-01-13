@@ -28,9 +28,6 @@ public class PhSensor implements Sensor {
     @JsonManagedReference
     private List<PhMeasure> measures = new ArrayList<PhMeasure>();
 
-    @Transient
-    private PhMeasure latest;
-
     public PhSensor() {
         super();
     }
@@ -106,7 +103,7 @@ public class PhSensor implements Sensor {
 		if(this.isEmpty()) {
 			return null;
 		}
-		return this.measures.get(0);
+		return this.measures.get(this.measures.size()-1);
 	}
 	
 	@Override

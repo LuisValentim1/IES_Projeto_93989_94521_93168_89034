@@ -2,6 +2,7 @@ package com.ies.blossom.dto;
 
 public class PlantDto {
     
+    private Long id;
     private String cientificName;
     private String englishName;
     private Double phMax;
@@ -67,6 +68,14 @@ public class PlantDto {
 
     public void setHumMax(Double humMax) {
         this.humMax = humMax;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     

@@ -67,7 +67,8 @@
               <div class="property-description">
                 <h5 th:text="${parcel.key.location}"> Card Title </h5>
                 <h6>Plant:</h6>
-                <p th:text="${parcel.key.plant.englishName}"></p>
+                <p th:if="${parcel.key.plant}" th:text="${parcel.key.plant.englishName}"></p>
+                <p th:unless="${parcel.key.plant}">No plant associated</p>
                 <div th:if="${parcel.value != null}">
                 	<div th:if="${parcel.value}">
                 		<img src="https://www.flaticon.com/svg/static/icons/svg/1721/1721539.svg" width="35" alt="">

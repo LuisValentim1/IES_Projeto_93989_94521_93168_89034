@@ -1,7 +1,6 @@
 package com.ies.blossom.model;
 
 import com.ies.blossom.entitys.Parcel;
-import com.ies.blossom.entitys.Plant;
 
 public class GoodPlantModel {
 	

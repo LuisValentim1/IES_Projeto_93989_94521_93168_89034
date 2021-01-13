@@ -4,9 +4,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 import com.ies.blossom.dto.UserDto;
-import com.ies.blossom.entitys.HumMeasure;
 import com.ies.blossom.entitys.HumSensor;
-import com.ies.blossom.entitys.Measure;
 import com.ies.blossom.entitys.Parcel;
 import com.ies.blossom.entitys.PhSensor;
 import com.ies.blossom.entitys.User;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
