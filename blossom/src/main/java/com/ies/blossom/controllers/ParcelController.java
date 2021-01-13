@@ -10,30 +10,25 @@ import com.ies.blossom.entitys.User;
 import com.ies.blossom.repositorys.ParcelRepository;
 import com.ies.blossom.repositorys.PlantRepository;
 import com.ies.blossom.repositorys.UserRepository;
+import com.ies.blossom.security.CustomUserDetails;
 import com.ies.blossom.model.ChangePlantModel;
 import com.ies.blossom.model.ParcelModel;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ParcelController {
@@ -45,19 +40,23 @@ public class ParcelController {
     @Autowired
     private UserRepository userRepository;
 
-    // TODO Change the URL MAPPING TO parcel NAME DYNAMICALY //
-
     @GetMapping("/parcel/{id}")
-    public String getParcel(Model model, @PathVariable(value="id") Long parcelId) {
+    public String getParcel(Model model, @PathVariable(value="id") Long parcelId, Authentication auth) {
+        CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
         Parcel parcel = this.parcelRepository.getOne(parcelId);
 
-        // ir buscar todos as ultimas medidas relativas aos sensores de ph
+        if (!parcel.getOwner().getUserId().equals(userLogged.getId())) {
+            model.addAttribute("notOwned", true);
+            return "parcel.html";
+        }
+        model.addAttribute("notOwned", false);      
+     // ir buscar todos as ultimas medidas relativas aos sensores de ph
         if (!parcel.getPhSensors().isEmpty()) {
             Map<PhSensor, PhMeasure> retPh = new HashMap<PhSensor, PhMeasure>();
             
             for (PhSensor sensor : parcel.getPhSensors()) {
                 if (!sensor.getMeasures().isEmpty()) {
-                    retPh.put(sensor, sensor.getMeasures().get(0)); // em vez de ir buscar o primeiro pode ir buscar o ultimo
+                    retPh.put(sensor, sensor.getMeasures().get(sensor.getMeasures().size()-1));
                 }else{
                     retPh.put(sensor, null);
                 }
@@ -71,23 +70,31 @@ public class ParcelController {
             Map<HumSensor, HumMeasure> retHum = new HashMap<HumSensor, HumMeasure>();
             for (HumSensor sensor : parcel.getHumSensors()) {
                 if (!sensor.getMeasures().isEmpty()) {
-                    retHum.put(sensor, sensor.getMeasures().get(0)); // em vez de ir buscar o primeiro pode ir buscar o ultimo
+                    retHum.put(sensor, sensor.getMeasures().get(sensor.getMeasures().size()-1));
                 }else{
                     retHum.put(sensor, null);
                 }
             }
-            // há sensores de humidade mas n há medicoes
             
+            // há sensores de humidade mas n há medicoes
             model.addAttribute("humSensorsLastMeasures", retHum);
         }
-
+        
+        model.addAttribute("goodPlant", parcel.checkPlantConditions());
         // ir buscar todas as plantas na bd
         // talvez seja melhor colocar noutro método, esta funcionalidade é chamada poucas vezes
         List<Plant> plants = this.plantRepository.findAll();
+        List<Plant> matchPlants = new ArrayList<Plant>(plants);
+        
+        matchPlants.remove(parcel.getPlant());
+        
         model.addAttribute("plantForm", new ChangePlantModel());
         model.addAttribute("plants", plants);
+        model.addAttribute("matchPlants", parcel.bestPlants(matchPlants));
 
         model.addAttribute("parcel", parcel);
+        
+        
         
         return "parcel.html";
     }
@@ -108,20 +115,22 @@ public class ParcelController {
     }
     
     @PostMapping("/parcel/new")
-    public String newParcel(Model model, @ModelAttribute ParcelModel parcel) {
+    public String newParcel(Model model, @ModelAttribute ParcelModel parcel, Authentication auth) {
+        CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
+        
         // TODO verificar se a parcela já n tinha sido criada previamente
         Parcel parcel2save = new Parcel();
         parcel2save.setLocation(parcel.getLocation());
         
-        if (parcel.getPlant() != 0) {
+        if (!parcel.getPlant().equals(0L)) {
+            // plant == 0 means no plant is associated with parcel
             Plant plant = this.plantRepository.getOne(parcel.getPlant());
             plant.getParcels().add(parcel2save);
             parcel2save.setPlant(plant);
             this.plantRepository.save(plant);
         }
 
-        // TODO tem de ser alterado para se associar à pessoa q fez login
-        User user = this.userRepository.getOne(1L);
+        User user = this.userRepository.getOne(userLogged.getId());
         user.getParcels().add(parcel2save);
         this.userRepository.save(user);
 
@@ -139,7 +148,8 @@ public class ParcelController {
 
         Parcel parcel = this.parcelRepository.getOne(change.getParcelId());
 
-        if (change.getCurrentPlantId() == 0L) {
+        if (change.getCurrentPlantId().equals(0L)) {
+            // parcel without plant
             Plant previous = this.plantRepository.getOne(change.getPreviousPlantId());
             previous.getParcels().remove(parcel);
             this.plantRepository.save(previous);
@@ -151,6 +161,7 @@ public class ParcelController {
         Plant current = this.plantRepository.getOne(change.getCurrentPlantId());
 
         if (change.getPreviousPlantId() != null) {
+            // if changed plant
             Plant previous = this.plantRepository.getOne(change.getPreviousPlantId());
             previous.getParcels().remove(parcel);
             this.plantRepository.save(previous);
@@ -164,46 +175,5 @@ public class ParcelController {
         return "redirect:" + request.getHeader("Referer");
     }
     
-    // private static void makeData(User user, Parcel parcel, Collection<Plant> plants) throws ParseException {
-    	
-    // 	user.setName("Jaime");
-    	
-    // 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    	
-    // 	parcel.setLocation("Aveiro");
-    //     parcel.setOwner(user);
-        
-    //     Plant plant01 = new Plant("planta in parcel", "parcel planta", 2.0, 1.0, 1.0, 1.8);
-    //     parcel.setPlant(plant01);
-        
-    //     HumSensor humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-    //     PhSensor phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-    //     parcel.addHumSensor(humsensor);
-    //     parcel.addPhSensor(phsensor);
-    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
-    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
-    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
-    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
-    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
-    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
-        
-    //     humsensor = new HumSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-    //     phsensor = new PhSensor(parcel, new Date((sdf.parse("2019-01-01 00:00:00")).getTime()));
-    //     parcel.addHumSensor(humsensor);
-    //     parcel.addPhSensor(phsensor);
-    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
-    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
-    //     humsensor.addHumMeasure(new HumMeasure(humsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
-    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-01 00:00:00")).getTime()), 2.1));
-    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-03 00:00:00")).getTime()), 1.9));
-    //     phsensor.addPhMeasure(new PhMeasure(phsensor, new Timestamp((sdf.parse("2020-06-05 00:00:00")).getTime()), 1.7));
-        
-
-    //     plants.add(plant01);
-    //     plants.add(new Plant("planta02", "planta02", 2.0, 1.0, 1.0, 2.5));
-    //     plants.add(new Plant("planta03", "planta03", 2.0, 1.0, 1.0, 2.0));
-    //     plants.add(new Plant("plantatusCuatro", "planta04", 2.0, 1.0, 1.0, 1.5));
-    	
-    // }
     
 }

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE"></title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
+
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-md navbar-dark bg-success">
+    <a class="navbar-brand" th:href="@{/}">Blossom</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/}">Home</a>
+            </li>
+            <li th:if="${#request.userPrincipal}" class="nav-item">
+                <a class="nav-link" th:href="@{/profile}">Profile</a>
+            </li>
+            <li th:if="${#request.userPrincipal}" class="nav-item">
+                <form th:action="@{/logout}" method="post">
+                    <input style="background: none; border: none;" class="nav-link" type="submit" value="Sign Out" />
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<h3 style="text-align: center;">Admin center</h3>
+
+<section>
+    <div class="container">
+        <p>Currently, there are <strong th:text="${#lists.size(users)}"></strong> clients using the app.</p>
+        <a th:href="@{/plant/new}" class="btn btn-primary">Add new plant</a>
+    </div>
+    <div class="container">
+        <canvas style="width: 50%; height: 10%;" id="joinedChart"></canvas>
+    </div>
+
+    <div class="container">
+        <canvas style="width: 50%; height: 10%;" id="lastJoinedChart"></canvas>
+    </div>
+
+    <div class="container">
+        <h2>Latest client reviews</h2>
+        <table class="table table-light">
+            <thead>
+                <tr>
+                    <th scope="col">User name</th>
+                    <th scope="col">Timestamp</th>
+                    <th scope="col">stars</th>
+                    <th scope="col">comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="comment : ${comments}">
+                    <td th:text="${comment.user.name}">...</th>
+                    <td th:text="${comment.timestamp}">...</td>
+                    <td th:text="${comment.stars}">...</td>
+                    <td th:text="${comment.comment}">...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <input type="hidden" id="joinedData" th:value="${joinedData}" />
+    <input type="hidden" id="lastJoinedData" th:value="${lastJoinedData}" />
+
+    <div class="container">
+        <h4>Clients with parcels at risk</h4>
+        <table class="table table-light">
+            <thead>
+                <tr>
+                    <th scope="col">User name</th>
+                    <th scope="col">parcel id</th>
+                    <th scope="col">parcel location</th>
+                    <th scope="col">verify</th>
+                </tr>
+            </thead>
+            <tbody>
+                <div th:each="user : ${users}" th:if="${not #lists.isEmpty(user.parcels)}">
+                    <tr th:each="parcel : ${user.parcels}">
+                        <td th:text="${user.name}">...</th>
+                        <td th:text="${parcel.parcelId}">...</td>
+                        <td th:text="${parcel.location}">...</td>
+                        <td><a th:href="'/parcelhealth/' + ${parcel.parcelId}">More info</a></td>
+                    </tr>
+                </div>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <p class="text-muted">&copy; 2020 blossom. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Optional Section -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<script th:src="@{/javascript/admin.js}"></script>
+</body>
+</html>
