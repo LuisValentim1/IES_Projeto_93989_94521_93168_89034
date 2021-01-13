@@ -76,8 +76,24 @@ public class PhSensorController {
             return "messageError.html";
         }
 
-        model.addAttribute("measures", measures);
+        model.addAttribute("data", this.getData(measures));
+        model.addAttribute("type", "Ph");
         return "measures.html";
+    }
+
+    private String getData(List<PhMeasure> measures) {
+        String ret = "";
+        
+        for (int i = 0; ; i++) {
+            ret += String.valueOf(i) + " " + measures.get(measures.size()-1 - i).getValue().toString();
+
+            if (i >= measures.size() || i > 49)
+                break;
+            
+            ret += "DELIMITER";
+        }
+
+        return ret;
     }
 
     // phsensor/new?parcelId=9

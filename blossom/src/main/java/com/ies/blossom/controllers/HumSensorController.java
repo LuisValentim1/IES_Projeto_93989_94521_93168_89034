@@ -77,8 +77,24 @@ public class HumSensorController {
             return "messageError.html";
         }
 
-        model.addAttribute("measures", measures);
+        model.addAttribute("data", this.getData(measures));
+        model.addAttribute("type", "Humidity");
         return "measures.html";
+    }
+
+    private String getData(List<HumMeasure> measures) {
+        String ret = "";
+        
+        for (int i = 0; ; i++) {
+            ret += String.valueOf(i) + " " + measures.get(measures.size()-1 - i).getValue().toString();
+
+            if (i >= measures.size() || i > 49)
+                break;
+            
+            ret += "DELIMITER";
+        }
+
+        return ret;
     }
 
     // humsensor/new?parcelId=9
