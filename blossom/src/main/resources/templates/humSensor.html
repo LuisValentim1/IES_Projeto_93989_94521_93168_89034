@@ -35,7 +35,10 @@
                                         <td th:text="${humSensor.assocDate}">...</td>
                                         <td th:if="${last_med}" th:text="${last_med.value}">..</td>
                                         <td th:unless="${last_med}">None</td>
-                                        <td ><a th:href="@{/humSensor/measures(sensorId=${humSensor.sensorId})}" >measures</a></td>
+                                        <td th:if="${#lists.isEmpty(humSensor.measures)}">None</td>
+                                        <td th:unless="${#lists.isEmpty(humSensor.measures)}">
+                                            <a th:href="@{/humSensor/measures(sensorId=${humSensor.sensorId})}" >measures</a>
+                                        </td>
 
                                     </tr>
                                 </tbody>

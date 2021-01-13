@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "hum_sensors")
-public class HumSensor {
+public class HumSensor implements Sensor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,9 +27,6 @@ public class HumSensor {
     @OneToMany(mappedBy = "sensor")
     @JsonManagedReference
     private List<HumMeasure> measures = new ArrayList<HumMeasure>();
-    
-    @Transient
-	  private HumMeasure latest;
 
     public HumSensor() { super(); }
 
@@ -85,4 +82,36 @@ public class HumSensor {
     	return false;
     	
     }
+    
+    @Override
+    public List<Measure> measures() {
+    	List<Measure> lista = new ArrayList<Measure>();
+    	for (HumMeasure measure : this.measures) {
+    		lista.add((Measure) measure);
+    	}
+    	return lista;
+    }
+
+	@Override
+	public boolean isEmpty() {
+		return this.measures.isEmpty();
+	}
+
+	@Override
+	public Measure getLatest() {
+		return this.measures.get(this.measures.size()-1);
+	}
+
+	@Override
+	public Boolean isGood(Plant plant) {
+		if(plant == null) {
+			return null;
+		}
+		Double value = this.getLatest().getValue();
+		if (value == null) {
+			return null;
+		}
+		return (plant.getHumMin() <= value) && (value <= plant.getHumMax());
+	}
+
 }

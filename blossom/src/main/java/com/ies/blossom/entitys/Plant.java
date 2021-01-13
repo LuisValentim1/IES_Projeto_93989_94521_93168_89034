@@ -1,6 +1,6 @@
 package com.ies.blossom.entitys;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -33,7 +33,7 @@ public class Plant {
     private Double humMax;
 
     @OneToMany(mappedBy = "plant")
-    @JsonManagedReference
+    @JsonBackReference
     private Set<Parcel> parcels = new HashSet<>();
 
     public Plant() { super(); }
@@ -111,6 +111,20 @@ public class Plant {
         this.humMax = humMax;
     }
     
+    public Boolean isGoodPh(Double phMeasure) {
+    	if (phMeasure == null) {
+    		return null;
+    	}
+        return this.getPhMin() <= phMeasure && phMeasure <= this.getPhMax();
+    }
+    
+    public Boolean isGoodHum(Double humMeasure) {
+    	if (humMeasure == null) {
+    		return null;
+    	}
+        return this.getPhMin() <= humMeasure && humMeasure <= this.getPhMax();
+    }
+    
     @Override
     public boolean equals(Object obj) {
     	if (this == obj) {
@@ -125,6 +139,12 @@ public class Plant {
     	}
     	return false;
     	
+    }
+
+    @Override
+    public String toString() {
+        return "Plant [cientificName=" + cientificName + ", englishName=" + englishName + ", humMax=" + humMax
+                + ", humMin=" + humMin + ", phMax=" + phMax + ", phMin=" + phMin + "]";
     }
     
     
