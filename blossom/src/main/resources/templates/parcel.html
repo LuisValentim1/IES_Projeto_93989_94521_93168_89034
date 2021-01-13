@@ -51,24 +51,68 @@
 											</tr>
 										</tbody>
 									</table>
-									<div th:if="${goodPlant != null}">
-										<div th:if="${goodPlant.phStatus != null}">
-											<span th:text="${goodPlant.phStatus.percentage}">...</span>
-											<span th:text="${goodPlant.phStatus.good}">...</span>
-										</div>
-										<div th:unless="${goodPlant.phStatus != null}">
-											PH é nulo, e por isso não pode-e fazer avaliação da planta para a medida.
-										</div>
-										<div th:if="${goodPlant.humStatus != null}">
-											<span th:text="${goodPlant.humStatus.percentage}">...</span>
-											<span th:text="${goodPlant.humStatus.good}">...</span>
-										</div>
-										<div th:unless="${goodPlant.phStatus != null}">
-											Humidade é nula, e por isso não pode-e fazer avaliação da planta para a medida.
+									<div th:if="${!goodPlant.plantNull}">
+										<div class="container">
+											<div class="row">
+												<div class="col-6">
+													<div th:if="${goodPlant.phStatus != null}">
+														<div th:if="${goodPlant.phStatus.good}"  class="card bg-success">
+  															<h5 class="card-header">PH is adequated to plant</h5>
+  															<div class="card-body">
+    															<h5 class="card-title">Parcel has adequated Ph standards to the plant</h5>
+  															</div>
+														</div>
+														<div th:unless="${goodPlant.phStatus.good}"  class="card bg-danger">
+  															<h5 class="card-header">PH is not adequated to plant</h5>
+  															<div class="card-body">
+    															<h5 class="card-title">Parcel does not have adequated Ph standards to the plant</h5>
+  															</div>
+														</div>													
+													</div>
+													<div th:unless="${goodPlant.phStatus != null}" class="card">
+  														<h5 class="card-header">No Ph Analysis</h5>
+  														<div class="card-body">
+    														<h5 class="card-title">Parcel does not have PH measurements to analyse</h5>
+  														</div>
+													</div>												
+												</div>
+												<div class="col-6">
+													<div th:if="${goodPlant.humStatus != null}">
+														<div th:if="${goodPlant.humStatus.good}"  class="card bg-success">
+  															<h5 class="card-header">Hum is adequated to plant</h5>
+  															<div class="card-body">
+    															<h5 class="card-title">Parcel has adequated Hum standards to the plant</h5>
+  															</div>
+														</div>
+														<div th:unless="${goodPlant.humStatus.good}"  class="card bg-danger">
+  															<h5 class="card-header">Hum is not adequated to plant</h5>
+  															<div class="card-body">
+    															<h5 class="card-title">Parcel does not have adequated Hum standards to the plant</h5>
+  															</div>
+														</div>													
+													</div>
+													<div th:unless="${goodPlant.humStatus != null}" class="card">
+  														<h5 class="card-header">No Ph Analysis</h5>
+  														<div class="card-body">
+    														<h5 class="card-title">Parcel does not have PH measurements to analyse</h5>
+  														</div>
+													</div>
+												
+												</div>
+											</div>
 										</div>
 									</div>
-									<div th:unless="${goodPlant !=null}">
-									Crop não tem planta para fazer analise!
+									<div th:unless="${!goodPlant.plantNull}">
+										<div class="container">
+											<div class="row align-items-start">
+												<div class="card">
+  													<h5 class="card-header">Null analysis</h5>
+  													<div class="card-body">
+    													<h5 class="card-title">Parcel does not have plant to analyse</h5>
+  													</div>
+												</div>										
+											</div>										
+										</div>
 									</div>
 									
 									<input type="hidden" th:value="${parcel.parcelId}" id="pId">
@@ -174,20 +218,20 @@
 										<a th:href="@{/humsensor/new(parcelId=${parcel.parcelId})}"
 											class="btn btn-primary">Add humidity sensor</a>
 									</div>
-
+									<br><br>
+									<div>
+										<h5>Best Matches for the Parcel</h5>
+										<div th:if="${#lists.isEmpty(matchPlants)}">There are no matches</div>
+										<table class="table" th:unless="${#lists.isEmpty(matchPlants)}">
+											<tbody>
+												<!-- tmb se pode colocar aqui os links para os sensores -->
+												<tr th:each="plant : ${matchPlants}">
+													<td><a th:href="'/plant/' + ${plant.plantId}"
+														th:text="${plant.englishName}">..</a></td>
+												</tr>
+											</tbody>
+										</table>
 									
-									<div th:if="${parcel.plant}" class="container"
-										style="border: 1px black solid">
-										<div class="row">
-											<div class="col-md-12">As seguintes plantas apresentam
-												uma boa humidade e consequentemente, uma boa irrigação.</div>
-										</div>
-										<div class="row" th:each="plant: ${plants}">
-											<div class="col-md-12">
-												<p th:text="${plant.cientificName}">...</p>
-												<p th:text="${plant.englishName}">...</p>
-											</div>
-										</div>
 									</div>
 								</div>
 						</body>

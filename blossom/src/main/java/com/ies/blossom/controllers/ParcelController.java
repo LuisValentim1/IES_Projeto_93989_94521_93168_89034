@@ -14,6 +14,7 @@ import com.ies.blossom.security.CustomUserDetails;
 import com.ies.blossom.model.ChangePlantModel;
 import com.ies.blossom.model.ParcelModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,8 +84,13 @@ public class ParcelController {
         // ir buscar todas as plantas na bd
         // talvez seja melhor colocar noutro método, esta funcionalidade é chamada poucas vezes
         List<Plant> plants = this.plantRepository.findAll();
+        List<Plant> matchPlants = new ArrayList<Plant>(plants);
+        
+        matchPlants.remove(parcel.getPlant());
+        
         model.addAttribute("plantForm", new ChangePlantModel());
         model.addAttribute("plants", plants);
+        model.addAttribute("matchPlants", parcel.bestPlants(matchPlants));
 
         model.addAttribute("parcel", parcel);
         
