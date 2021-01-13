@@ -86,6 +86,9 @@ public class HumSensorController {
         String ret = "";
         
         for (int i = 0; ; i++) {
+		    if (i >= measures.size())
+		    		break;
+		    		
             ret += String.valueOf(i) + " " + measures.get(measures.size()-1 - i).getValue().toString();
 
             if (i >= measures.size() || i > 49)

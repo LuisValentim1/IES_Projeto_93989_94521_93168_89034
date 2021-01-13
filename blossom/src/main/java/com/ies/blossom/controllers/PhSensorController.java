@@ -75,8 +75,9 @@ public class PhSensorController {
             model.addAttribute("errorMessage", userLogged.getName() + ", you are not allowed to see this content.");
             return "messageError.html";
         }
-
+		
         model.addAttribute("data", this.getData(measures));
+        
         model.addAttribute("type", "Ph");
         return "measures.html";
     }
@@ -85,6 +86,9 @@ public class PhSensorController {
         String ret = "";
         
         for (int i = 0; ; i++) {
+        	if (i >= measures.size())
+        		break;
+        		
             ret += String.valueOf(i) + " " + measures.get(measures.size()-1 - i).getValue().toString();
 
             if (i >= measures.size() || i > 49)

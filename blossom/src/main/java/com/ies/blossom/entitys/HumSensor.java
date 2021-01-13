@@ -107,7 +107,12 @@ public class HumSensor implements Sensor {
 		if(plant == null) {
 			return null;
 		}
-		Double value = this.getLatest().getValue();
+		Double value = null;
+		try {
+			value = this.getLatest().getValue();
+		} catch (Exception e) {
+			return null;
+		}
 		if (value == null) {
 			return null;
 		}
