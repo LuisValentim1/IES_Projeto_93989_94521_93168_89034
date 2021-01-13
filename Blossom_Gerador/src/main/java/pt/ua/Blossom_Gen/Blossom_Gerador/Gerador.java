@@ -94,18 +94,18 @@ public class Gerador {
 					MonitorHum h = monitoresHum.get(i);
 					String mode = h.getMode();
 					if(mode == "Low") {
-						h.generateLowSoil(1/regs_per_day);
+						h.generateDrySoil(1/regs_per_day);
 						String[] com = {"curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(h.getId()) + " \", \"value\" : \" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \"}\' http://localhost:8080/api/test/phmeasures"}; 
 						pr = Runtime.getRuntime().exec(com);
 						
 					}
 					if(mode == "Medium") {
-						h.generateMediumSoil(1/regs_per_day);
+						h.generateNeutralSoil(1/regs_per_day);
 						String[] com = {"curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(h.getId()) + " \", \"value\" : \" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \"}\' http://localhost:8080/api/test/phmeasures"}; 
 						pr = Runtime.getRuntime().exec(com);
 					}
 					if(mode == "High") {
-						h.generateHighSoil(1/regs_per_day);
+						h.generateMoistSoil(1/regs_per_day);
 						String[] com = {"curl -X POST -H \"Content-Type: application/json\" -d \'{\"sensorId\" : \" " + Integer.toString(h.getId()) + " \", \"value\" : \" " + Integer.toString(h.getValues().get(h.getValues().size()-1)) +  " \"}\' http://localhost:8080/api/test/phmeasures"}; 
 						pr = Runtime.getRuntime().exec(com);
 						
