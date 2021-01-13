@@ -23,14 +23,13 @@ their own specific responsibilities over different important aspects of the proj
 Although everyone shall still work as a core developer instead of focusing solely on their
 assigned role.
 
-
 <img src="https://i.imgur.com/YftU0q9.png" >
 
 
 ## How to run the project
 
-The deployment is made in a simple way with a docker script.
-While on the main folder (the one with docker-compose)
+- The deployment is really simple
+  While on the main folder (the one with docker-compose)
 
 - Windows:
 './deploy-windows.sh'
@@ -38,15 +37,15 @@ While on the main folder (the one with docker-compose)
 - Linux:
 './deploy.sh'
 
-## Testing
-Alternatively, if you wish do deploy only a single container you can compile a new jar by running
-'mvn package install' on either spring app
-
-Folowed by 
+Alternatively if you wish to apply changes on only 1 container, compile using 'mvn package install' followed by:
 'docker-compose up --build'
 
 and to turn off
 'docker-compose down'
+
+Execute the following on the command line while on the "blossom folder"
+
+'./mvnw spring-boot:run'
 
 ## Dependencies
 
