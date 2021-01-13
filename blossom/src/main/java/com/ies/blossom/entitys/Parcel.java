@@ -201,18 +201,22 @@ public class Parcel {
     	} else {
     		goodHum = null;
     	}
-    	
-    	if (goodHum == null && goodPh == null) {
-    		return null;
-    	} else if(goodHum == null && goodPh) {
-    		return true;
-    	} else if(goodHum && goodPh == null) {
-    		return true;
-    	} else if(goodHum && goodPh) {
-    		return true;
-    	} else {
-    		return false;
-    	}
+		
+		try {
+			if (goodHum == null && goodPh == null) {
+				return null;
+			} else if(goodHum == null && goodPh) {
+				return true;
+			} else if(goodHum && goodPh == null) {
+				return true;
+			} else if(goodHum && goodPh) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (NullPointerException e) {
+			return false;
+		}
     }
     
     //Private method for HUM/PH references
@@ -267,8 +271,7 @@ public class Parcel {
     			count++;
     		}
 		}
-    	DecimalFormat formatter = new DecimalFormat("#0.00");
-    	return Double.valueOf(formatter.format(Double.valueOf(100*count/sensores.size()))); 
+    	return (double) 100* (double) count/sensores.size();
     }
     
     private Double measure(boolean isHumidity, Set<Sensor> sensores) {
