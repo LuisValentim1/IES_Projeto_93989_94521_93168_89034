@@ -5,6 +5,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.io.*;
 
+import pt.ua.Blossom_Gen.Blossom_Gerador.MonitorHum;
+import pt.ua.Blossom_Gen.Blossom_Gerador.MonitorPH;
+
 public class Gerador {
 	
 	//Dados estáticos que definem o que gerar 
@@ -35,6 +38,7 @@ public class Gerador {
 		while ((data = buffer.readLine()) != null) {
 		    for(String i : data.substring(1, data.length()-1).split("[,]+")) {
 				opt = randomInt(0, 2);
+				System.out.println(i);
 			    monitoresPH.add(new MonitorPH(Integer.parseInt(i), monitor_type[opt], regs_per_day, days));	
 		    }
 		}
@@ -45,6 +49,7 @@ public class Gerador {
 		while ((data = buffer.readLine()) != null) {
 		    for(String i : data.substring(1, data.length()-1).split("[,]+")) {
 				opt = randomInt(0, 2);
+				System.out.println(i);
 				monitoresHum.add(new MonitorHum(Integer.parseInt(i), monitor_type[opt], regs_per_day, days));
 		    }
 		}
@@ -52,14 +57,18 @@ public class Gerador {
 		//Adicionar todos os valores de pH à base de dados
 		for(int i = 0; i<monitoresPH.size(); i++) {
 			for(int z = 0; z<monitoresPH.get(i).getValues().size(); z++) {
-				Runtime.getRuntime().exec(postCommand(false, Integer.toString(monitoresPH.get(i).getId()), Double.toString(monitoresPH.get(i).getValues().get(z))));
+				String[] ret = postCommand(false, Integer.toString(monitoresPH.get(i).getId()), Double.toString(monitoresPH.get(i).getValues().get(z)));
+				Runtime.getRuntime().exec(ret);
+				System.out.println(Arrays.toString(ret));
 			}
 		}
 				
 		//Adicionar todos os valores de humidade à base de dados
 		for(int i = 0; i<monitoresHum.size(); i++) {
 			for(int z = 0; z<monitoresHum.get(i).getValues().size(); z++) {
-				Runtime.getRuntime().exec(postCommand(false, Integer.toString(monitoresPH.get(i).getId()), Double.toString(monitoresPH.get(i).getValues().get(z))));
+				String[] ret = postCommand(true, Integer.toString(monitoresHum.get(i).getId()), Double.toString(monitoresHum.get(i).getValues().get(z)));
+				Runtime.getRuntime().exec(ret);
+				System.out.println(Arrays.toString(ret));
 			}
 		}
 		
@@ -131,14 +140,14 @@ public class Gerador {
 
 	public static String getCommand(boolean isHumidity){
 		String type = (isHumidity) ? "hum" : "ph";
-		return "curl http://host.docker.internal/api/test/"+type+"ids";
+		return "curl blossom-app:8080/api/"+type+"ids";
 	}
 
-	public static String postCommand(boolean isHumidity, String id, String value) {
+	public static String[] postCommand(boolean isHumidity, String id, String value) {
 		String type = (isHumidity) ? "hum" : "ph";
-		String str = "curl -X POST -H \"Content-Type: application/json\" -d ";
-		str += "'{\"sensorId\" : \""+id+"\", \"value\" : \""+value+"\"}' ";
-		str += "http://host.docker.internal/api/test/"+type+"measures";
-		return str;
+		String data = "{\"sensorId\" : "+id+", \"value\" : "+value+"}";
+		String[] ret = {"curl", "-X", "POST", "blossom-app:8080/api/"+type+"measures",
+							"-H", "content-type: application/json", "-d", data};
+		return ret;
 	}
 }

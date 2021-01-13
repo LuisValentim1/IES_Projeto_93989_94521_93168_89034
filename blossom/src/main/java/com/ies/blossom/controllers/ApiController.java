@@ -563,4 +563,25 @@ public class ApiController {
 
         this.avaliationRepository.delete(avaliation);
     }
+
+    // métodos para gerador
+    @GetMapping("/phids")
+    public List<Long> getPhIds() {
+        List<Long> ret = new ArrayList<Long>();
+        this.phSensorRepository.findAll().forEach(
+            sensor -> ret.add(sensor.getSensorId())
+        );
+
+        return ret;
+    }
+
+    @GetMapping("/humids")
+    public List<Long> getHumIds() {
+        List<Long> ret = new ArrayList<Long>();
+        this.humSensorRepository.findAll().forEach(
+            sensor -> ret.add(sensor.getSensorId())
+        );
+
+        return ret;
+    }
 }
