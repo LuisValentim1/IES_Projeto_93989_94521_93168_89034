@@ -46,7 +46,7 @@ public class HumSensorController {
             return "messageError.html";
         }
 
-        if (sensor.getParcel().getOwner().getUserId() != userLogged.getId()) {
+        if (!sensor.getParcel().getOwner().getUserId().equals(userLogged.getId())) {
             model.addAttribute("httpError", "401");
             model.addAttribute("errorMessage", userLogged.getName() + ", you are not allowed to see this content.");
             return "messageError.html";
@@ -71,7 +71,7 @@ public class HumSensorController {
             return "messageError.html";
         }
 
-        if (measures.get(0).getSensor().getParcel().getOwner().getUserId() != userLogged.getId()) {
+        if (!measures.get(0).getSensor().getParcel().getOwner().getUserId().equals(userLogged.getId())) {
             model.addAttribute("httpError", "401");
             model.addAttribute("errorMessage", userLogged.getName() + ", you are not allowed to see this content.");
             return "messageError.html";
@@ -99,7 +99,7 @@ public class HumSensorController {
             return "messageError.html";
         }
 
-        if (parcel.getOwner().getUserId() != userLogged.getId()) {
+        if (!parcel.getOwner().getUserId().equals(userLogged.getId())) {
             model.addAttribute("httpError", "401");
             model.addAttribute("errorMessage", userLogged.getName() + ", you are not allowed to alter this content.");
             return "messageError.html";

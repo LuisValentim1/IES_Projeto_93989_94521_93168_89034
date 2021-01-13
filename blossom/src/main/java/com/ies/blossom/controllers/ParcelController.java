@@ -44,11 +44,11 @@ public class ParcelController {
         CustomUserDetails userLogged = (CustomUserDetails) auth.getPrincipal();
         Parcel parcel = this.parcelRepository.getOne(parcelId);
 
-        if (parcel.getOwner().getUserId() != userLogged.getId()) {
+        if (!parcel.getOwner().getUserId().equals(userLogged.getId())) {
             model.addAttribute("notOwned", true);
             return "parcel.html";
         }
-              
+        model.addAttribute("notOwned", false);      
      // ir buscar todos as ultimas medidas relativas aos sensores de ph
         if (!parcel.getPhSensors().isEmpty()) {
             Map<PhSensor, PhMeasure> retPh = new HashMap<PhSensor, PhMeasure>();
@@ -116,7 +116,7 @@ public class ParcelController {
         Parcel parcel2save = new Parcel();
         parcel2save.setLocation(parcel.getLocation());
         
-        if (parcel.getPlant() != 0) {
+        if (!parcel.getPlant().equals(0L)) {
             // plant == 0 means no plant is associated with parcel
             Plant plant = this.plantRepository.getOne(parcel.getPlant());
             plant.getParcels().add(parcel2save);
@@ -142,7 +142,7 @@ public class ParcelController {
 
         Parcel parcel = this.parcelRepository.getOne(change.getParcelId());
 
-        if (change.getCurrentPlantId() == 0L) {
+        if (change.getCurrentPlantId().equals(0L)) {
             // parcel without plant
             Plant previous = this.plantRepository.getOne(change.getPreviousPlantId());
             previous.getParcels().remove(parcel);
