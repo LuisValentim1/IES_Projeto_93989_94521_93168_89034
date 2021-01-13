@@ -1,19 +1,19 @@
-package pt.ua.Blossom_Gen.Blossom_Gerador;
+package com.example.Generator;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.io.*;
 
-import pt.ua.Blossom_Gen.Blossom_Gerador.MonitorHum;
-import pt.ua.Blossom_Gen.Blossom_Gerador.MonitorPH;
+import com.example.Generator.MonitorHum;
+import com.example.Generator.MonitorPH;
 
 public class Gerador {
 	
 	//Dados estáticos que definem o que gerar 
 	//Deve ser alterado conforme a quantidade/frequencia de dados que queremos gerar
 	// TODO ALTEREI DE 48 PARA 3 PARA SER MAIS FACIL DEBUG
-	static int regs_per_day = 3; 				// Numero de registos que os monitores fazem por dia.
+	static int regs_per_day = 1; 				// Numero de registos que os monitores fazem por dia.
 	static int days = 1;
 	static String monitor_type[] = {"Low", "Medium", "High"};     // Gerar monitores especificos
 																		   // Low -> ph acido / humidade baixa
@@ -21,7 +21,7 @@ public class Gerador {
 																		   // High -> ph b�sico / humidade alta
 
 	public static void main(String[] args) throws InterruptedException, IOException{
-		
+
 		Process pr;
 		String data;
 		int opt;
@@ -38,7 +38,6 @@ public class Gerador {
 		while ((data = buffer.readLine()) != null) {
 		    for(String i : data.substring(1, data.length()-1).split("[,]+")) {
 				opt = randomInt(0, 2);
-				System.out.println(i);
 			    monitoresPH.add(new MonitorPH(Integer.parseInt(i), monitor_type[opt], regs_per_day, days));	
 		    }
 		}
@@ -49,7 +48,6 @@ public class Gerador {
 		while ((data = buffer.readLine()) != null) {
 		    for(String i : data.substring(1, data.length()-1).split("[,]+")) {
 				opt = randomInt(0, 2);
-				System.out.println(i);
 				monitoresHum.add(new MonitorHum(Integer.parseInt(i), monitor_type[opt], regs_per_day, days));
 		    }
 		}

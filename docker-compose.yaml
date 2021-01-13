@@ -19,7 +19,7 @@ services:
   gerador-app:
     image: gerador-spring-boot-app
     build:
-      context: ./Blossom_Gerador
+      context: ./Generator
       dockerfile: Dockerfile
     networks:
       - all

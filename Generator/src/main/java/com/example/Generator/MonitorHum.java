@@ -1,4 +1,4 @@
-package pt.ua.Blossom_Gen.Blossom_Gerador;
+package com.example.Generator;
 
 import java.util.ArrayList;
 import java.util.Random;
