@@ -2,6 +2,9 @@
 
 <img src="https://i.imgur.com/dPcLwIx.png" >
 
+## For online use
+- [I'm an inline-style link with title](http://deti-engsoft-11.ua.pt/ "Google's Homepage")
+
 ## Class
 
 Introdução a Engenharia do Software
