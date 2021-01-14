@@ -3,7 +3,10 @@
 <img src="https://i.imgur.com/dPcLwIx.png" >
 
 ## For online use
-- [I'm an inline-style link with title](http://deti-engsoft-11.ua.pt/ "Google's Homepage")
+- Online server at [http://deti-engsoft-11.ua.pt/](http://deti-engsoft-11.ua.pt/ "Blossom App")
+- Useful emails:
+    - working account for client **g11@mail.pt** with password **pass**
+    - for admin **admin@mail.pt** with password **pass**
 
 ## Class
 
