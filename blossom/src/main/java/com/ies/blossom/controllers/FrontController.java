@@ -142,8 +142,8 @@ public class FrontController {
             if (sensor.getMeasures().isEmpty())
                 continue;
             
-            double measure = sensor.getMeasures().get(sensor.getMeasures().size()-1).getValue();
-            if (measure < parcel.getPlant().getHumMin() || measure > parcel.getPlant().getHumMax())
+            Double measure = sensor.getMeasures().get(sensor.getMeasures().size()-1).getValue();
+            if (measure.compareTo(parcel.getPlant().getHumMin()) == -1 || measure.compareTo(parcel.getPlant().getHumMax()) == 1)
                 wrong += 1;
             sensors += 1;
         }
@@ -172,8 +172,8 @@ public class FrontController {
             if (sensor.getMeasures().isEmpty())
                 continue;
 
-            double measure = sensor.getMeasures().get(sensor.getMeasures().size()-1).getValue();
-            if (measure < parcel.getPlant().getPhMin() || measure > parcel.getPlant().getPhMax())
+            Double measure = sensor.getMeasures().get(sensor.getMeasures().size()-1).getValue();
+            if (measure.compareTo(parcel.getPlant().getPhMin()) == -1 || measure.compareTo(parcel.getPlant().getPhMax()) == 1)
                 wrong += 1;
             sensors += 1;
         }
